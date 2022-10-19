@@ -1,0 +1,1 @@
+# SBOM – Snyk CLI Extension
