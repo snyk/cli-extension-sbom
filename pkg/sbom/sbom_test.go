@@ -1,6 +1,7 @@
 package sbom
 
 import (
+	"net/url"
 	"testing"
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
@@ -17,6 +18,8 @@ func TestInit(t *testing.T) {
 
 	err = Init(e)
 	assert.NoError(t, err)
+
+	WorkflowID, _ := url.Parse(OutputWorkflowScheme)
 
 	_, err = e.Invoke(WorkflowID)
 	assert.NoError(t, err)
