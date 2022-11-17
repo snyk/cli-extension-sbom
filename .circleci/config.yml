@@ -5,7 +5,6 @@ orbs:
 
 jobs:
   test:
-    name: Unit tests
     executor:
       name: go/default
       tag: '1.19'
