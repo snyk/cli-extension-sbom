@@ -1,0 +1,25 @@
+version: 2.1
+
+orbs:
+  go: circleci/go@1.7.1
+
+jobs:
+  test:
+    name: Unit tests
+    executor:
+      name: go/default
+      tag: '1.19'
+    steps:
+      - checkout
+      - go/load-cache
+      - go/mod-download
+      - go/save-cache
+      - go/test:
+          covermode: atomic
+          failfast: true
+          race: true
+
+workflows:
+  main:
+    jobs:
+      - test
