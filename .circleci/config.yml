@@ -4,7 +4,7 @@ orbs:
   go: circleci/go@1.7.1
 
 jobs:
-  test:
+  Unit Tests:
     executor:
       name: go/default
       tag: '1.19'
@@ -17,8 +17,15 @@ jobs:
           covermode: atomic
           failfast: true
           race: true
+  Linting:
+    docker:
+      - image: golangci/golangci-lint:v1.50-alpine
+    steps:
+      - checkout
+      - run: golangci-lint run -v ./...
 
 workflows:
-  main:
+  CI:
     jobs:
-      - test
+      - Unit Tests
+      - Linting
