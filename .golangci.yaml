@@ -3,7 +3,8 @@ run:
     - integration
   concurrency: 4
   issues-exit-code: 1
-  skip-dirs: []
+  skip-dirs:
+    - internal/mocks
   tests: true
   timeout: 5m
 
