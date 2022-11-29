@@ -9,12 +9,12 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/spf13/pflag"
 )
 
 const (
-	baseURL                 = "https://api.snyk.io" // TODO: we should make this configurable.
 	apiVersion              = "2022-03-31~experimental"
 	mimeTypeCycloneDXJSON   = "application/vnd.cyclonedx+json"
 	sbomFormatCycloneDXJSON = "cyclonedx+json"
@@ -83,6 +83,7 @@ func convertDepGraphToSBOM(
 
 	token := config.GetString("token")
 	orgID := config.GetString("org")
+	baseURL := config.GetString(configuration.API_URL)
 
 	req, err := http.NewRequestWithContext(
 		ctx,
