@@ -57,7 +57,7 @@ func mockInvocationContext(ctrl *gomock.Controller, sbomServiceURL string) workf
 	mockConfig.EXPECT().GetString(gomock.Any()).DoAndReturn(func(key string) string {
 		switch key {
 		case configuration.AUTHENTICATION_TOKEN:
-			return "asdf"
+			return "<SOME API TOKEN>"
 		case configuration.ORGANIZATION:
 			return "6277734c-fc84-4c74-9662-33d46ec66c53"
 		case configuration.API_URL:
@@ -66,6 +66,7 @@ func mockInvocationContext(ctrl *gomock.Controller, sbomServiceURL string) workf
 			return ""
 		}
 	}).AnyTimes()
+	mockConfig.EXPECT().GetBool(gomock.Any()).Return(false).AnyTimes()
 
 	mockEngine := mocks.NewMockEngine(ctrl)
 	mockEngine.EXPECT().Invoke(gomock.Eq(sbom.DepGraphWorkflowID)).Return([]workflow.Data{

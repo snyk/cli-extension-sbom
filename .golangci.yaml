@@ -105,7 +105,6 @@ linters:
     - usestdlibvars
     - wastedassign
     - whitespace
-    - wrapcheck
 
 issues:
   exclude-rules:
