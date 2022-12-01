@@ -33,6 +33,10 @@ linters-settings:
     check-shadowing: true
     disable:
       - fieldalignment
+  ireturn:
+    allow:
+      - error
+      - github.com/snyk/go-application-framework/pkg/workflow.Data
   lll:
     line-length: 160
   misspell:
