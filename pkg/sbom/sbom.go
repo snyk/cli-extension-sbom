@@ -3,6 +3,7 @@ package sbom
 import (
 	"fmt"
 
+	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/spf13/pflag"
 
@@ -18,9 +19,10 @@ func SBOMWorkflow(
 	ictx workflow.InvocationContext,
 	_ []workflow.Data,
 ) (sbomDocs []workflow.Data, err error) {
-	var workflowEngineInstance = ictx.GetEngine()
+	engine := ictx.GetEngine()
+	config := ictx.GetConfiguration()
 
-	depGraphs, err := workflowEngineInstance.Invoke(DepGraphWorkflowID)
+	depGraphs, err := engine.Invoke(DepGraphWorkflowID)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +34,9 @@ func SBOMWorkflow(
 		}
 
 		sbomBytes, err := service.DepGraphToSBOM(
-			ictx.GetConfiguration(),
+			ictx.GetNetworkAccess().GetHttpClient(),
+			config.GetString(configuration.API_URL),
+			config.GetString(configuration.ORGANIZATION),
 			depGraphBytes,
 			service.SBOMFormatCycloneDXJSON,
 		)
@@ -40,7 +44,7 @@ func SBOMWorkflow(
 			return nil, err
 		}
 
-		sbomDocs = append(sbomDocs, newData(service.MimeTypeCycloneDXJSON, sbomBytes))
+		sbomDocs = append(sbomDocs, newData(depGraph, service.MimeTypeCycloneDXJSON, sbomBytes))
 	}
 
 	return sbomDocs, nil
@@ -62,9 +66,10 @@ func Init(e workflow.Engine) error {
 	return nil
 }
 
-func newData(contentType string, sbom []byte) workflow.Data {
-	return workflow.NewData(
-		WorkflowID,
+func newData(depGraph workflow.Data, contentType string, sbom []byte) workflow.Data {
+	return workflow.NewDataFromInput(
+		depGraph,
+		workflow.NewTypeIdentifier(WorkflowID, "cyclonedx"),
 		contentType,
 		sbom,
 	)

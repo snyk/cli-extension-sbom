@@ -8,9 +8,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-
-	"github.com/snyk/go-application-framework/pkg/configuration"
-	"github.com/snyk/go-application-framework/pkg/networking"
 )
 
 type SBOMFormat string
@@ -24,13 +21,12 @@ const (
 )
 
 func DepGraphToSBOM(
-	cfg configuration.Configuration,
+	client *http.Client,
+	apiURL string,
+	orgID string,
 	depGraph []byte,
 	format SBOMFormat,
 ) (docs []byte, err error) {
-	orgID := cfg.GetString(configuration.ORGANIZATION)
-	apiURL := cfg.GetString(configuration.API_URL)
-
 	req, err := http.NewRequestWithContext(
 		context.Background(),
 		http.MethodPost,
@@ -42,10 +38,7 @@ func DepGraphToSBOM(
 	}
 	req.Header.Add("Content-Type", MimeTypeJSON)
 
-	resp, err := networking.
-		NewNetworkAccess(cfg).
-		GetHttpClient().
-		Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error while making request: %w", err)
 	}

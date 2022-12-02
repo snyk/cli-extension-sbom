@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/snyk/go-application-framework/pkg/configuration"
+	"github.com/snyk/go-application-framework/pkg/networking"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/stretchr/testify/assert"
 
@@ -67,15 +68,17 @@ func mockInvocationContext(ctrl *gomock.Controller, sbomServiceURL string) workf
 		}
 	}).AnyTimes()
 	mockConfig.EXPECT().GetBool(gomock.Any()).Return(false).AnyTimes()
+	mockConfig.EXPECT().GetInt(gomock.Any()).Return(0).AnyTimes()
 
 	mockEngine := mocks.NewMockEngine(ctrl)
 	mockEngine.EXPECT().Invoke(gomock.Eq(sbom.DepGraphWorkflowID)).Return([]workflow.Data{
-		workflow.NewData(sbom.DepGraphWorkflowID, "application/json", depGraphData),
+		workflow.NewData(workflow.NewTypeIdentifier(sbom.DepGraphWorkflowID, "cyclonedx"), "application/json", depGraphData),
 	}, nil)
 
 	ictx := mocks.NewMockInvocationContext(ctrl)
 	ictx.EXPECT().GetConfiguration().Return(mockConfig)
 	ictx.EXPECT().GetEngine().Return(mockEngine)
+	ictx.EXPECT().GetNetworkAccess().Return(networking.NewNetworkAccess(mockConfig))
 
 	return ictx
 }
