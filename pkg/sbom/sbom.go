@@ -15,17 +15,35 @@ var (
 	DepGraphWorkflowID = workflow.NewWorkflowIdentifier("depgraph")
 )
 
+const (
+	flagExperimental = "experimental"
+	flagFile         = "file"
+	flagFormat       = "format"
+)
+
 func SBOMWorkflow(
 	ictx workflow.InvocationContext,
 	_ []workflow.Data,
 ) (sbomDocs []workflow.Data, err error) {
 	engine := ictx.GetEngine()
 	config := ictx.GetConfiguration()
+	logger := ictx.GetLogger()
+	format := config.GetString(flagFormat)
+
+	logger.Println("SBOM workflow start")
+
+	if !config.GetBool(flagExperimental) {
+		return nil, fmt.Errorf("set `--experimental` flag to enable sbom command")
+	}
+
+	logger.Println("Invoking depgraph workflow")
 
 	depGraphs, err := engine.Invoke(DepGraphWorkflowID)
 	if err != nil {
 		return nil, err
 	}
+
+	logger.Printf("Generating documents for %d depgraph(s)\n", len(depGraphs))
 
 	for _, depGraph := range depGraphs {
 		depGraphBytes, err := getPayloadBytes(depGraph)
@@ -38,7 +56,8 @@ func SBOMWorkflow(
 			config.GetString(configuration.API_URL),
 			config.GetString(configuration.ORGANIZATION),
 			depGraphBytes,
-			service.SBOMFormatCycloneDXJSON,
+			format,
+			logger,
 		)
 		if err != nil {
 			return nil, err
@@ -47,15 +66,17 @@ func SBOMWorkflow(
 		sbomDocs = append(sbomDocs, newData(depGraph, service.MimeTypeCycloneDXJSON, sbomBytes))
 	}
 
+	logger.Printf("Successfully generated %d document(s}\n", len(sbomDocs))
+
 	return sbomDocs, nil
 }
 
 func Init(e workflow.Engine) error {
 	flagset := pflag.NewFlagSet("snyk-cli-extension-sbom", pflag.ExitOnError)
-	// TODO: add proper user documentation.
-	flagset.String("file", "", "usage docs for file option")
-	// TODO: add proper user documentation.
-	flagset.StringP("format", "f", "text", "usage docs for format option")
+
+	flagset.Bool(flagExperimental, false, "Explicitly enable `sbom` command with the --experimental flag.")
+	flagset.String(flagFile, "", "Specify a package file.")
+	flagset.StringP(flagFormat, "f", "cyclonedx+json", "Specify the SBOM output format. (cyclonedx+json)")
 
 	c := workflow.ConfigurationOptionsFromFlagset(flagset)
 

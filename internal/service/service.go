@@ -3,21 +3,17 @@ package service
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 )
-
-type SBOMFormat string
 
 const (
 	apiVersion            = "2022-03-31~experimental"
 	MimeTypeCycloneDXJSON = "application/vnd.cyclonedx+json"
 	MimeTypeJSON          = "application/json"
-
-	SBOMFormatCycloneDXJSON SBOMFormat = "cyclonedx+json"
 )
 
 func DepGraphToSBOM(
@@ -25,7 +21,8 @@ func DepGraphToSBOM(
 	apiURL string,
 	orgID string,
 	depGraph []byte,
-	format SBOMFormat,
+	format string,
+	logger *log.Logger,
 ) (docs []byte, err error) {
 	req, err := http.NewRequestWithContext(
 		context.Background(),
@@ -38,6 +35,8 @@ func DepGraphToSBOM(
 	}
 	req.Header.Add("Content-Type", MimeTypeJSON)
 
+	logger.Printf("Converting depgraph remotely (url: %s)", req.URL.String())
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error while making request: %w", err)
@@ -47,22 +46,20 @@ func DepGraphToSBOM(
 		return nil, fmt.Errorf("could not convert to SBOM (status: %s)", resp.Status)
 	}
 
-	if resp.Header.Get("Content-Type") != MimeTypeCycloneDXJSON {
-		return nil, errors.New("received unexpected response format")
-	}
-
 	defer resp.Body.Close()
 	docs, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("could not read response body: %w", err)
 	}
 
+	logger.Println("Successfully converted depGraph to SBOM")
+
 	return docs, nil
 }
 
-func buildURL(apiURL, orgID string, format SBOMFormat) string {
+func buildURL(apiURL, orgID, format string) string {
 	return fmt.Sprintf(
 		"%s/hidden/orgs/%s/sbom?version=%s&format=%s",
-		apiURL, orgID, apiVersion, url.QueryEscape(string(format)),
+		apiURL, orgID, apiVersion, url.QueryEscape(format),
 	)
 }

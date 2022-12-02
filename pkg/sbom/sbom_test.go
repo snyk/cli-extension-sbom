@@ -2,15 +2,18 @@ package sbom_test
 
 import (
 	_ "embed"
+	"io"
+	"log"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/snyk/go-application-framework/pkg/configuration"
+	"github.com/snyk/go-application-framework/pkg/mocks"
 	"github.com/snyk/go-application-framework/pkg/networking"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/snyk/cli-extension-sbom/internal/mocks"
+	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
 	"github.com/snyk/cli-extension-sbom/pkg/sbom"
 )
 
@@ -39,7 +42,7 @@ func TestSBOMWorkflowSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockSBOMService := mocks.NewMockSBOMService(expectedSBOM)
+	mockSBOMService := svcmocks.NewMockSBOMService(expectedSBOM)
 	defer mockSBOMService.Close()
 	mockICTX := mockInvocationContext(ctrl, mockSBOMService.URL)
 
@@ -54,6 +57,8 @@ func TestSBOMWorkflowSuccess(t *testing.T) {
 }
 
 func mockInvocationContext(ctrl *gomock.Controller, sbomServiceURL string) workflow.InvocationContext {
+	mockLogger := log.New(io.Discard, "", 0)
+
 	mockConfig := mocks.NewMockConfiguration(ctrl)
 	mockConfig.EXPECT().GetString(gomock.Any()).DoAndReturn(func(key string) string {
 		switch key {
@@ -67,7 +72,7 @@ func mockInvocationContext(ctrl *gomock.Controller, sbomServiceURL string) workf
 			return ""
 		}
 	}).AnyTimes()
-	mockConfig.EXPECT().GetBool(gomock.Any()).Return(false).AnyTimes()
+	mockConfig.EXPECT().GetBool(gomock.Any()).Return(true).AnyTimes()
 	mockConfig.EXPECT().GetInt(gomock.Any()).Return(0).AnyTimes()
 
 	mockEngine := mocks.NewMockEngine(ctrl)
@@ -79,6 +84,7 @@ func mockInvocationContext(ctrl *gomock.Controller, sbomServiceURL string) workf
 	ictx.EXPECT().GetConfiguration().Return(mockConfig)
 	ictx.EXPECT().GetEngine().Return(mockEngine)
 	ictx.EXPECT().GetNetworkAccess().Return(networking.NewNetworkAccess(mockConfig))
+	ictx.EXPECT().GetLogger().Return(mockLogger)
 
 	return ictx
 }
