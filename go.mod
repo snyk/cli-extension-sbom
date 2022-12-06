@@ -3,7 +3,7 @@ module github.com/snyk/cli-extension-sbom
 go 1.19
 
 require (
-	github.com/snyk/go-application-framework v0.0.0-20221028125644-66016a1d4215
+	github.com/snyk/go-application-framework v0.0.0-20221201145925-ee0ec4cf2688
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
 )
