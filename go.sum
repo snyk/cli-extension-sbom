@@ -169,10 +169,8 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/rogpeppe/go-internal v1.9.0 h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZVejAe8=
-github.com/snyk/go-application-framework v0.0.0-20221028125644-66016a1d4215 h1:0/1AW7/GHT4pAuzIFw0BLOH3jPKf3H4B2eQbTT2jZT0=
-github.com/snyk/go-application-framework v0.0.0-20221028125644-66016a1d4215/go.mod h1:qxy9kRGPDMbgKqTFHMYTGBaSovjxgIxbSSNtz/fz79I=
-github.com/snyk/go-application-framework v0.0.0-20221201145925-ee0ec4cf2688 h1:2WOMtq2WSgP/WL9qsQJBIxctf9vuvv+xn/xl6/qgNUY=
-github.com/snyk/go-application-framework v0.0.0-20221201145925-ee0ec4cf2688/go.mod h1:cmEA75r0NIy0dyNx5AIKLtczEg6YF0oOPXIKHWiLyWc=
+github.com/snyk/go-application-framework v0.0.0-20221208153222-02f242b16d48 h1:sSV4Q1Tst46jksiYIQGGhspywGgbA2rODyUba9wqzNU=
+github.com/snyk/go-application-framework v0.0.0-20221208153222-02f242b16d48/go.mod h1:5hLGqObbxLWnZkhn3Xc5PblESjQOfjN509ucQ4dtqz8=
 github.com/snyk/go-httpauth v0.0.0-20220915135832-0edf62cf8cdd h1:zjDhcQ642rIVI8aIjfG5uVcw+OGotQtX2l9VHe7IqCQ=
 github.com/snyk/go-httpauth v0.0.0-20220915135832-0edf62cf8cdd/go.mod h1:v6t6wKizOcHXT3p4qKn6Bda7yNIjCQ54Xyl31NjgXkY=
 github.com/spf13/afero v1.9.2 h1:j49Hj62F0n+DaZ1dDCvhABaPNSGNkt32oRFxI33IEMw=

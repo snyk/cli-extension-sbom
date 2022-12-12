@@ -3,7 +3,8 @@ module github.com/snyk/cli-extension-sbom
 go 1.19
 
 require (
-	github.com/snyk/go-application-framework v0.0.0-20221201145925-ee0ec4cf2688
+	github.com/golang/mock v1.6.0
+	github.com/snyk/go-application-framework v0.0.0-20221208153222-02f242b16d48
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
 )
@@ -12,7 +13,6 @@ require (
 	github.com/alexbrainman/sspi v0.0.0-20210105120005-909beea2cc74 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
-	github.com/golang/mock v1.6.0 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jcmturner/aescts/v2 v2.0.0 // indirect
