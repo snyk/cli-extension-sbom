@@ -17,6 +17,7 @@ var (
 
 const (
 	flagExperimental = "experimental"
+	flagUnmanaged    = "unmanaged"
 	flagFile         = "file"
 	flagFormat       = "format"
 )
@@ -75,6 +76,7 @@ func Init(e workflow.Engine) error {
 	flagset := pflag.NewFlagSet("snyk-cli-extension-sbom", pflag.ExitOnError)
 
 	flagset.Bool(flagExperimental, false, "Explicitly enable `sbom` command with the --experimental flag.")
+	flagset.Bool(flagUnmanaged, false, "For C/C++ only, scan all files for known open source dependencies and build an SBOM.")
 	flagset.String(flagFile, "", "Specify a package file.")
 	flagset.StringP(flagFormat, "f", "cyclonedx+json", "Specify the SBOM output format. (cyclonedx+json)")
 
