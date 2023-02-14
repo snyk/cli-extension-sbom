@@ -78,7 +78,7 @@ func Init(e workflow.Engine) error {
 	flagset.Bool(flagExperimental, false, "Explicitly enable `sbom` command with the --experimental flag.")
 	flagset.Bool(flagUnmanaged, false, "For C/C++ only, scan all files for known open source dependencies and build an SBOM.")
 	flagset.String(flagFile, "", "Specify a package file.")
-	flagset.StringP(flagFormat, "f", "cyclonedx+json", "Specify the SBOM output format. (cyclonedx+json)")
+	flagset.StringP(flagFormat, "f", "cyclonedx1.4+json", "Specify the SBOM output format. (cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json)")
 
 	c := workflow.ConfigurationOptionsFromFlagset(flagset)
 
