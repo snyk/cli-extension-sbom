@@ -42,7 +42,8 @@ func TestSBOMWorkflowSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockSBOMService := svcmocks.NewMockSBOMService(expectedSBOM)
+	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", expectedSBOM)
+	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse)
 	defer mockSBOMService.Close()
 	mockICTX := mockInvocationContext(ctrl, mockSBOMService.URL)
 

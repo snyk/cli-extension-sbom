@@ -52,7 +52,7 @@ func SBOMWorkflow(
 			return nil, err
 		}
 
-		sbomBytes, err := service.DepGraphToSBOM(
+		result, err := service.DepGraphToSBOM(
 			ictx.GetNetworkAccess().GetHttpClient(),
 			config.GetString(configuration.API_URL),
 			config.GetString(configuration.ORGANIZATION),
@@ -64,7 +64,7 @@ func SBOMWorkflow(
 			return nil, err
 		}
 
-		sbomDocs = append(sbomDocs, newData(depGraph, service.MimeTypeCycloneDXJSON, sbomBytes))
+		sbomDocs = append(sbomDocs, newData(depGraph, result.MIMEType, result.Doc))
 	}
 
 	logger.Printf("Successfully generated %d document(s}\n", len(sbomDocs))
@@ -92,7 +92,7 @@ func Init(e workflow.Engine) error {
 func newData(depGraph workflow.Data, contentType string, sbom []byte) workflow.Data {
 	return workflow.NewDataFromInput(
 		depGraph,
-		workflow.NewTypeIdentifier(WorkflowID, "cyclonedx"),
+		workflow.NewTypeIdentifier(WorkflowID, "sbom"),
 		contentType,
 		sbom,
 	)
