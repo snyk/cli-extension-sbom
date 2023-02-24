@@ -68,6 +68,8 @@ func mockInvocationContext(ctrl *gomock.Controller, sbomServiceURL string) workf
 			return "6277734c-fc84-4c74-9662-33d46ec66c53"
 		case configuration.API_URL:
 			return sbomServiceURL
+		case "format":
+			return "cyclonedx1.4+json"
 		default:
 			return ""
 		}
