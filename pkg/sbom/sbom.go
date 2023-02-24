@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/pflag"
 
 	"github.com/snyk/cli-extension-sbom/internal/service"
+	"github.com/snyk/cli-extension-sbom/pkg/workflowerrors"
 )
 
 var (
@@ -30,11 +31,16 @@ func SBOMWorkflow(
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
 	format := config.GetString(flagFormat)
+	orgID := config.GetString(configuration.ORGANIZATION)
 
 	logger.Println("SBOM workflow start")
 
 	if !config.GetBool(flagExperimental) {
-		return nil, fmt.Errorf("set `--experimental` flag to enable sbom command")
+		return nil, workflowerrors.NewExperimentalFlagError()
+	}
+
+	if orgID == "" {
+		return nil, workflowerrors.NewEmptyOrgIDError()
 	}
 
 	logger.Println("Invoking depgraph workflow")
@@ -49,19 +55,19 @@ func SBOMWorkflow(
 	for _, depGraph := range depGraphs {
 		depGraphBytes, err := getPayloadBytes(depGraph)
 		if err != nil {
-			return nil, err
+			return nil, workflowerrors.NewFailedSCAError(err)
 		}
 
 		sbomBytes, err := service.DepGraphToSBOM(
 			ictx.GetNetworkAccess().GetHttpClient(),
 			config.GetString(configuration.API_URL),
-			config.GetString(configuration.ORGANIZATION),
+			orgID,
 			depGraphBytes,
 			format,
 			logger,
 		)
 		if err != nil {
-			return nil, err
+			return nil, workflowerrors.NewFailedConversionError(err)
 		}
 
 		sbomDocs = append(sbomDocs, newData(depGraph, service.MimeTypeCycloneDXJSON, sbomBytes))
