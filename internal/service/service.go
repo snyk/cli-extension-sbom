@@ -10,10 +10,14 @@ import (
 	"net/url"
 )
 
+type SBOMResult struct {
+	Doc      []byte
+	MIMEType string
+}
+
 const (
-	apiVersion            = "2022-03-31~experimental"
-	MimeTypeCycloneDXJSON = "application/vnd.cyclonedx+json"
-	MimeTypeJSON          = "application/json"
+	apiVersion   = "2022-03-31~experimental"
+	MimeTypeJSON = "application/json"
 )
 
 func DepGraphToSBOM(
@@ -23,7 +27,7 @@ func DepGraphToSBOM(
 	depGraph []byte,
 	format string,
 	logger *log.Logger,
-) (docs []byte, err error) {
+) (result *SBOMResult, err error) {
 	req, err := http.NewRequestWithContext(
 		context.Background(),
 		http.MethodPost,
@@ -47,14 +51,14 @@ func DepGraphToSBOM(
 	}
 
 	defer resp.Body.Close()
-	docs, err = io.ReadAll(resp.Body)
+	doc, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("could not read response body: %w", err)
 	}
 
 	logger.Println("Successfully converted depGraph to SBOM")
 
-	return docs, nil
+	return &SBOMResult{Doc: doc, MIMEType: resp.Header.Get("Content-Type")}, nil
 }
 
 func buildURL(apiURL, orgID, format string) string {
