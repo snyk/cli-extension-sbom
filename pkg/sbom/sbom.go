@@ -57,7 +57,10 @@ func SBOMWorkflow(
 
 	depGraphs, err := engine.Invoke(DepGraphWorkflowID)
 	if err != nil {
-		return nil, err
+		return nil, extension_errors.New(
+			fmt.Errorf("error while invoking depgraph workflow: %w", err),
+			"An error occurred while running the underlying analysis needed to generate the SBOM.",
+		)
 	}
 
 	logger.Printf("Generating documents for %d depgraph(s)\n", len(depGraphs))
