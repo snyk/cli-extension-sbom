@@ -54,7 +54,9 @@ linters-settings:
   staticcheck:
     checks: ["all"]
   stylecheck:
-    checks: ["all"]
+    checks:
+      - all
+      - "-ST1003" # Allow underscores in package names
     http-status-code-whitelist: []
   varcheck:
     exported-fields: true

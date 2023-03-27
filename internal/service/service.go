@@ -8,6 +8,9 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
+
+	"github.com/snyk/cli-extension-sbom/internal/extension_errors"
 )
 
 type SBOMResult struct {
@@ -19,6 +22,12 @@ const (
 	apiVersion   = "2022-03-31~experimental"
 	MimeTypeJSON = "application/json"
 )
+
+var sbomFormats = [...]string{
+	"cyclonedx1.4+json",
+	"cyclonedx1.4+xml",
+	"spdx2.3+json",
+}
 
 func DepGraphToSBOM(
 	client *http.Client,
@@ -65,5 +74,34 @@ func buildURL(apiURL, orgID, format string) string {
 	return fmt.Sprintf(
 		"%s/hidden/orgs/%s/sbom?version=%s&format=%s",
 		apiURL, orgID, apiVersion, url.QueryEscape(format),
+	)
+}
+
+func ValidateSBOMFormat(candidate string) error {
+	if candidate == "" {
+		return extension_errors.New(
+			fmt.Errorf("no format provided"),
+			fmt.Sprintf(
+				"Must set `--format` flag to specify an SBOM format. "+
+					"Available formats are: %s",
+				strings.Join(sbomFormats[:], ", "),
+			),
+		)
+	}
+
+	for _, f := range sbomFormats {
+		if f == candidate {
+			return nil
+		}
+	}
+
+	return extension_errors.New(
+		fmt.Errorf("invalid format provided (%s)", candidate),
+		fmt.Sprintf(
+			"The format provided (%s) is not one of the available formats. "+
+				"Available formats are: %s",
+			candidate,
+			strings.Join(sbomFormats[:], ", "),
+		),
 	)
 }
