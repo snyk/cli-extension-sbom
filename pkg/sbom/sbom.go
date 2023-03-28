@@ -42,6 +42,17 @@ func SBOMWorkflow(
 		return nil, verr
 	}
 
+	logger.Println("Getting preferred organization ID")
+
+	orgID := config.GetString(configuration.ORGANIZATION)
+	if orgID == "" {
+		return nil, extension_errors.New(
+			fmt.Errorf("failed to determine org id"),
+			"Snyk failed to infer an organization ID. Please make sure to authenticate using `snyk auth`. "+
+				"Should the issue persist, explicitly set an organization ID via the `--org` flag.",
+		)
+	}
+
 	logger.Println("Invoking depgraph workflow")
 
 	depGraphs, err := engine.Invoke(DepGraphWorkflowID)
@@ -60,7 +71,7 @@ func SBOMWorkflow(
 		result, err := service.DepGraphToSBOM(
 			ictx.GetNetworkAccess().GetHttpClient(),
 			config.GetString(configuration.API_URL),
-			config.GetString(configuration.ORGANIZATION),
+			orgID,
 			depGraphBytes,
 			format,
 			logger,

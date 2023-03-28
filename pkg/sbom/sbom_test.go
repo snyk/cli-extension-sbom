@@ -109,6 +109,25 @@ func TestSBOMWorkflow_InvalidFOrmat(t *testing.T) {
 		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json")
 }
 
+func TestSBOMWorkflow_NoOrgID(t *testing.T) {
+	mockLogger := log.New(io.Discard, "", 0)
+	ctrl := gomock.NewController(t)
+	mockConfig := mocks.NewMockConfiguration(ctrl)
+	mockConfig.EXPECT().GetBool(gomock.Any()).Return(true).AnyTimes()
+	mockConfig.EXPECT().GetString("format").Return("cyclonedx1.4+json").AnyTimes()
+	mockConfig.EXPECT().GetString("org").Return("").AnyTimes()
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine)
+	mockICTX.EXPECT().GetLogger().Return(mockLogger)
+
+	_, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
+
+	assert.ErrorContains(t, err, "Snyk failed to infer an organization ID. Please make sure to authenticate using `snyk auth`. "+
+		"Should the issue persist, explicitly set an organization ID via the `--org` flag.")
+}
+
 func mockInvocationContext(ctrl *gomock.Controller, sbomServiceURL string) workflow.InvocationContext {
 	mockLogger := log.New(io.Discard, "", 0)
 
