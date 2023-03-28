@@ -109,6 +109,27 @@ func TestSBOMWorkflow_InvalidFOrmat(t *testing.T) {
 		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json")
 }
 
+func TestSBOMWorkflow_InvalidPayload(t *testing.T) {
+	mockLogger := log.New(io.Discard, "", 0)
+	ctrl := gomock.NewController(t)
+	mockConfig := mocks.NewMockConfiguration(ctrl)
+	mockConfig.EXPECT().GetBool(gomock.Any()).Return(true).AnyTimes()
+	mockConfig.EXPECT().GetString("format").Return("cyclonedx1.4+json").AnyTimes()
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockEngine.EXPECT().Invoke(gomock.Eq(sbom.DepGraphWorkflowID)).Return([]workflow.Data{
+		workflow.NewData(workflow.NewTypeIdentifier(sbom.DepGraphWorkflowID, "cyclonedx"), "application/json", nil),
+	}, nil)
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine)
+	mockICTX.EXPECT().GetLogger().Return(mockLogger)
+
+	_, err := sbom.SBOMWorkflow(mockICTX, nil)
+
+	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis which is required to generate an SBOM. "+
+		"Should this issue persist, please reach out to customer support.")
+}
+
 func mockInvocationContext(ctrl *gomock.Controller, sbomServiceURL string) workflow.InvocationContext {
 	mockLogger := log.New(io.Discard, "", 0)
 
