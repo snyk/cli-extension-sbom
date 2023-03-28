@@ -67,3 +67,15 @@ func TestDepGraphToSBOM(t *testing.T) {
 		})
 	}
 }
+
+func TestValidateSBOMFormat_EmptyFormat(t *testing.T) {
+	err := ValidateSBOMFormat("")
+	assert.ErrorContains(t, err, "Must set `--format` flag to specify an SBOM format. "+
+		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json")
+}
+
+func TestValidateSBOMFormat_InvalidFormat(t *testing.T) {
+	err := ValidateSBOMFormat("not+a+format")
+	assert.ErrorContains(t, err, "The format provided (not+a+format) is not one of the available formats. "+
+		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json")
+}

@@ -7,6 +7,7 @@ import (
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/spf13/pflag"
 
+	"github.com/snyk/cli-extension-sbom/internal/extension_errors"
 	"github.com/snyk/cli-extension-sbom/internal/service"
 )
 
@@ -34,11 +35,11 @@ func SBOMWorkflow(
 	logger.Println("SBOM workflow start")
 
 	if !config.GetBool(flagExperimental) {
-		return nil, fmt.Errorf("set `--experimental` flag to enable sbom command")
+		return nil, extension_errors.New(nil, "Must set `--experimental` flag to enable sbom command.")
 	}
 
-	if format == "" {
-		return nil, fmt.Errorf("set `--format` to specify SBOM format. (cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json)")
+	if verr := service.ValidateSBOMFormat(format); verr != nil {
+		return nil, verr
 	}
 
 	logger.Println("Invoking depgraph workflow")

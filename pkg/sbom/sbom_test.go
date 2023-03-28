@@ -38,7 +38,7 @@ func TestInit(t *testing.T) {
 	assert.NotNil(t, wflw)
 }
 
-func TestSBOMWorkflowSuccess(t *testing.T) {
+func TestSBOMWorkflow_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -55,6 +55,58 @@ func TestSBOMWorkflowSuccess(t *testing.T) {
 	sbomBytes, ok := results[0].GetPayload().([]byte)
 	assert.True(t, ok)
 	assert.Equal(t, string(expectedSBOM), string(sbomBytes))
+}
+
+func TestSBOMWorkflow_NoExperimentalFlag(t *testing.T) {
+	mockLogger := log.New(io.Discard, "", 0)
+	ctrl := gomock.NewController(t)
+	mockConfig := mocks.NewMockConfiguration(ctrl)
+	mockConfig.EXPECT().GetBool(gomock.Any()).Return(false).AnyTimes()
+	mockConfig.EXPECT().GetString(gomock.Any()).Return("").AnyTimes()
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine)
+	mockICTX.EXPECT().GetLogger().Return(mockLogger)
+
+	_, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
+
+	assert.ErrorContains(t, err, "Must set `--experimental` flag to enable sbom command.")
+}
+
+func TestSBOMWorkflow_EmptyFormat(t *testing.T) {
+	mockLogger := log.New(io.Discard, "", 0)
+	ctrl := gomock.NewController(t)
+	mockConfig := mocks.NewMockConfiguration(ctrl)
+	mockConfig.EXPECT().GetBool(gomock.Any()).Return(true).AnyTimes()
+	mockConfig.EXPECT().GetString("format").Return("").AnyTimes()
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine)
+	mockICTX.EXPECT().GetLogger().Return(mockLogger)
+
+	_, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
+
+	assert.ErrorContains(t, err, "Must set `--format` flag to specify an SBOM format.")
+}
+
+func TestSBOMWorkflow_InvalidFOrmat(t *testing.T) {
+	mockLogger := log.New(io.Discard, "", 0)
+	ctrl := gomock.NewController(t)
+	mockConfig := mocks.NewMockConfiguration(ctrl)
+	mockConfig.EXPECT().GetBool(gomock.Any()).Return(true).AnyTimes()
+	mockConfig.EXPECT().GetString("format").Return("cyclonedx+json").AnyTimes()
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine)
+	mockICTX.EXPECT().GetLogger().Return(mockLogger)
+
+	_, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
+
+	assert.ErrorContains(t, err, "The format provided (cyclonedx+json) is not one of the available formats. "+
+		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json")
 }
 
 func mockInvocationContext(ctrl *gomock.Controller, sbomServiceURL string) workflow.InvocationContext {
