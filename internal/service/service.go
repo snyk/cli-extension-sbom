@@ -44,7 +44,7 @@ func DepGraphToSBOM(
 		bytes.NewBuffer([]byte(fmt.Sprintf(`{"depGraph":%s}`, depGraph))),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("error while creating request: %w", err)
+		return nil, extension_errors.NewInternalError(fmt.Errorf("error while creating request: %w", err))
 	}
 	req.Header.Add("Content-Type", MimeTypeJSON)
 
@@ -52,7 +52,7 @@ func DepGraphToSBOM(
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error while making request: %w", err)
+		return nil, extension_errors.NewInternalError(fmt.Errorf("error while making request: %w", err))
 	}
 
 	if resp.StatusCode != http.StatusOK {
