@@ -8,6 +8,7 @@ import (
 type response struct {
 	contentType string
 	body        []byte
+	status      int
 }
 
 func NewMockSBOMService(response response, assertions ...func(r *http.Request)) *httptest.Server {
@@ -17,6 +18,9 @@ func NewMockSBOMService(response response, assertions ...func(r *http.Request)) 
 		}
 
 		w.Header().Set("Content-Type", response.contentType)
+		if response.status >= http.StatusContinue {
+			w.WriteHeader(response.status)
+		}
 		if _, err := w.Write(response.body); err != nil {
 			panic(err)
 		}
@@ -25,9 +29,10 @@ func NewMockSBOMService(response response, assertions ...func(r *http.Request)) 
 	return ts
 }
 
-func NewMockResponse(c string, b []byte) response {
+func NewMockResponse(c string, b []byte, status int) response {
 	return response{
 		contentType: c,
 		body:        b,
+		status:      status,
 	}
 }
