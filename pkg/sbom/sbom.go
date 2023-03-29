@@ -54,11 +54,7 @@ func SBOMWorkflow(
 	for _, depGraph := range depGraphs {
 		depGraphBytes, err := getPayloadBytes(depGraph)
 		if err != nil {
-			return nil, extension_errors.New(
-				err,
-				"An error occurred while running the underlying analysis which is required to generate an SBOM. "+
-					"Should this issue persist, please reach out to customer support.",
-			)
+			return nil, extension_errors.NewInternalError(err)
 		}
 
 		result, err := service.DepGraphToSBOM(

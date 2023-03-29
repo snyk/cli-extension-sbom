@@ -68,6 +68,22 @@ func TestDepGraphToSBOM(t *testing.T) {
 	}
 }
 
+func TestDepGraphToSBOM_FailedRequest(t *testing.T) {
+	logger := log.New(&bytes.Buffer{}, "", 0)
+	res, err := DepGraphToSBOM(
+		http.DefaultClient,
+		"http://0.0.0.0",
+		orgID,
+		[]byte("{}"),
+		"cyclonedx1.4+json",
+		logger,
+	)
+
+	assert.Nil(t, res)
+	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis which is required to generate an SBOM. "+
+		"Should this issue persist, please reach out to customer support.")
+}
+
 func TestValidateSBOMFormat_EmptyFormat(t *testing.T) {
 	err := ValidateSBOMFormat("")
 	assert.ErrorContains(t, err, "Must set `--format` flag to specify an SBOM format. "+
