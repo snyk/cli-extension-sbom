@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"log"
+	"net/http"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -43,7 +44,7 @@ func TestSBOMWorkflow_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", expectedSBOM)
+	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", expectedSBOM, http.StatusOK)
 	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse)
 	defer mockSBOMService.Close()
 	mockICTX := mockInvocationContext(ctrl, mockSBOMService.URL)
@@ -157,7 +158,7 @@ func TestSBOMWorkflow_InvalidPayload(t *testing.T) {
 
 	_, err := sbom.SBOMWorkflow(mockICTX, nil)
 
-	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis which is required to generate an SBOM. "+
+	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis which is required to generate the SBOM. "+
 		"Should this issue persist, please reach out to customer support.")
 }
 

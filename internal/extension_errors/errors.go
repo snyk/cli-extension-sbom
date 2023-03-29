@@ -24,7 +24,15 @@ func (xerr SBOMExtensionError) Error() string {
 func NewInternalError(err error) *SBOMExtensionError {
 	return New(
 		err,
-		"An error occurred while running the underlying analysis which is required to generate an SBOM. "+
+		"An error occurred while running the underlying analysis which is required to generate the SBOM. "+
+			"Should this issue persist, please reach out to customer support.",
+	)
+}
+
+func NewRemoteError(err error) *SBOMExtensionError {
+	return New(
+		err,
+		"An error occurred while generating the SBOM. "+
 			"Should this issue persist, please reach out to customer support.",
 	)
 }
