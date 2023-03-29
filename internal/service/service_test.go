@@ -10,6 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/mocks"
 	. "github.com/snyk/cli-extension-sbom/internal/service"
 )
@@ -52,6 +53,7 @@ func TestDepGraphToSBOM(t *testing.T) {
 				)
 			})
 			logger := log.New(&bytes.Buffer{}, "", 0)
+			errFactory := errors.NewErrorFactory(logger)
 
 			res, err := DepGraphToSBOM(
 				http.DefaultClient,
@@ -60,6 +62,7 @@ func TestDepGraphToSBOM(t *testing.T) {
 				[]byte("{}"),
 				tt.format,
 				logger,
+				errFactory,
 			)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.mockBody, res.Doc)
@@ -70,6 +73,8 @@ func TestDepGraphToSBOM(t *testing.T) {
 
 func TestDepGraphToSBOM_FailedRequest(t *testing.T) {
 	logger := log.New(&bytes.Buffer{}, "", 0)
+	errFactory := errors.NewErrorFactory(logger)
+
 	res, err := DepGraphToSBOM(
 		http.DefaultClient,
 		"http://0.0.0.0",
@@ -77,6 +82,7 @@ func TestDepGraphToSBOM_FailedRequest(t *testing.T) {
 		[]byte("{}"),
 		"cyclonedx1.4+json",
 		logger,
+		errFactory,
 	)
 
 	assert.Nil(t, res)
@@ -117,6 +123,7 @@ func TestDepGraphToSBOM_UnsuccessfulResponse(t *testing.T) {
 			response := mocks.NewMockResponse("text/plain", []byte{}, tt.statusCode)
 			mockSBOMService := mocks.NewMockSBOMService(response)
 			logger := log.New(&bytes.Buffer{}, "", 0)
+			errFactory := errors.NewErrorFactory(logger)
 
 			_, err := DepGraphToSBOM(
 				http.DefaultClient,
@@ -125,6 +132,7 @@ func TestDepGraphToSBOM_UnsuccessfulResponse(t *testing.T) {
 				[]byte("{}"),
 				"cyclonedx1.4+json",
 				logger,
+				errFactory,
 			)
 			assert.Error(t, err)
 			assert.ErrorContains(t, err, tt.expectedErr)
@@ -133,13 +141,17 @@ func TestDepGraphToSBOM_UnsuccessfulResponse(t *testing.T) {
 }
 
 func TestValidateSBOMFormat_EmptyFormat(t *testing.T) {
-	err := ValidateSBOMFormat("")
+	logger := log.New(&bytes.Buffer{}, "", 0)
+	errFactory := errors.NewErrorFactory(logger)
+	err := ValidateSBOMFormat(errFactory, "")
 	assert.ErrorContains(t, err, "Must set `--format` flag to specify an SBOM format. "+
 		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json")
 }
 
 func TestValidateSBOMFormat_InvalidFormat(t *testing.T) {
-	err := ValidateSBOMFormat("not+a+format")
+	logger := log.New(&bytes.Buffer{}, "", 0)
+	errFactory := errors.NewErrorFactory(logger)
+	err := ValidateSBOMFormat(errFactory, "not+a+format")
 	assert.ErrorContains(t, err, "The format provided (not+a+format) is not one of the available formats. "+
 		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json")
 }
