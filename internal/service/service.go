@@ -44,7 +44,7 @@ func DepGraphToSBOM(
 		bytes.NewBuffer([]byte(fmt.Sprintf(`{"depGraph":%s}`, depGraph))),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("error while creating request: %w", err)
+		return nil, extension_errors.NewInternalError(fmt.Errorf("error while creating request: %w", err))
 	}
 	req.Header.Add("Content-Type", MimeTypeJSON)
 
@@ -52,11 +52,11 @@ func DepGraphToSBOM(
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error while making request: %w", err)
+		return nil, extension_errors.NewInternalError(fmt.Errorf("error while making request: %w", err))
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("could not convert to SBOM (status: %s)", resp.Status)
+		return nil, errorFromResponse(resp, orgID)
 	}
 
 	defer resp.Body.Close()
@@ -75,6 +75,36 @@ func buildURL(apiURL, orgID, format string) string {
 		"%s/hidden/orgs/%s/sbom?version=%s&format=%s",
 		apiURL, orgID, apiVersion, url.QueryEscape(format),
 	)
+}
+
+func errorFromResponse(resp *http.Response, orgID string) error {
+	err := fmt.Errorf("could not convert to SBOM (status: %s)", resp.Status)
+	switch resp.StatusCode {
+	case http.StatusBadRequest:
+		return extension_errors.New(
+			err,
+			"SBOM generation failed due to bad input arguments. "+
+				"Please make sure you are using the latest version of the Snyk CLI.",
+		)
+	case http.StatusUnauthorized:
+		return extension_errors.New(
+			err,
+			"Snyk failed to authenticate you based on on you API token. "+
+				"Please ensure that you have authenticated by running `snyk auth`.",
+		)
+	case http.StatusForbidden:
+		return extension_errors.New(
+			err,
+			fmt.Sprintf(
+				"Your account is not authorized to perform this action. "+
+					"Please ensure that you belong to the given organization and that "+
+					"the organization is entitled to use the Snyk API. (Org ID: %s)",
+				orgID,
+			),
+		)
+	default:
+		return extension_errors.NewRemoteError(err)
+	}
 }
 
 func ValidateSBOMFormat(candidate string) error {

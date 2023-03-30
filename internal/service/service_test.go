@@ -41,7 +41,7 @@ func TestDepGraphToSBOM(t *testing.T) {
 
 	for name, tt := range tc {
 		t.Run(name, func(t *testing.T) {
-			response := mocks.NewMockResponse(tt.expectedContentType, tt.mockBody)
+			response := mocks.NewMockResponse(tt.expectedContentType, tt.mockBody, http.StatusOK)
 			mockSBOMService := mocks.NewMockSBOMService(response, func(r *http.Request) {
 				assert.Equal(t, http.MethodPost, r.Method)
 				assert.Equal(t, MimeTypeJSON, r.Header.Get("Content-Type"))
@@ -64,6 +64,70 @@ func TestDepGraphToSBOM(t *testing.T) {
 			assert.NoError(t, err)
 			assert.Equal(t, tt.mockBody, res.Doc)
 			assert.Equal(t, tt.expectedContentType, res.MIMEType)
+		})
+	}
+}
+
+func TestDepGraphToSBOM_FailedRequest(t *testing.T) {
+	logger := log.New(&bytes.Buffer{}, "", 0)
+	res, err := DepGraphToSBOM(
+		http.DefaultClient,
+		"http://0.0.0.0",
+		orgID,
+		[]byte("{}"),
+		"cyclonedx1.4+json",
+		logger,
+	)
+
+	assert.Nil(t, res)
+	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis which is required to generate the SBOM. "+
+		"Should this issue persist, please reach out to customer support.")
+}
+
+func TestDepGraphToSBOM_UnsuccessfulResponse(t *testing.T) {
+	tc := map[string]struct {
+		statusCode  int
+		expectedErr string
+	}{
+		"Bad Request": {
+			statusCode: http.StatusBadRequest,
+			expectedErr: "SBOM generation failed due to bad input arguments. " +
+				"Please make sure you are using the latest version of the Snyk CLI.",
+		},
+		"Unauthorized": {
+			statusCode: http.StatusUnauthorized,
+			expectedErr: "Snyk failed to authenticate you based on on you API token. " +
+				"Please ensure that you have authenticated by running `snyk auth`.",
+		},
+		"Forbidden": {
+			statusCode: http.StatusForbidden,
+			expectedErr: "Your account is not authorized to perform this action. " +
+				"Please ensure that you belong to the given organization and that the organization is " +
+				"entitled to use the Snyk API. (Org ID: c32727e4-2d6c-4780-aa1a-a89bcd16fe6f)",
+		},
+		"Other Errors": {
+			statusCode: http.StatusInternalServerError,
+			expectedErr: "An error occurred while generating the SBOM. Should this issue persist, " +
+				"please reach out to customer support.",
+		},
+	}
+
+	for name, tt := range tc {
+		t.Run(name, func(t *testing.T) {
+			response := mocks.NewMockResponse("text/plain", []byte{}, tt.statusCode)
+			mockSBOMService := mocks.NewMockSBOMService(response)
+			logger := log.New(&bytes.Buffer{}, "", 0)
+
+			_, err := DepGraphToSBOM(
+				http.DefaultClient,
+				mockSBOMService.URL,
+				orgID,
+				[]byte("{}"),
+				"cyclonedx1.4+json",
+				logger,
+			)
+			assert.Error(t, err)
+			assert.ErrorContains(t, err, tt.expectedErr)
 		})
 	}
 }

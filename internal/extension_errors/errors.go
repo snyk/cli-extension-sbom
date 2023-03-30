@@ -20,3 +20,19 @@ func New(err error, userMsg string) *SBOMExtensionError {
 func (xerr SBOMExtensionError) Error() string {
 	return xerr.userMsg
 }
+
+func NewInternalError(err error) *SBOMExtensionError {
+	return New(
+		err,
+		"An error occurred while running the underlying analysis which is required to generate the SBOM. "+
+			"Should this issue persist, please reach out to customer support.",
+	)
+}
+
+func NewRemoteError(err error) *SBOMExtensionError {
+	return New(
+		err,
+		"An error occurred while generating the SBOM. "+
+			"Should this issue persist, please reach out to customer support.",
+	)
+}
