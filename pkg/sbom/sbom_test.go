@@ -92,7 +92,7 @@ func TestSBOMWorkflow_EmptyFormat(t *testing.T) {
 	assert.ErrorContains(t, err, "Must set `--format` flag to specify an SBOM format.")
 }
 
-func TestSBOMWorkflow_InvalidFOrmat(t *testing.T) {
+func TestSBOMWorkflow_InvalidFormat(t *testing.T) {
 	mockLogger := log.New(io.Discard, "", 0)
 	ctrl := gomock.NewController(t)
 	mockConfig := mocks.NewMockConfiguration(ctrl)
@@ -127,6 +127,38 @@ func TestSBOMWorkflow_NoOrgID(t *testing.T) {
 
 	assert.ErrorContains(t, err, "Snyk failed to infer an organization ID. Please make sure to authenticate using `snyk auth`. "+
 		"Should the issue persist, explicitly set an organization ID via the `--org` flag.")
+}
+
+func TestSBOMWorkflow_InvalidPayload(t *testing.T) {
+	mockLogger := log.New(io.Discard, "", 0)
+	ctrl := gomock.NewController(t)
+	mockConfig := mocks.NewMockConfiguration(ctrl)
+	mockConfig.EXPECT().GetBool(gomock.Any()).Return(true).AnyTimes()
+	mockConfig.EXPECT().GetString(gomock.Any()).DoAndReturn(func(key string) string {
+		switch key {
+		case configuration.AUTHENTICATION_TOKEN:
+			return "<SOME API TOKEN>"
+		case configuration.ORGANIZATION:
+			return "6277734c-fc84-4c74-9662-33d46ec66c53"
+		case "format":
+			return "cyclonedx1.4+json"
+		default:
+			return ""
+		}
+	}).AnyTimes()
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockEngine.EXPECT().Invoke(gomock.Eq(sbom.DepGraphWorkflowID)).Return([]workflow.Data{
+		workflow.NewData(workflow.NewTypeIdentifier(sbom.DepGraphWorkflowID, "cyclonedx"), "application/json", nil),
+	}, nil)
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine)
+	mockICTX.EXPECT().GetLogger().Return(mockLogger)
+
+	_, err := sbom.SBOMWorkflow(mockICTX, nil)
+
+	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis which is required to generate an SBOM. "+
+		"Should this issue persist, please reach out to customer support.")
 }
 
 func TestSBOMWorkflow_DepGraphError(t *testing.T) {
