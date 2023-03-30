@@ -7,7 +7,7 @@ import (
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/spf13/pflag"
 
-	"github.com/snyk/cli-extension-sbom/internal/extension_errors"
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/service"
 )
 
@@ -30,10 +30,11 @@ func SBOMWorkflow(
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
 	format := config.GetString(flagFormat)
+	errFactory := errors.NewErrorFactory(logger)
 
 	logger.Println("SBOM workflow start")
 
-	if verr := service.ValidateSBOMFormat(format); verr != nil {
+	if verr := service.ValidateSBOMFormat(errFactory, format); verr != nil {
 		return nil, verr
 	}
 
@@ -41,21 +42,14 @@ func SBOMWorkflow(
 
 	orgID := config.GetString(configuration.ORGANIZATION)
 	if orgID == "" {
-		return nil, extension_errors.New(
-			fmt.Errorf("failed to determine org id"),
-			"Snyk failed to infer an organization ID. Please make sure to authenticate using `snyk auth`. "+
-				"Should the issue persist, explicitly set an organization ID via the `--org` flag.",
-		)
+		return nil, errFactory.NewEmptyOrgError()
 	}
 
 	logger.Println("Invoking depgraph workflow")
 
 	depGraphs, err := engine.Invoke(DepGraphWorkflowID)
 	if err != nil {
-		return nil, extension_errors.New(
-			fmt.Errorf("error while invoking depgraph workflow: %w", err),
-			"An error occurred while running the underlying analysis needed to generate the SBOM.",
-		)
+		return nil, errFactory.NewDepGraphWorkflowError(err)
 	}
 
 	logger.Printf("Generating documents for %d depgraph(s)\n", len(depGraphs))
@@ -63,7 +57,7 @@ func SBOMWorkflow(
 	for _, depGraph := range depGraphs {
 		depGraphBytes, err := getPayloadBytes(depGraph)
 		if err != nil {
-			return nil, extension_errors.NewInternalError(err)
+			return nil, errFactory.NewInternalError(err)
 		}
 
 		result, err := service.DepGraphToSBOM(
@@ -73,6 +67,7 @@ func SBOMWorkflow(
 			depGraphBytes,
 			format,
 			logger,
+			errFactory,
 		)
 		if err != nil {
 			return nil, err

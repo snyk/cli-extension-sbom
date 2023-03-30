@@ -8,9 +8,8 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"strings"
 
-	"github.com/snyk/cli-extension-sbom/internal/extension_errors"
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
 
 type SBOMResult struct {
@@ -36,6 +35,7 @@ func DepGraphToSBOM(
 	depGraph []byte,
 	format string,
 	logger *log.Logger,
+	errFactory *errors.ErrorFactory,
 ) (result *SBOMResult, err error) {
 	req, err := http.NewRequestWithContext(
 		context.Background(),
@@ -44,7 +44,7 @@ func DepGraphToSBOM(
 		bytes.NewBuffer([]byte(fmt.Sprintf(`{"depGraph":%s}`, depGraph))),
 	)
 	if err != nil {
-		return nil, extension_errors.NewInternalError(fmt.Errorf("error while creating request: %w", err))
+		return nil, errFactory.NewInternalError(fmt.Errorf("error while creating request: %w", err))
 	}
 	req.Header.Add("Content-Type", MimeTypeJSON)
 
@@ -52,17 +52,17 @@ func DepGraphToSBOM(
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, extension_errors.NewInternalError(fmt.Errorf("error while making request: %w", err))
+		return nil, errFactory.NewInternalError(fmt.Errorf("error while making request: %w", err))
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errorFromResponse(resp, orgID)
+		return nil, errorFromResponse(resp, errFactory, orgID)
 	}
 
 	defer resp.Body.Close()
 	doc, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, extension_errors.NewInternalError(fmt.Errorf("could not read response body: %w", err))
+		return nil, errFactory.NewInternalError(fmt.Errorf("could not read response body: %w", err))
 	}
 
 	logger.Println("Successfully converted depGraph to SBOM")
@@ -77,46 +77,23 @@ func buildURL(apiURL, orgID, format string) string {
 	)
 }
 
-func errorFromResponse(resp *http.Response, orgID string) error {
+func errorFromResponse(resp *http.Response, errFactory *errors.ErrorFactory, orgID string) error {
 	err := fmt.Errorf("could not convert to SBOM (status: %s)", resp.Status)
 	switch resp.StatusCode {
 	case http.StatusBadRequest:
-		return extension_errors.New(
-			err,
-			"SBOM generation failed due to bad input arguments. "+
-				"Please make sure you are using the latest version of the Snyk CLI.",
-		)
+		return errFactory.NewBadRequestError(err)
 	case http.StatusUnauthorized:
-		return extension_errors.New(
-			err,
-			"Snyk failed to authenticate you based on on you API token. "+
-				"Please ensure that you have authenticated by running `snyk auth`.",
-		)
+		return errFactory.NewUnauthorizedError(err)
 	case http.StatusForbidden:
-		return extension_errors.New(
-			err,
-			fmt.Sprintf(
-				"Your account is not authorized to perform this action. "+
-					"Please ensure that you belong to the given organization and that "+
-					"the organization is entitled to use the Snyk API. (Org ID: %s)",
-				orgID,
-			),
-		)
+		return errFactory.NewForbiddenError(err, orgID)
 	default:
-		return extension_errors.NewRemoteError(err)
+		return errFactory.NewRemoteError(err)
 	}
 }
 
-func ValidateSBOMFormat(candidate string) error {
+func ValidateSBOMFormat(errFactory *errors.ErrorFactory, candidate string) error {
 	if candidate == "" {
-		return extension_errors.New(
-			fmt.Errorf("no format provided"),
-			fmt.Sprintf(
-				"Must set `--format` flag to specify an SBOM format. "+
-					"Available formats are: %s",
-				strings.Join(sbomFormats[:], ", "),
-			),
-		)
+		return errFactory.NewEmptyFormatError(sbomFormats[:])
 	}
 
 	for _, f := range sbomFormats {
@@ -125,13 +102,5 @@ func ValidateSBOMFormat(candidate string) error {
 		}
 	}
 
-	return extension_errors.New(
-		fmt.Errorf("invalid format provided (%s)", candidate),
-		fmt.Sprintf(
-			"The format provided (%s) is not one of the available formats. "+
-				"Available formats are: %s",
-			candidate,
-			strings.Join(sbomFormats[:], ", "),
-		),
-	)
+	return errFactory.NewInvalidFormatError(candidate, sbomFormats[:])
 }
