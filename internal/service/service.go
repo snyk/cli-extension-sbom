@@ -62,7 +62,7 @@ func DepGraphToSBOM(
 	defer resp.Body.Close()
 	doc, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("could not read response body: %w", err)
+		return nil, extension_errors.NewInternalError(fmt.Errorf("could not read response body: %w", err))
 	}
 
 	logger.Println("Successfully converted depGraph to SBOM")
