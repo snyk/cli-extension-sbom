@@ -59,23 +59,6 @@ func TestSBOMWorkflow_Success(t *testing.T) {
 	assert.Equal(t, string(expectedSBOM), string(sbomBytes))
 }
 
-func TestSBOMWorkflow_NoExperimentalFlag(t *testing.T) {
-	mockLogger := log.New(io.Discard, "", 0)
-	ctrl := gomock.NewController(t)
-	mockConfig := mocks.NewMockConfiguration(ctrl)
-	mockConfig.EXPECT().GetBool(gomock.Any()).Return(false).AnyTimes()
-	mockConfig.EXPECT().GetString(gomock.Any()).Return("").AnyTimes()
-	mockEngine := mocks.NewMockEngine(ctrl)
-	mockICTX := mocks.NewMockInvocationContext(ctrl)
-	mockICTX.EXPECT().GetConfiguration().Return(mockConfig)
-	mockICTX.EXPECT().GetEngine().Return(mockEngine)
-	mockICTX.EXPECT().GetLogger().Return(mockLogger)
-
-	_, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
-
-	assert.ErrorContains(t, err, "Must set `--experimental` flag to enable sbom command.")
-}
-
 func TestSBOMWorkflow_EmptyFormat(t *testing.T) {
 	mockLogger := log.New(io.Discard, "", 0)
 	ctrl := gomock.NewController(t)

@@ -17,10 +17,9 @@ var (
 )
 
 const (
-	flagExperimental = "experimental"
-	flagUnmanaged    = "unmanaged"
-	flagFile         = "file"
-	flagFormat       = "format"
+	flagUnmanaged = "unmanaged"
+	flagFile      = "file"
+	flagFormat    = "format"
 )
 
 func SBOMWorkflow(
@@ -33,10 +32,6 @@ func SBOMWorkflow(
 	format := config.GetString(flagFormat)
 
 	logger.Println("SBOM workflow start")
-
-	if !config.GetBool(flagExperimental) {
-		return nil, extension_errors.New(nil, "Must set `--experimental` flag to enable sbom command.")
-	}
 
 	if verr := service.ValidateSBOMFormat(format); verr != nil {
 		return nil, verr
@@ -94,7 +89,6 @@ func SBOMWorkflow(
 func Init(e workflow.Engine) error {
 	flagset := pflag.NewFlagSet("snyk-cli-extension-sbom", pflag.ExitOnError)
 
-	flagset.Bool(flagExperimental, false, "Explicitly enable `sbom` command with the --experimental flag.")
 	flagset.Bool(flagUnmanaged, false, "For C/C++ only, scan all files for known open source dependencies and build an SBOM.")
 	flagset.String(flagFile, "", "Specify a package file.")
 	flagset.StringP(flagFormat, "f", "", "Specify the SBOM output format. (cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json)")
