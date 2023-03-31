@@ -17,9 +17,10 @@ var (
 )
 
 const (
-	flagUnmanaged = "unmanaged"
-	flagFile      = "file"
-	flagFormat    = "format"
+	flagExperimental = "experimental"
+	flagUnmanaged    = "unmanaged"
+	flagFile         = "file"
+	flagFormat       = "format"
 )
 
 func SBOMWorkflow(
@@ -84,6 +85,7 @@ func SBOMWorkflow(
 func Init(e workflow.Engine) error {
 	flagset := pflag.NewFlagSet("snyk-cli-extension-sbom", pflag.ExitOnError)
 
+	flagset.Bool(flagExperimental, false, "Deprecated. Will be ignored.")
 	flagset.Bool(flagUnmanaged, false, "For C/C++ only, scan all files for known open source dependencies and build an SBOM.")
 	flagset.String(flagFile, "", "Specify a package file.")
 	flagset.StringP(flagFormat, "f", "", "Specify the SBOM output format. (cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json)")
