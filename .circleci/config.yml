@@ -44,7 +44,7 @@ jobs:
           command: code test
           fail-on-issues: true
           severity-threshold: high
-          monitor-on-build: << parameters.monitor >>
+          monitor-on-build: false
 
 workflows:
   version: 2
