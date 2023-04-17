@@ -2,9 +2,10 @@ version: 2.1
 
 orbs:
   go: circleci/go@1.7.1
+  snyk: snyk/snyk@1.4.0
 
 jobs:
-  Unit Tests:
+  unit-test:
     executor:
       name: go/default
       tag: '1.19'
@@ -17,15 +18,56 @@ jobs:
           covermode: atomic
           failfast: true
           race: true
-  Linting:
+  lint:
     docker:
       - image: golangci/golangci-lint:v1.50-alpine
     steps:
       - checkout
       - run: golangci-lint run -v ./...
+  snyk-scan:
+    parameters:
+      monitor:
+        type: boolean
+        default: false
+    resource_class: medium
+    executor:
+      name: go/default
+      tag: '1.19'
+    steps:
+      - checkout
+      - setup_remote_docker
+      - snyk/scan:
+          fail-on-issues: true
+          severity-threshold: high
+          monitor-on-build: << parameters.monitor >>
+      - snyk/scan:
+          command: code test
+          fail-on-issues: true
+          severity-threshold: high
+          monitor-on-build: << parameters.monitor >>
 
 workflows:
+  version: 2
   CI:
     jobs:
-      - Unit Tests
-      - Linting
+      - unit-test:
+          name: Unit Test
+      - lint:
+          name: Linting
+      - snyk-scan:
+          name: Snyk Scan branch
+          context:
+            - snyk-token-team-link
+          filters:
+            branches:
+              ignore:
+                - main
+      - snyk-scan:
+          name: Snyk Scan and Monitor
+          monitor: true
+          context:
+            - snyk-token-team-link
+          filters:
+            branches:
+              only:
+                - main
