@@ -21,6 +21,10 @@ const (
 	flagUnmanaged    = "unmanaged"
 	flagFile         = "file"
 	flagFormat       = "format"
+	flagAllProjects  = "all-projects"
+	flagExclude      = "exclude"
+	flagName         = "name"
+	flagVersion      = "version"
 )
 
 func SBOMWorkflow(
@@ -31,6 +35,8 @@ func SBOMWorkflow(
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
 	format := config.GetString(flagFormat)
+	name := config.GetString(flagName)
+	version := config.GetString(flagVersion)
 	errFactory := errors.NewErrorFactory(logger)
 
 	logger.Println("SBOM workflow start")
@@ -44,6 +50,14 @@ func SBOMWorkflow(
 	orgID := config.GetString(configuration.ORGANIZATION)
 	if orgID == "" {
 		return nil, errFactory.NewEmptyOrgError()
+	}
+
+	if name != "" {
+		logger.Println("Name:", name)
+	}
+
+	if version != "" {
+		logger.Println("Version:", version)
 	}
 
 	logger.Println("Invoking depgraph workflow")
@@ -87,7 +101,15 @@ func Init(e workflow.Engine) error {
 
 	flagset.Bool(flagExperimental, false, "Deprecated. Will be ignored.")
 	flagset.Bool(flagUnmanaged, false, "For C/C++ only, scan all files for known open source dependencies and build an SBOM.")
+	flagset.Bool(flagAllProjects, false, "Auto-detect all projects in the working directory (including Yarn workspaces).")
+	flagset.String(
+		flagExclude,
+		"",
+		"Can be used with --all-projects to indicate directory names and file names to exclude. Must be comma separated.",
+	)
 	flagset.String(flagFile, "", "Specify a package file.")
+	flagset.String(flagName, "", "Specify a name for the collection of all projects in the working directory.")
+	flagset.String(flagVersion, "", "Specify a version for the collection of all projects in the working directory.")
 	flagset.StringP(flagFormat, "f", "", "Specify the SBOM output format. (cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json)")
 
 	c := workflow.ConfigurationOptionsFromFlagset(flagset)
