@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"context"
+	stderr "errors"
 	"fmt"
 	"io"
 	"log"
@@ -12,10 +13,17 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
 
-type SBOMResult struct {
-	Doc      []byte
-	MIMEType string
-}
+type (
+	SBOMResult struct {
+		Doc      []byte
+		MIMEType string
+	}
+
+	subject struct {
+		name    string
+		version string
+	}
+)
 
 const (
 	apiVersion   = "2022-03-31~experimental"
@@ -28,27 +36,40 @@ var sbomFormats = [...]string{
 	"spdx2.3+json",
 }
 
-func DepGraphToSBOM(
+func NewSubject(name, version string) *subject {
+	return &subject{
+		name:    name,
+		version: version,
+	}
+}
+
+func DepGraphsToSBOM(
 	client *http.Client,
 	apiURL string,
 	orgID string,
-	depGraph []byte,
+	depGraphs [][]byte,
+	subject *subject,
 	format string,
 	logger *log.Logger,
 	errFactory *errors.ErrorFactory,
 ) (result *SBOMResult, err error) {
+	payload, err := preparePayload(depGraphs, subject)
+	if err != nil {
+		return nil, errFactory.NewInternalError(err)
+	}
+
 	req, err := http.NewRequestWithContext(
 		context.Background(),
 		http.MethodPost,
 		buildURL(apiURL, orgID, format),
-		bytes.NewBuffer([]byte(fmt.Sprintf(`{"depGraph":%s}`, depGraph))),
+		bytes.NewBuffer(payload),
 	)
 	if err != nil {
 		return nil, errFactory.NewInternalError(fmt.Errorf("error while creating request: %w", err))
 	}
 	req.Header.Add("Content-Type", MimeTypeJSON)
 
-	logger.Printf("Converting depgraph remotely (url: %s)", req.URL.String())
+	logger.Printf("Converting depgraphs remotely (url: %s)", req.URL.String())
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -103,4 +124,28 @@ func ValidateSBOMFormat(errFactory *errors.ErrorFactory, candidate string) error
 	}
 
 	return errFactory.NewInvalidFormatError(candidate, sbomFormats[:])
+}
+
+func preparePayload(depGraphs [][]byte, subject *subject) ([]byte, error) {
+	if len(depGraphs) == 1 {
+		return singleDepGraphReqBody(depGraphs[0]), nil
+	} else {
+		return multipleDepGraphsReqBody(depGraphs, subject)
+	}
+}
+
+func singleDepGraphReqBody(depGraph []byte) []byte {
+	return []byte(fmt.Sprintf(`{"depGraph":%s}`, depGraph))
+}
+
+func multipleDepGraphsReqBody(depGraphs [][]byte, subject *subject) ([]byte, error) {
+	if subject == nil {
+		return []byte{}, stderr.New("no subject defined for multiple depgraphs")
+	}
+	return []byte(fmt.Sprintf(
+		`{"depGraphs":[%s],"subject":{"name":%q,"version":%q}}`,
+		bytes.Join(depGraphs, []byte(",")),
+		subject.name,
+		subject.version,
+	)), nil
 }
