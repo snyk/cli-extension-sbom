@@ -3,12 +3,14 @@ package service_test
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/mocks"
@@ -17,7 +19,7 @@ import (
 
 const orgID = "c32727e4-2d6c-4780-aa1a-a89bcd16fe6f"
 
-func TestDepGraphToSBOM(t *testing.T) {
+func TestDepGraphsToSBOM(t *testing.T) {
 	tc := map[string]struct {
 		format              string
 		expectedContentType string
@@ -55,11 +57,12 @@ func TestDepGraphToSBOM(t *testing.T) {
 			logger := log.New(&bytes.Buffer{}, "", 0)
 			errFactory := errors.NewErrorFactory(logger)
 
-			res, err := DepGraphToSBOM(
+			res, err := DepGraphsToSBOM(
 				http.DefaultClient,
 				mockSBOMService.URL,
 				orgID,
-				[]byte("{}"),
+				[][]byte{[]byte("{}")},
+				nil,
 				tt.format,
 				logger,
 				errFactory,
@@ -71,15 +74,45 @@ func TestDepGraphToSBOM(t *testing.T) {
 	}
 }
 
-func TestDepGraphToSBOM_FailedRequest(t *testing.T) {
+func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
+	format := "cyclonedx1.4+json"
+	expectedContentType := "application/vnd.cyclonedx+json"
+	mockBody := []byte("{}")
+	response := mocks.NewMockResponse(expectedContentType, mockBody, http.StatusOK)
+	mockSBOMService := mocks.NewMockSBOMService(response, func(r *http.Request) {
+		body, err := io.ReadAll(r.Body)
+		defer r.Body.Close()
+		require.NoError(t, err)
+		assert.JSONEq(t, `{"depGraphs":[{},{}],"subject":{"name":"goof","version":"0.0.0"}}`, string(body))
+	})
+	logger := log.New(&bytes.Buffer{}, "", 0)
+	errFactory := errors.NewErrorFactory(logger)
+	depGraphs := [][]byte{[]byte("{}"), []byte("{}")}
+	subject := NewSubject("goof", "0.0.0")
+
+	_, err := DepGraphsToSBOM(
+		http.DefaultClient,
+		mockSBOMService.URL,
+		orgID,
+		depGraphs,
+		subject,
+		format,
+		logger,
+		errFactory,
+	)
+	assert.NoError(t, err)
+}
+
+func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
 	logger := log.New(&bytes.Buffer{}, "", 0)
 	errFactory := errors.NewErrorFactory(logger)
 
-	res, err := DepGraphToSBOM(
+	res, err := DepGraphsToSBOM(
 		http.DefaultClient,
 		"http://0.0.0.0",
 		orgID,
-		[]byte("{}"),
+		[][]byte{[]byte("{}")},
+		nil,
 		"cyclonedx1.4+json",
 		logger,
 		errFactory,
@@ -90,7 +123,7 @@ func TestDepGraphToSBOM_FailedRequest(t *testing.T) {
 		"Should this issue persist, please reach out to customer support.")
 }
 
-func TestDepGraphToSBOM_UnsuccessfulResponse(t *testing.T) {
+func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 	tc := map[string]struct {
 		statusCode  int
 		expectedErr string
@@ -125,11 +158,12 @@ func TestDepGraphToSBOM_UnsuccessfulResponse(t *testing.T) {
 			logger := log.New(&bytes.Buffer{}, "", 0)
 			errFactory := errors.NewErrorFactory(logger)
 
-			_, err := DepGraphToSBOM(
+			_, err := DepGraphsToSBOM(
 				http.DefaultClient,
 				mockSBOMService.URL,
 				orgID,
-				[]byte("{}"),
+				[][]byte{[]byte("{}")},
+				nil,
 				"cyclonedx1.4+json",
 				logger,
 				errFactory,

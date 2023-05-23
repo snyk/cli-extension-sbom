@@ -14,6 +14,7 @@ import (
 	"github.com/snyk/go-application-framework/pkg/networking"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
 	"github.com/snyk/cli-extension-sbom/pkg/sbom"
@@ -47,7 +48,7 @@ func TestSBOMWorkflow_Success(t *testing.T) {
 	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", expectedSBOM, http.StatusOK)
 	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse)
 	defer mockSBOMService.Close()
-	mockICTX := mockInvocationContext(ctrl, mockSBOMService.URL, nil)
+	mockICTX := mockInvocationContext(t, ctrl, mockSBOMService.URL, nil)
 
 	results, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
 
@@ -61,7 +62,8 @@ func TestSBOMWorkflow_Success(t *testing.T) {
 
 func TestSBOMWorkflow_EmptyFormat(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockICTX := mockInvocationContext(ctrl, "", nil)
+	defer ctrl.Finish()
+	mockICTX := mockInvocationContext(t, ctrl, "", nil)
 	mockICTX.GetConfiguration().Set("format", "")
 
 	_, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
@@ -71,7 +73,8 @@ func TestSBOMWorkflow_EmptyFormat(t *testing.T) {
 
 func TestSBOMWorkflow_InvalidFormat(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockICTX := mockInvocationContext(ctrl, "", nil)
+	defer ctrl.Finish()
+	mockICTX := mockInvocationContext(t, ctrl, "", nil)
 	mockICTX.GetConfiguration().Set("format", "cyclonedx+json")
 
 	_, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
@@ -82,7 +85,8 @@ func TestSBOMWorkflow_InvalidFormat(t *testing.T) {
 
 func TestSBOMWorkflow_NoOrgID(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockICTX := mockInvocationContext(ctrl, "", nil)
+	defer ctrl.Finish()
+	mockICTX := mockInvocationContext(t, ctrl, "", nil)
 	mockICTX.GetConfiguration().Set(configuration.ORGANIZATION, "")
 
 	_, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
@@ -93,12 +97,13 @@ func TestSBOMWorkflow_NoOrgID(t *testing.T) {
 
 func TestSBOMWorkflow_InvalidPayload(t *testing.T) {
 	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 	mockEngine := newMockEngine(
 		ctrl,
 		[]workflow.Data{workflow.NewData(workflow.NewTypeIdentifier(sbom.DepGraphWorkflowID, "cyclonedx"), "application/json", nil)},
 		nil,
 	)
-	mockICTX := mockInvocationContext(ctrl, "", mockEngine)
+	mockICTX := mockInvocationContext(t, ctrl, "", mockEngine)
 
 	_, err := sbom.SBOMWorkflow(mockICTX, nil)
 
@@ -108,19 +113,72 @@ func TestSBOMWorkflow_InvalidPayload(t *testing.T) {
 
 func TestSBOMWorkflow_DepGraphError(t *testing.T) {
 	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 	mockEngine := newMockEngine(ctrl, nil, errors.New("error during composition analysis"))
-	mockICTX := mockInvocationContext(ctrl, "", mockEngine)
+	mockICTX := mockInvocationContext(t, ctrl, "", mockEngine)
 
 	_, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
 
 	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis needed to generate the SBOM.")
 }
 
+func TestSBOMWorkflow_MultipleDepGraphs(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", []byte("{}"), http.StatusOK)
+	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse, func(r *http.Request) {
+		body, err := io.ReadAll(r.Body)
+		defer r.Body.Close()
+		require.NoError(t, err)
+		assert.JSONEq(t, `{"depGraphs":[{"pkgManager":{"name":"npm"}},{"pkgManager":{"name":"nuget"}}],"subject":{"name":"goof","version":"0.0.0"}}`, string(body))
+	})
+	defer mockSBOMService.Close()
+	mockEngine := newMockEngine(ctrl, []workflow.Data{
+		newDepGraphData(t, []byte(`{"pkgManager":{"name":"npm"}}`)),
+		newDepGraphData(t, []byte(`{"pkgManager":{"name":"nuget"}}`)),
+	}, nil)
+	mockICTX := mockInvocationContext(t, ctrl, mockSBOMService.URL, mockEngine)
+
+	results, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
+
+	require.NoError(t, err)
+	assert.Len(t, results, 1)
+	assert.NotNil(t, results[0])
+	sbomBytes, ok := results[0].GetPayload().([]byte)
+	assert.True(t, ok)
+	assert.JSONEq(t, "{}", string(sbomBytes))
+}
+
+func TestSBOMWorkflow_MergeSubject(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", []byte("{}"), http.StatusOK)
+	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse, func(r *http.Request) {
+		body, err := io.ReadAll(r.Body)
+		defer r.Body.Close()
+		require.NoError(t, err)
+		assert.JSONEq(t, `{"depGraphs":[{},{}],"subject":{"name":"sbom","version":""}}`, string(body), "Fall back to working directory name.")
+	})
+	defer mockSBOMService.Close()
+	mockEngine := newMockEngine(ctrl, []workflow.Data{newDepGraphData(t, []byte(`{}`)), newDepGraphData(t, []byte(`{}`))}, nil)
+	mockICTX := mockInvocationContext(t, ctrl, mockSBOMService.URL, mockEngine)
+	mockICTX.GetConfiguration().Set("name", "")
+	mockICTX.GetConfiguration().Set("version", "")
+
+	_, err := sbom.SBOMWorkflow(mockICTX, []workflow.Data{})
+	require.NoError(t, err)
+}
+
 func mockInvocationContext(
+	t *testing.T,
 	ctrl *gomock.Controller,
 	sbomServiceURL string,
 	mockEngine *mocks.MockEngine,
 ) workflow.InvocationContext {
+	t.Helper()
+
 	mockLogger := log.New(io.Discard, "", 0)
 
 	mockConfig := configuration.New()
@@ -128,11 +186,13 @@ func mockInvocationContext(
 	mockConfig.Set(configuration.ORGANIZATION, "6277734c-fc84-4c74-9662-33d46ec66c53")
 	mockConfig.Set(configuration.API_URL, sbomServiceURL)
 	mockConfig.Set("format", "cyclonedx1.4+json")
+	mockConfig.Set("name", "goof")
+	mockConfig.Set("version", "0.0.0")
 
 	if mockEngine == nil {
 		mockEngine = newMockEngine(
 			ctrl,
-			[]workflow.Data{workflow.NewData(workflow.NewTypeIdentifier(sbom.DepGraphWorkflowID, "cyclonedx"), "application/json", depGraphData)},
+			[]workflow.Data{newDepGraphData(t, depGraphData)},
 			nil,
 		)
 	}
@@ -156,4 +216,14 @@ func newMockEngine(ctrl *gomock.Controller, result []workflow.Data, err error) *
 		AnyTimes()
 
 	return mockEngine
+}
+
+func newDepGraphData(t *testing.T, bts []byte) workflow.Data {
+	t.Helper()
+
+	return workflow.NewData(
+		workflow.NewTypeIdentifier(sbom.DepGraphWorkflowID, "cyclonedx"),
+		"application/json",
+		bts,
+	)
 }
