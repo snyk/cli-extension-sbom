@@ -7,26 +7,15 @@ import (
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
-	"github.com/spf13/pflag"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
+	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/service"
 )
 
 var (
 	WorkflowID         = workflow.NewWorkflowIdentifier("sbom")
 	DepGraphWorkflowID = workflow.NewWorkflowIdentifier("depgraph")
-)
-
-const (
-	flagExperimental = "experimental"
-	flagUnmanaged    = "unmanaged"
-	flagFile         = "file"
-	flagFormat       = "format"
-	flagAllProjects  = "all-projects"
-	flagExclude      = "exclude"
-	flagName         = "name"
-	flagVersion      = "version"
 )
 
 func SBOMWorkflow(
@@ -36,9 +25,9 @@ func SBOMWorkflow(
 	engine := ictx.GetEngine()
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
-	format := config.GetString(flagFormat)
-	name := config.GetString(flagName)
-	version := config.GetString(flagVersion)
+	format := config.GetString(flags.FlagFormat)
+	name := config.GetString(flags.FlagName)
+	version := config.GetString(flags.FlagVersion)
 	errFactory := errors.NewErrorFactory(logger)
 
 	logger.Println("SBOM workflow start")
@@ -105,16 +94,7 @@ func SBOMWorkflow(
 }
 
 func Init(e workflow.Engine) error {
-	flagset := pflag.NewFlagSet("snyk-cli-extension-sbom", pflag.ExitOnError)
-
-	flagset.Bool(flagExperimental, false, "Deprecated. Will be ignored.")
-	flagset.Bool(flagUnmanaged, false, "For C/C++ only, scan all files for known open source dependencies and build an SBOM.")
-	flagset.Bool(flagAllProjects, false, "Auto-detect all projects in the working directory (including Yarn workspaces).")
-	flagset.String(flagExclude, "", "Can be used with --all-projects to indicate directory names and file names to exclude. Must be comma separated.")
-	flagset.String(flagFile, "", "Specify a package file.")
-	flagset.String(flagName, "", "Specify a name for the collection of all projects in the working directory.")
-	flagset.String(flagVersion, "", "Specify a version for the collection of all projects in the working directory.")
-	flagset.StringP(flagFormat, "f", "", "Specify the SBOM output format. (cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json)")
+	flagset := flags.GetFlagSet()
 
 	c := workflow.ConfigurationOptionsFromFlagset(flagset)
 
