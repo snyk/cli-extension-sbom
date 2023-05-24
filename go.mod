@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/golang/mock v1.6.0
-	github.com/snyk/go-application-framework v0.0.0-20230511121935-f02b01f91229
+	github.com/snyk/go-application-framework v0.0.0-20230524140501-c87830a0faf7
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
 )
@@ -31,7 +31,7 @@ require (
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/zerolog v1.29.1 // indirect
-	github.com/snyk/go-httpauth v0.0.0-20230328170530-1af63c87b650 // indirect
+	github.com/snyk/go-httpauth v0.0.0-20230512081507-800aedece3cb // indirect
 	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
