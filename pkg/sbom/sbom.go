@@ -3,7 +3,7 @@ package sbom
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
@@ -67,7 +67,7 @@ func SBOMWorkflow(
 			if err != nil {
 				return nil, errFactory.NewDepGraphWorkflowError(err)
 			}
-			name = path.Base(wd)
+			name = filepath.Base(wd)
 		}
 		logger.Printf("Document subject: { Name: %q, Version: %q }\n", name, version)
 	}
