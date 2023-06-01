@@ -184,8 +184,8 @@ github.com/rogpeppe/go-internal v1.9.0 h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZV
 github.com/rs/xid v1.4.0/go.mod h1:trrq9SKmegXys3aeAKXMUTdJsYXVwGY3RLcfgqegfbg=
 github.com/rs/zerolog v1.29.1 h1:cO+d60CHkknCbvzEWxP0S9K6KqyTjrCNUy1LdQLCGPc=
 github.com/rs/zerolog v1.29.1/go.mod h1:Le6ESbR7hc+DP6Lt1THiV8CQSdkkNrd3R0XbEgp3ZBU=
-github.com/snyk/go-application-framework v0.0.0-20230526065140-1fabe799e3f9 h1:FS0NA9lcbrW4Oha217+DppFXlECeWcHa8RBIKIK3+Qs=
-github.com/snyk/go-application-framework v0.0.0-20230526065140-1fabe799e3f9/go.mod h1:Aun65T/AmzxjZe9jZZBqia6RHwoS7oq8QB2UfQIcPjU=
+github.com/snyk/go-application-framework v0.0.0-20230602151048-31fbf2587cab h1:sDzcsRD7v5hihBxG28ASOD87k0bORefUhGMWThUolSE=
+github.com/snyk/go-application-framework v0.0.0-20230602151048-31fbf2587cab/go.mod h1:Aun65T/AmzxjZe9jZZBqia6RHwoS7oq8QB2UfQIcPjU=
 github.com/snyk/go-httpauth v0.0.0-20230512081507-800aedece3cb h1:UwbUBfe1u5MYLhtCNOsFEM98tfEUWqgmaXam/UxU88Q=
 github.com/snyk/go-httpauth v0.0.0-20230512081507-800aedece3cb/go.mod h1:88KbbvGYlmLgee4OcQ19yr0bNpXpOr2kciOthaSzCAg=
 github.com/spf13/afero v1.9.2 h1:j49Hj62F0n+DaZ1dDCvhABaPNSGNkt32oRFxI33IEMw=
