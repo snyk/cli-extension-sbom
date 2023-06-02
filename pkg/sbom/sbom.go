@@ -45,7 +45,11 @@ func SBOMWorkflow(
 
 	logger.Println("Invoking depgraph workflow")
 
-	depGraphs, err := engine.Invoke(DepGraphWorkflowID)
+	depGraphConfig := config.Clone()
+	if config.GetBool(flags.FlagAllProjects) {
+		depGraphConfig.Set("fail-fast", true)
+	}
+	depGraphs, err := engine.InvokeWithConfig(DepGraphWorkflowID, depGraphConfig)
 	if err != nil {
 		return nil, errFactory.NewDepGraphWorkflowError(err)
 	}

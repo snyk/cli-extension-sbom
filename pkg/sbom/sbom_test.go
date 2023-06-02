@@ -211,7 +211,7 @@ func newMockEngine(ctrl *gomock.Controller, result []workflow.Data, err error) *
 
 	mockEngine.
 		EXPECT().
-		Invoke(gomock.Eq(sbom.DepGraphWorkflowID)).
+		InvokeWithConfig(gomock.Eq(sbom.DepGraphWorkflowID), gomock.Any()).
 		Return(result, err).
 		AnyTimes()
 
