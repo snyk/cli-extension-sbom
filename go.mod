@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/golang/mock v1.6.0
-	github.com/snyk/go-application-framework v0.0.0-20230602151048-31fbf2587cab
+	github.com/snyk/go-application-framework v0.0.0-20230608152503-40b6d700aefa
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
 )
