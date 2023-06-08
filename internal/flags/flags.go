@@ -13,6 +13,7 @@ const (
 	FlagExclude                      = "exclude"
 	FlagName                         = "name"
 	FlagVersion                      = "version"
+	FlagDev                          = "dev"
 )
 
 func GetFlagSet() *pflag.FlagSet {
@@ -29,6 +30,7 @@ func GetFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagName, "", "Specify a name for the collection of all projects in the working directory.")
 	flagSet.String(FlagVersion, "", "Specify a version for the collection of all projects in the working directory.")
 	flagSet.StringP(FlagFormat, "f", "", "Specify the SBOM output format. (cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json)")
+	flagSet.Bool(FlagDev, false, "Include development-only dependencies. Applicable only for some package managers.")
 
 	return flagSet
 }
