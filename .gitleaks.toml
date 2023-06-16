@@ -1,0 +1,14 @@
+[extend]
+useDefault = true
+
+[[rules]]
+description = "Hardcoded Snyk internal credentials"
+id = "hardcoded snyk internal credentials"
+regex = '''snyk(-[a-zA-Z]+)+:[a-zA-Z0-9]+'''
+
+[allowlist]
+description = "global allow list"
+paths = [
+  '''.bin''',
+  'test/jwt/jwt_private_key.pem'
+]
