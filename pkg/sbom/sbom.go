@@ -1,6 +1,7 @@
 package sbom
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -56,7 +57,7 @@ func SBOMWorkflow(
 
 	numGraphs := len(depGraphs)
 	logger.Printf("Generating documents for %d depgraph(s)\n", numGraphs)
-	depGraphsBytes := make([][]byte, numGraphs)
+	depGraphsBytes := make([]json.RawMessage, numGraphs)
 	for i, depGraph := range depGraphs {
 		depGraphBytes, err := getPayloadBytes(depGraph) //nolint:govet // error is checked
 		if err != nil {
