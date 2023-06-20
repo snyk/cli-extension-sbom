@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"net/http"
 	"os"
 	"path/filepath"
 	"testing"
 
-	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
 	osdepgraph "github.com/snyk/cli-extension-sbom/internal/opensource/depgraph"
+	"github.com/snyk/cli-extension-sbom/test"
 
 	"github.com/golang/mock/gomock"
 	"github.com/snyk/go-application-framework/pkg/configuration"
@@ -53,8 +52,8 @@ func TestSBOMWorkflow_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", expectedSBOM, http.StatusOK)
-	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse)
+	mockResponse := test.Response{ContentType: "application/vnd.cyclonedx+json", Body: expectedSBOM}
+	mockSBOMService := test.MockSBOMService(mockResponse)
 	defer mockSBOMService.Close()
 	mockICTX := mockInvocationContext(t, ctrl, mockSBOMService.URL, nil, openSourceDepGraphID)
 
@@ -138,13 +137,10 @@ func TestSBOMWorkflow_MultipleDepGraphs(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", []byte("{}"), http.StatusOK)
-	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse, func(r *http.Request) {
-		body, err := io.ReadAll(r.Body)
-		defer r.Body.Close()
-		require.NoError(t, err)
-		assert.JSONEq(t, `{"depGraphs":[{"pkgManager":{"name":"npm"}},{"pkgManager":{"name":"nuget"}}],"subject":{"name":"goof","version":"0.0.0"}}`, string(body))
-	})
+	mockResponse := test.Response{ContentType: "application/vnd.cyclonedx+json", Body: []byte("{}")}
+	mockSBOMService := test.MockSBOMService(mockResponse,
+		test.AssertJSONBody(t, `{"depGraphs":[{"pkgManager":{"name":"npm"}},{"pkgManager":{"name":"nuget"}}],"subject":{"name":"goof","version":"0.0.0"}}`),
+	)
 	defer mockSBOMService.Close()
 	mockEngine := newMockEngine(ctrl, []workflow.Data{
 		newDepGraphData(t, []byte(`{"pkgManager":{"name":"npm"}}`)),
@@ -166,13 +162,10 @@ func TestSBOMWorkflow_MergeSubject(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", []byte("{}"), http.StatusOK)
-	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse, func(r *http.Request) {
-		body, err := io.ReadAll(r.Body)
-		defer r.Body.Close()
-		require.NoError(t, err)
-		assert.JSONEq(t, `{"depGraphs":[{},{}],"subject":{"name":"sbom","version":""}}`, string(body))
-	})
+	mockResponse := test.Response{ContentType: "application/vnd.cyclonedx+json", Body: []byte("{}")}
+	mockSBOMService := test.MockSBOMService(mockResponse,
+		test.AssertJSONBody(t, `{"depGraphs":[{},{}],"subject":{"name":"sbom","version":""}}`),
+	)
 	defer mockSBOMService.Close()
 	mockEngine := newMockEngine(ctrl,
 		[]workflow.Data{newDepGraphData(t, []byte(`{}`)), newDepGraphData(t, []byte(`{}`))},

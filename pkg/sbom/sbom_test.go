@@ -2,17 +2,13 @@ package sbom //nolint:testpackage // we want to test private fields & functions.
 
 import (
 	_ "embed"
-	"io"
-	"net/http"
 	"testing"
 
-	"github.com/snyk/cli-extension-sbom/internal/mocks"
 	"github.com/snyk/cli-extension-sbom/pkg/flag"
+	"github.com/snyk/cli-extension-sbom/test"
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestNewWorkflowInit(t *testing.T) {
@@ -83,13 +79,10 @@ func TestWorkflowEntrypoint(t *testing.T) {
 				t.Fatalf("could not initialize workflow: %v", err)
 			}
 
-			response := mocks.NewMockResponse("", nil, http.StatusOK)
-			ts := mocks.NewMockSBOMService(response, func(r *http.Request) {
-				body, err := io.ReadAll(r.Body)
-				defer r.Body.Close()
-				require.NoError(t, err)
-				assert.JSONEq(t, tc.expectedRequest, string(body))
-			})
+			ts := test.MockSBOMService(test.Response{},
+				test.AssertSBOMURLPath(t, orgID),
+				test.AssertJSONBody(t, tc.expectedRequest),
+			)
 			t.Cleanup(ts.Close)
 
 			c.Set(configuration.ORGANIZATION, orgID)
