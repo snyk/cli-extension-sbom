@@ -9,7 +9,7 @@ jobs:
   unit-test:
     executor:
       name: go/default
-      tag: '1.19'
+      tag: "1.20"
     steps:
       - checkout
       - go/load-cache
@@ -21,7 +21,7 @@ jobs:
           race: true
   lint:
     docker:
-      - image: golangci/golangci-lint:v1.50-alpine
+      - image: golangci/golangci-lint:v1.53-alpine
     steps:
       - checkout
       - run: golangci-lint run -v ./...
@@ -33,7 +33,7 @@ jobs:
     resource_class: medium
     executor:
       name: go/default
-      tag: '1.19'
+      tag: "1.20"
     steps:
       - checkout
       - setup_remote_docker
