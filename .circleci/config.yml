@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   go: circleci/go@1.7.1
   snyk: snyk/snyk@1.4.0
+  prodsec: snyk/prodsec-orb@1.0
 
 jobs:
   unit-test:
@@ -50,6 +51,11 @@ workflows:
   version: 2
   CI:
     jobs:
+      - prodsec/secrets-scan:
+          name: Scan repository for secrets
+          context:
+            - snyk-bot-slack
+          channel: team-link-pipeline-info
       - unit-test:
           name: Unit Test
       - lint:
