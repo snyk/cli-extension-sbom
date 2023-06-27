@@ -2,140 +2,141 @@ package depgraph
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os/exec"
 	"regexp"
 	"strings"
+
+	"github.com/snyk/cli-extension-sbom/pkg/flag"
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/spf13/pflag"
 )
 
-var WORKFLOWID_DEPGRAPH_WORKFLOW workflow.Identifier = workflow.NewWorkflowIdentifier("depgraph")
-var DATATYPEID_DEPGRAPH workflow.Identifier = workflow.NewTypeIdentifier(WORKFLOWID_DEPGRAPH_WORKFLOW, "depgraph")
-
-// LegacyCliJsonError is the error type returned by the legacy cli
-type LegacyCliJsonError struct {
+// legacyCLIJSONError is the error type returned by the legacy cli.
+type legacyCLIJSONError struct {
 	Ok       bool   `json:"ok"`
 	ErrorMsg string `json:"error"`
 	Path     string `json:"path"`
 }
 
-// Error returns the LegacyCliJsonError error message
-func (e *LegacyCliJsonError) Error() string {
+// Error returns the LegacyCliJsonError error message.
+func (e *legacyCLIJSONError) Error() string {
 	return e.ErrorMsg
 }
 
-// extractLegacyCLIError extracts the error message from the legacy cli if possible
+// extractLegacyCLIError extracts the error message from the legacy cli if possible.
 func extractLegacyCLIError(input error, data []workflow.Data) (output error) {
-	output = input
-
-	// extract error from legacy cli if possible and wrap it in an error instance
-	_, isExitError := input.(*exec.ExitError)
-	if isExitError && data != nil && len(data) > 0 {
-		bytes := data[0].GetPayload().([]byte)
-
-		var decodedError LegacyCliJsonError
-		err := json.Unmarshal(bytes, &decodedError)
-		if err == nil {
-			output = &decodedError
-		}
-
+	// if there's no data, we can't extract anything.
+	if len(data) == 0 {
+		return input
 	}
 
-	return output
+	// extract error from legacy cli if possible and wrap it in an error instance
+	var exitErr *exec.ExitError
+	if errors.As(input, &exitErr) {
+		bytes, ok := data[0].GetPayload().([]byte)
+		if !ok {
+			return output
+		}
+
+		var decodedError legacyCLIJSONError
+		if json.Unmarshal(bytes, &decodedError) == nil {
+			return &decodedError
+		}
+	}
+	return input
+}
+
+func NewWorkflow[T workflowConfig](cmd string, subWorkflow T) *Workflow[T] {
+	return &Workflow[T]{
+		Name: cmd,
+		Config: Config[T]{
+			Debug:      flag.Flag[bool]{Name: configuration.DEBUG, DefaultValue: false},
+			SubCommand: subWorkflow,
+		},
+	}
 }
 
 // InitDepGraphWorkflow initializes the depgraph workflow
 // The depgraph workflow is responsible for handling the depgraph data
-// As part of the localworkflows package, it is registered via the localworkflows.Init method
-func InitDepGraphWorkflow(engine workflow.Engine) error {
-	depGraphConfig := pflag.NewFlagSet("depgraph", pflag.ExitOnError)
-	depGraphConfig.Bool("fail-fast", false, "Fail fast when scanning all projects")
-	depGraphConfig.Bool("all-projects", false, "Enable all projects")
-	depGraphConfig.Bool("dev", false, "Include dev dependencies")
-	depGraphConfig.String("file", "", "Input file")
-	depGraphConfig.String("detection-depth", "", "Detection depth")
-	depGraphConfig.BoolP("prune-repeated-subdependencies", "p", false, "Prune repeated sub-dependencies")
+// As part of the localworkflows package, it is registered via the localworkflows.Init method.
+func InitWorkflow[T workflowConfig](engine workflow.Engine, w *Workflow[T]) error {
+	return w.init(engine)
+}
 
-	_, err := engine.Register(WORKFLOWID_DEPGRAPH_WORKFLOW, workflow.ConfigurationOptionsFromFlagset(depGraphConfig), depgraphWorkflowEntryPoint)
+type workflowConfig interface {
+	Command() []string
+	Flags() flag.Flags
+}
+
+type Workflow[c workflowConfig] struct {
+	Name string
+	Config[c]
+}
+
+func (d Workflow[Config]) init(e workflow.Engine) error {
+	fs := pflag.NewFlagSet(d.Name, pflag.ExitOnError)
+	for _, f := range d.Flags() {
+		f.AddToFlagSet(fs)
+	}
+
+	_, err := e.Register(d.Identifier(), workflow.ConfigurationOptionsFromFlagset(fs), d.Entrypoint)
 	return err
 }
 
-// depgraphWorkflowEntryPoint defines the depgraph entry point
-// the entry point is called by the engine when the workflow is invoked
-func depgraphWorkflowEntryPoint(invocation workflow.InvocationContext, input []workflow.Data) (depGraphList []workflow.Data, err error) {
-	err = nil
-	depGraphList = []workflow.Data{}
+func (d Workflow[Config]) Identifier() workflow.Identifier {
+	return workflow.NewWorkflowIdentifier(d.Name)
+}
 
-	engine := invocation.GetEngine()
-	config := invocation.GetConfiguration()
+func (d Workflow[Config]) TypeIdentifier() workflow.Identifier {
+	return workflow.NewTypeIdentifier(d.Identifier(), "depgraph")
+}
+
+var legacyCLIID = workflow.NewWorkflowIdentifier("legacycli")
+
+func (d Workflow[Config]) Entrypoint(invocation workflow.InvocationContext, _ []workflow.Data) ([]workflow.Data, error) {
 	debugLogger := invocation.GetLogger()
+	debugLogger.Printf("start")
 
-	debugLogger.Println("depgraph workflow start")
-
-	// prepare invocation of the legacy cli
-	snykCmdArguments := []string{"test", "--print-graph", "--json"}
-	if allProjects := config.GetBool("all-projects"); allProjects {
-		snykCmdArguments = append(snykCmdArguments, "--all-projects")
+	cmdArgs := d.SubCommand.Command()
+	config := invocation.GetConfiguration()
+	for _, flag := range d.Flags() {
+		if arg, ok := flag.AsArgument(config); ok {
+			cmdArgs = append(cmdArgs, arg)
+		}
 	}
 
-	if config.GetBool("fail-fast") {
-		snykCmdArguments = append(snykCmdArguments, "--fail-fast")
+	// This is the directory for OS, or the container name for container. It's not a flag, but a
+	// positional argument.
+	cmdArgs = append(cmdArgs, config.GetString("targetDirectory"))
+	debugLogger.Printf("cli invocation args: %v", cmdArgs)
+
+	config.Set(configuration.RAW_CMD_ARGS, cmdArgs)
+	data, err := invocation.GetEngine().InvokeWithConfig(legacyCLIID, config)
+	if err != nil {
+		return nil, extractLegacyCLIError(err, data)
 	}
 
-	if exclude := config.GetString("exclude"); exclude != "" {
-		snykCmdArguments = append(snykCmdArguments, "--exclude="+exclude)
-		debugLogger.Println("Exclude:", exclude)
-	}
-
-	if detectionDepth := config.GetString("detection-depth"); detectionDepth != "" {
-		snykCmdArguments = append(snykCmdArguments, "--detection-depth="+detectionDepth)
-		debugLogger.Println("Detection depth:", detectionDepth)
-	}
-
-	if pruneRepeatedSubDependencies := config.GetBool("prune-repeated-subdependencies"); pruneRepeatedSubDependencies {
-		snykCmdArguments = append(snykCmdArguments, "--prune-repeated-subdependencies")
-		debugLogger.Println("Prune repeated sub-dependencies:", pruneRepeatedSubDependencies)
-	}
-
-	if targetDirectory := config.GetString("targetDirectory"); err == nil {
-		snykCmdArguments = append(snykCmdArguments, targetDirectory)
-	}
-
-	if unmanaged := config.GetBool("unmanaged"); unmanaged {
-		snykCmdArguments = append(snykCmdArguments, "--unmanaged")
-	}
-
-	if file := config.GetString("file"); len(file) > 0 {
-		snykCmdArguments = append(snykCmdArguments, "--file="+file)
-		debugLogger.Println("File:", file)
-	}
-
-	if config.GetBool(configuration.DEBUG) {
-		snykCmdArguments = append(snykCmdArguments, "--debug")
-	}
-
-	if config.GetBool("dev") {
-		snykCmdArguments = append(snykCmdArguments, "--dev")
-	}
-
-	config.Set(configuration.RAW_CMD_ARGS, snykCmdArguments)
-	legacyData, legacyCLIError := engine.InvokeWithConfig(workflow.NewWorkflowIdentifier("legacycli"), config)
-	if legacyCLIError != nil {
-		legacyCLIError = extractLegacyCLIError(legacyCLIError, legacyData)
-		return depGraphList, legacyCLIError
-	}
-
-	depGraphList, err = extractDepGraphsFromCLIOutput(legacyData[0].GetPayload().([]byte))
+	depGraphList, err := d.extractDepGraphsFromCLIOutput(data[0].GetPayload().([]byte))
 	if err != nil {
 		return nil, fmt.Errorf("could not extract depGraphs from CLI output: %w", err)
 	}
 
-	debugLogger.Printf("depgraph workflow done (%d)", len(depGraphList))
+	debugLogger.Printf("done (%d)", len(depGraphList))
 
-	return depGraphList, err
+	return depGraphList, nil
+}
+
+type Config[specific workflowConfig] struct {
+	Debug      flag.Flag[bool]
+	SubCommand specific
+}
+
+func (c Config[a]) Flags() flag.Flags {
+	return append(c.SubCommand.Flags(), c.Debug)
 }
 
 // depGraphSeparator separates the depgraph from the target name and the rest.
@@ -146,7 +147,7 @@ var depGraphSeparator = regexp.MustCompile(`(?s)DepGraph data:(.*?)DepGraph targ
 
 const depGraphContentType = "application/json"
 
-func extractDepGraphsFromCLIOutput(output []byte) ([]workflow.Data, error) {
+func (d Workflow[Config]) extractDepGraphsFromCLIOutput(output []byte) ([]workflow.Data, error) {
 	if len(output) == 0 {
 		return nil, noDependencyGraphsError{output}
 	}
@@ -158,7 +159,7 @@ func extractDepGraphsFromCLIOutput(output []byte) ([]workflow.Data, error) {
 			return nil, fmt.Errorf("malformed CLI output, got %v matches", len(match))
 		}
 
-		data := workflow.NewData(DATATYPEID_DEPGRAPH, depGraphContentType, match[1])
+		data := workflow.NewData(d.TypeIdentifier(), depGraphContentType, match[1])
 		data.SetMetaData("Content-Location", strings.TrimSpace(string(match[2])))
 		depGraphs = append(depGraphs, data)
 	}
