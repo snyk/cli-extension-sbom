@@ -13,6 +13,7 @@ import (
 	"github.com/snyk/go-application-framework/pkg/mocks"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_Depgraph_extractLegacyCLIError_extractError(t *testing.T) {
@@ -371,6 +372,74 @@ func Test_Depgraph_depgraphWorkflowEntryPoint(t *testing.T) {
 		_, err := depgraphWorkflowEntryPoint(invocationContextMock, []workflow.Data{})
 
 		// assert
-		assert.Equal(t, "No dependency graphs found", err.Error())
+		assert.ErrorAs(t, err, &noDependencyGraphsError{})
 	})
+}
+
+func TestExtractDepGraphsFromCLIOutput(t *testing.T) {
+	type depGraph struct {
+		name string
+		file string
+	}
+	type testCase struct {
+		cliOutputFile string
+		graphs        []depGraph
+	}
+
+	testCases := []testCase{{
+		cliOutputFile: "testdata/single_depgraph_output.txt",
+		graphs: []depGraph{{
+			name: "package-lock.json",
+			file: "testdata/single_depgraph.json",
+		}},
+	}, {
+		cliOutputFile: "testdata/multi_depgraph_output.txt",
+		graphs: []depGraph{{
+			name: "docker-image|snyk/kubernetes-scanner",
+			file: "testdata/multi_depgraph_1.json",
+		}, {
+			name: "docker-image|snyk/kubernetes-scanner:/kubernetes-scanner",
+			file: "testdata/multi_depgraph_2.json",
+		}},
+	}}
+
+	for _, tc := range testCases {
+		t.Run(tc.cliOutputFile, func(t *testing.T) {
+			output, err := os.ReadFile(tc.cliOutputFile)
+			require.NoError(t, err)
+
+			data, err := extractDepGraphsFromCLIOutput(output)
+			require.NoError(t, err)
+
+			require.Len(t, data, len(tc.graphs))
+			var i int
+			for _, graph := range tc.graphs {
+				testDepGraphFromFile(t, graph.name, graph.file, data[i])
+				i++
+			}
+		})
+	}
+}
+
+func testDepGraphFromFile(t *testing.T, dgName, fileName string, actual workflow.Data) {
+	t.Helper()
+	content, err := os.ReadFile(fileName)
+	require.NoError(t, err)
+
+	var expectedDG map[string]interface{}
+	err = json.Unmarshal(content, &expectedDG)
+	require.NoError(t, err)
+
+	require.Equal(t, depGraphContentType, actual.GetContentType())
+	require.Equal(t, dgName, actual.GetContentLocation())
+
+	payload, ok := actual.GetPayload().([]byte)
+	if !ok {
+		t.Fatalf("payload is not []byte: %T", actual.GetPayload())
+	}
+
+	var actualDG map[string]interface{}
+	err = json.Unmarshal(payload, &actualDG)
+	require.NoError(t, err)
+	require.Equal(t, expectedDG, actualDG)
 }

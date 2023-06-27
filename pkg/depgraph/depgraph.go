@@ -1,10 +1,10 @@
 package depgraph
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"os/exec"
+	"regexp"
 	"strings"
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
@@ -75,10 +75,6 @@ func depgraphWorkflowEntryPoint(invocation workflow.InvocationContext, input []w
 
 	debugLogger.Println("depgraph workflow start")
 
-	jsonSeparatorEnd := []byte("DepGraph end")
-	jsonSeparatorData := []byte("DepGraph data:")
-	jsonSeparatorTarget := []byte("DepGraph target:")
-
 	// prepare invocation of the legacy cli
 	snykCmdArguments := []string{"test", "--print-graph", "--json"}
 	if allProjects := config.GetBool("all-projects"); allProjects {
@@ -132,33 +128,48 @@ func depgraphWorkflowEntryPoint(invocation workflow.InvocationContext, input []w
 		return depGraphList, legacyCLIError
 	}
 
-	snykOutput := legacyData[0].GetPayload().([]byte)
-
-	snykOutputLength := len(snykOutput)
-	if snykOutputLength <= 0 {
-		return depGraphList, fmt.Errorf("No dependency graphs found")
-	}
-
-	// split up dependency data from legacy cli
-	separatedJsonRawData := bytes.Split(snykOutput, jsonSeparatorEnd)
-	for i := range separatedJsonRawData {
-		rawData := separatedJsonRawData[i]
-		if bytes.Contains(rawData, jsonSeparatorData) {
-			graphStartIndex := bytes.Index(rawData, jsonSeparatorData) + len(jsonSeparatorData)
-			graphEndIndex := bytes.Index(rawData, jsonSeparatorTarget)
-			targetNameStartIndex := graphEndIndex + len(jsonSeparatorTarget)
-			targetNameEndIndex := len(rawData) - 1
-
-			targetName := rawData[targetNameStartIndex:targetNameEndIndex]
-			depGraphJson := rawData[graphStartIndex:graphEndIndex]
-
-			data := workflow.NewData(DATATYPEID_DEPGRAPH, "application/json", depGraphJson)
-			data.SetMetaData("Content-Location", strings.TrimSpace(string(targetName)))
-			depGraphList = append(depGraphList, data)
-		}
+	depGraphList, err = extractDepGraphsFromCLIOutput(legacyData[0].GetPayload().([]byte))
+	if err != nil {
+		return nil, fmt.Errorf("could not extract depGraphs from CLI output: %w", err)
 	}
 
 	debugLogger.Printf("depgraph workflow done (%d)", len(depGraphList))
 
 	return depGraphList, err
+}
+
+// depGraphSeparator separates the depgraph from the target name and the rest.
+// The DepGraph and the name are caught in a capturing group.
+//
+// The `(?s)` at the beginning enables multiline-matching.
+var depGraphSeparator = regexp.MustCompile(`(?s)DepGraph data:(.*?)DepGraph target:(.*?)DepGraph end`)
+
+const depGraphContentType = "application/json"
+
+func extractDepGraphsFromCLIOutput(output []byte) ([]workflow.Data, error) {
+	if len(output) == 0 {
+		return nil, noDependencyGraphsError{output}
+	}
+
+	matches := depGraphSeparator.FindAllSubmatch(output, -1)
+	depGraphs := make([]workflow.Data, 0, len(matches))
+	for _, match := range matches {
+		if len(match) != 3 {
+			return nil, fmt.Errorf("malformed CLI output, got %v matches", len(match))
+		}
+
+		data := workflow.NewData(DATATYPEID_DEPGRAPH, depGraphContentType, match[1])
+		data.SetMetaData("Content-Location", strings.TrimSpace(string(match[2])))
+		depGraphs = append(depGraphs, data)
+	}
+
+	return depGraphs, nil
+}
+
+type noDependencyGraphsError struct {
+	output []byte
+}
+
+func (n noDependencyGraphsError) Error() string {
+	return fmt.Sprintf("no dependency graphs found in output: %s", n.output)
 }

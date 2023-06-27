@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.3.0",
+  "pkgManager": {
+    "name": "deb",
+    "repositories": [
+      {
+        "alias": "debian:11"
+      }
+    ]
+  },
+  "pkgs": [
+    {
+      "id": "docker-image|snyk/kubernetes-scanner@tilt-c19a95c25e69b6a5",
+      "info": {
+        "name": "docker-image|snyk/kubernetes-scanner",
+        "version": "tilt-c19a95c25e69b6a5"
+      }
+    },
+    {
+      "id": "base-files@11.1+deb11u6",
+      "info": {
+        "name": "base-files",
+        "version": "11.1+deb11u6"
+      }
+    },
+    {
+      "id": "netbase@6.3",
+      "info": {
+        "name": "netbase",
+        "version": "6.3"
+      }
+    },
+    {
+      "id": "tzdata@2021a-1+deb11u9",
+      "info": {
+        "name": "tzdata",
+        "version": "2021a-1+deb11u9"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "root-node",
+        "pkgId": "docker-image|snyk/kubernetes-scanner@tilt-c19a95c25e69b6a5",
+        "deps": [
+          {
+            "nodeId": "base-files@11.1+deb11u6"
+          },
+          {
+            "nodeId": "netbase@6.3"
+          },
+          {
+            "nodeId": "tzdata@2021a-1+deb11u9"
+          }
+        ]
+      },
+      {
+        "nodeId": "base-files@11.1+deb11u6",
+        "pkgId": "base-files@11.1+deb11u6",
+        "deps": []
+      },
+      {
+        "nodeId": "netbase@6.3",
+        "pkgId": "netbase@6.3",
+        "deps": []
+      },
+      {
+        "nodeId": "tzdata@2021a-1+deb11u9",
+        "pkgId": "tzdata@2021a-1+deb11u9",
+        "deps": []
+      }
+    ]
+  }
+}
