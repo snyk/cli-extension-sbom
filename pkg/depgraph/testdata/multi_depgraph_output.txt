@@ -1,0 +1,5287 @@
+DepGraph data:
+{
+  "schemaVersion": "1.3.0",
+  "pkgManager": {
+    "name": "deb",
+    "repositories": [
+      {
+        "alias": "debian:11"
+      }
+    ]
+  },
+  "pkgs": [
+    {
+      "id": "docker-image|snyk/kubernetes-scanner@tilt-c19a95c25e69b6a5",
+      "info": {
+        "name": "docker-image|snyk/kubernetes-scanner",
+        "version": "tilt-c19a95c25e69b6a5"
+      }
+    },
+    {
+      "id": "base-files@11.1+deb11u6",
+      "info": {
+        "name": "base-files",
+        "version": "11.1+deb11u6"
+      }
+    },
+    {
+      "id": "netbase@6.3",
+      "info": {
+        "name": "netbase",
+        "version": "6.3"
+      }
+    },
+    {
+      "id": "tzdata@2021a-1+deb11u9",
+      "info": {
+        "name": "tzdata",
+        "version": "2021a-1+deb11u9"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "root-node",
+        "pkgId": "docker-image|snyk/kubernetes-scanner@tilt-c19a95c25e69b6a5",
+        "deps": [
+          {
+            "nodeId": "base-files@11.1+deb11u6"
+          },
+          {
+            "nodeId": "netbase@6.3"
+          },
+          {
+            "nodeId": "tzdata@2021a-1+deb11u9"
+          }
+        ]
+      },
+      {
+        "nodeId": "base-files@11.1+deb11u6",
+        "pkgId": "base-files@11.1+deb11u6",
+        "deps": []
+      },
+      {
+        "nodeId": "netbase@6.3",
+        "pkgId": "netbase@6.3",
+        "deps": []
+      },
+      {
+        "nodeId": "tzdata@2021a-1+deb11u9",
+        "pkgId": "tzdata@2021a-1+deb11u9",
+        "deps": []
+      }
+    ]
+  }
+}
+DepGraph target:
+docker-image|snyk/kubernetes-scanner
+DepGraph end
+DepGraph data:
+{
+  "schemaVersion": "1.3.0",
+  "pkgManager": {
+    "name": "gomodules"
+  },
+  "pkgs": [
+    {
+      "id": "github.com/snyk/kubernetes-scanner@",
+      "info": {
+        "name": "github.com/snyk/kubernetes-scanner"
+      }
+    },
+    {
+      "id": "github.com/cespare/xxhash/v2@v2.2.0",
+      "info": {
+        "name": "github.com/cespare/xxhash/v2",
+        "version": "v2.2.0"
+      }
+    },
+    {
+      "id": "github.com/davecgh/go-spew/spew@v1.1.1",
+      "info": {
+        "name": "github.com/davecgh/go-spew/spew",
+        "version": "v1.1.1"
+      }
+    },
+    {
+      "id": "github.com/emicklei/go-restful/v3/log@v3.10.1",
+      "info": {
+        "name": "github.com/emicklei/go-restful/v3/log",
+        "version": "v3.10.1"
+      }
+    },
+    {
+      "id": "github.com/emicklei/go-restful/v3@v3.10.1",
+      "info": {
+        "name": "github.com/emicklei/go-restful/v3",
+        "version": "v3.10.1"
+      }
+    },
+    {
+      "id": "github.com/evanphx/json-patch/v5@v5.6.0",
+      "info": {
+        "name": "github.com/evanphx/json-patch/v5",
+        "version": "v5.6.0"
+      }
+    },
+    {
+      "id": "github.com/fsnotify/fsnotify@v1.6.0",
+      "info": {
+        "name": "github.com/fsnotify/fsnotify",
+        "version": "v1.6.0"
+      }
+    },
+    {
+      "id": "github.com/go-logr/logr@v1.2.3",
+      "info": {
+        "name": "github.com/go-logr/logr",
+        "version": "v1.2.3"
+      }
+    },
+    {
+      "id": "github.com/go-logr/zapr@v1.2.3",
+      "info": {
+        "name": "github.com/go-logr/zapr",
+        "version": "v1.2.3"
+      }
+    },
+    {
+      "id": "github.com/go-openapi/jsonpointer@v0.19.5",
+      "info": {
+        "name": "github.com/go-openapi/jsonpointer",
+        "version": "v0.19.5"
+      }
+    },
+    {
+      "id": "github.com/go-openapi/jsonreference/internal@v0.20.0",
+      "info": {
+        "name": "github.com/go-openapi/jsonreference/internal",
+        "version": "v0.20.0"
+      }
+    },
+    {
+      "id": "github.com/go-openapi/jsonreference@v0.20.0",
+      "info": {
+        "name": "github.com/go-openapi/jsonreference",
+        "version": "v0.20.0"
+      }
+    },
+    {
+      "id": "github.com/go-openapi/swag@v0.21.1",
+      "info": {
+        "name": "github.com/go-openapi/swag",
+        "version": "v0.21.1"
+      }
+    },
+    {
+      "id": "github.com/gogo/protobuf/proto@v1.3.2",
+      "info": {
+        "name": "github.com/gogo/protobuf/proto",
+        "version": "v1.3.2"
+      }
+    },
+    {
+      "id": "github.com/gogo/protobuf/sortkeys@v1.3.2",
+      "info": {
+        "name": "github.com/gogo/protobuf/sortkeys",
+        "version": "v1.3.2"
+      }
+    },
+    {
+      "id": "github.com/golang/groupcache/lru@v0.0.0-20210331224755-41bb18bfe9da",
+      "info": {
+        "name": "github.com/golang/groupcache/lru",
+        "version": "v0.0.0-20210331224755-41bb18bfe9da"
+      }
+    },
+    {
+      "id": "github.com/golang/protobuf/proto@v1.5.2",
+      "info": {
+        "name": "github.com/golang/protobuf/proto",
+        "version": "v1.5.2"
+      }
+    },
+    {
+      "id": "github.com/golang/protobuf/ptypes/timestamp@v1.5.2",
+      "info": {
+        "name": "github.com/golang/protobuf/ptypes/timestamp",
+        "version": "v1.5.2"
+      }
+    },
+    {
+      "id": "github.com/golang/protobuf/ptypes/any@v1.5.2",
+      "info": {
+        "name": "github.com/golang/protobuf/ptypes/any",
+        "version": "v1.5.2"
+      }
+    },
+    {
+      "id": "github.com/golang/protobuf/ptypes/duration@v1.5.2",
+      "info": {
+        "name": "github.com/golang/protobuf/ptypes/duration",
+        "version": "v1.5.2"
+      }
+    },
+    {
+      "id": "github.com/google/gnostic/extensions@v0.6.9",
+      "info": {
+        "name": "github.com/google/gnostic/extensions",
+        "version": "v0.6.9"
+      }
+    },
+    {
+      "id": "github.com/google/gnostic/compiler@v0.6.9",
+      "info": {
+        "name": "github.com/google/gnostic/compiler",
+        "version": "v0.6.9"
+      }
+    },
+    {
+      "id": "github.com/google/gnostic/openapiv2@v0.6.9",
+      "info": {
+        "name": "github.com/google/gnostic/openapiv2",
+        "version": "v0.6.9"
+      }
+    },
+    {
+      "id": "github.com/google/gnostic/openapiv3@v0.6.9",
+      "info": {
+        "name": "github.com/google/gnostic/openapiv3",
+        "version": "v0.6.9"
+      }
+    },
+    {
+      "id": "github.com/google/go-cmp/cmp/internal/diff@v0.5.9",
+      "info": {
+        "name": "github.com/google/go-cmp/cmp/internal/diff",
+        "version": "v0.5.9"
+      }
+    },
+    {
+      "id": "github.com/google/go-cmp/cmp/internal/function@v0.5.9",
+      "info": {
+        "name": "github.com/google/go-cmp/cmp/internal/function",
+        "version": "v0.5.9"
+      }
+    },
+    {
+      "id": "github.com/google/go-cmp/cmp/internal/value@v0.5.9",
+      "info": {
+        "name": "github.com/google/go-cmp/cmp/internal/value",
+        "version": "v0.5.9"
+      }
+    },
+    {
+      "id": "github.com/google/go-cmp/cmp@v0.5.9",
+      "info": {
+        "name": "github.com/google/go-cmp/cmp",
+        "version": "v0.5.9"
+      }
+    },
+    {
+      "id": "github.com/google/gofuzz@v1.2.0",
+      "info": {
+        "name": "github.com/google/gofuzz",
+        "version": "v1.2.0"
+      }
+    },
+    {
+      "id": "github.com/google/uuid@v1.3.0",
+      "info": {
+        "name": "github.com/google/uuid",
+        "version": "v1.3.0"
+      }
+    },
+    {
+      "id": "github.com/imdario/mergo@v0.3.13",
+      "info": {
+        "name": "github.com/imdario/mergo",
+        "version": "v0.3.13"
+      }
+    },
+    {
+      "id": "github.com/json-iterator/go@v1.1.12",
+      "info": {
+        "name": "github.com/json-iterator/go",
+        "version": "v1.1.12"
+      }
+    },
+    {
+      "id": "github.com/mailru/easyjson/buffer@v0.7.7",
+      "info": {
+        "name": "github.com/mailru/easyjson/buffer",
+        "version": "v0.7.7"
+      }
+    },
+    {
+      "id": "github.com/mailru/easyjson/jwriter@v0.7.7",
+      "info": {
+        "name": "github.com/mailru/easyjson/jwriter",
+        "version": "v0.7.7"
+      }
+    },
+    {
+      "id": "github.com/matttproud/golang_protobuf_extensions/pbutil@v1.0.4",
+      "info": {
+        "name": "github.com/matttproud/golang_protobuf_extensions/pbutil",
+        "version": "v1.0.4"
+      }
+    },
+    {
+      "id": "github.com/modern-go/concurrent@v0.0.0-20180306012644-bacd9c7ef1dd",
+      "info": {
+        "name": "github.com/modern-go/concurrent",
+        "version": "v0.0.0-20180306012644-bacd9c7ef1dd"
+      }
+    },
+    {
+      "id": "github.com/modern-go/reflect2@v1.0.2",
+      "info": {
+        "name": "github.com/modern-go/reflect2",
+        "version": "v1.0.2"
+      }
+    },
+    {
+      "id": "github.com/pkg/errors@v0.9.1",
+      "info": {
+        "name": "github.com/pkg/errors",
+        "version": "v0.9.1"
+      }
+    },
+    {
+      "id": "github.com/prometheus/client_golang/prometheus/internal@v1.14.0",
+      "info": {
+        "name": "github.com/prometheus/client_golang/prometheus/internal",
+        "version": "v1.14.0"
+      }
+    },
+    {
+      "id": "github.com/prometheus/client_golang/prometheus@v1.14.0",
+      "info": {
+        "name": "github.com/prometheus/client_golang/prometheus",
+        "version": "v1.14.0"
+      }
+    },
+    {
+      "id": "github.com/prometheus/client_golang/prometheus/collectors@v1.14.0",
+      "info": {
+        "name": "github.com/prometheus/client_golang/prometheus/collectors",
+        "version": "v1.14.0"
+      }
+    },
+    {
+      "id": "github.com/prometheus/client_golang/prometheus/promhttp@v1.14.0",
+      "info": {
+        "name": "github.com/prometheus/client_golang/prometheus/promhttp",
+        "version": "v1.14.0"
+      }
+    },
+    {
+      "id": "github.com/prometheus/client_model/go@v0.3.0",
+      "info": {
+        "name": "github.com/prometheus/client_model/go",
+        "version": "v0.3.0"
+      }
+    },
+    {
+      "id": "github.com/prometheus/common/model@v0.37.0",
+      "info": {
+        "name": "github.com/prometheus/common/model",
+        "version": "v0.37.0"
+      }
+    },
+    {
+      "id": "github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg@v0.37.0",
+      "info": {
+        "name": "github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg",
+        "version": "v0.37.0"
+      }
+    },
+    {
+      "id": "github.com/prometheus/common/expfmt@v0.37.0",
+      "info": {
+        "name": "github.com/prometheus/common/expfmt",
+        "version": "v0.37.0"
+      }
+    },
+    {
+      "id": "github.com/prometheus/procfs/internal/util@v0.8.0",
+      "info": {
+        "name": "github.com/prometheus/procfs/internal/util",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "github.com/prometheus/procfs/internal/fs@v0.8.0",
+      "info": {
+        "name": "github.com/prometheus/procfs/internal/fs",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "github.com/prometheus/procfs@v0.8.0",
+      "info": {
+        "name": "github.com/prometheus/procfs",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "github.com/spf13/pflag@v1.0.5",
+      "info": {
+        "name": "github.com/spf13/pflag",
+        "version": "v1.0.5"
+      }
+    },
+    {
+      "id": "go.uber.org/atomic@v1.9.0",
+      "info": {
+        "name": "go.uber.org/atomic",
+        "version": "v1.9.0"
+      }
+    },
+    {
+      "id": "go.uber.org/multierr@v1.8.0",
+      "info": {
+        "name": "go.uber.org/multierr",
+        "version": "v1.8.0"
+      }
+    },
+    {
+      "id": "go.uber.org/zap/buffer@v1.24.0",
+      "info": {
+        "name": "go.uber.org/zap/buffer",
+        "version": "v1.24.0"
+      }
+    },
+    {
+      "id": "go.uber.org/zap/internal/bufferpool@v1.24.0",
+      "info": {
+        "name": "go.uber.org/zap/internal/bufferpool",
+        "version": "v1.24.0"
+      }
+    },
+    {
+      "id": "go.uber.org/zap/zapcore@v1.24.0",
+      "info": {
+        "name": "go.uber.org/zap/zapcore",
+        "version": "v1.24.0"
+      }
+    },
+    {
+      "id": "go.uber.org/zap/internal/color@v1.24.0",
+      "info": {
+        "name": "go.uber.org/zap/internal/color",
+        "version": "v1.24.0"
+      }
+    },
+    {
+      "id": "go.uber.org/zap/internal/exit@v1.24.0",
+      "info": {
+        "name": "go.uber.org/zap/internal/exit",
+        "version": "v1.24.0"
+      }
+    },
+    {
+      "id": "go.uber.org/zap@v1.24.0",
+      "info": {
+        "name": "go.uber.org/zap",
+        "version": "v1.24.0"
+      }
+    },
+    {
+      "id": "golang.org/x/exp/slices@v0.0.0-20230213192124-5e25df0256eb",
+      "info": {
+        "name": "golang.org/x/exp/slices",
+        "version": "v0.0.0-20230213192124-5e25df0256eb"
+      }
+    },
+    {
+      "id": "golang.org/x/net/idna@v0.8.0",
+      "info": {
+        "name": "golang.org/x/net/idna",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "golang.org/x/net/http/httpguts@v0.8.0",
+      "info": {
+        "name": "golang.org/x/net/http/httpguts",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "golang.org/x/net/http2/hpack@v0.8.0",
+      "info": {
+        "name": "golang.org/x/net/http2/hpack",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "golang.org/x/net/http2@v0.8.0",
+      "info": {
+        "name": "golang.org/x/net/http2",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "golang.org/x/oauth2/internal@v0.5.0",
+      "info": {
+        "name": "golang.org/x/oauth2/internal",
+        "version": "v0.5.0"
+      }
+    },
+    {
+      "id": "golang.org/x/oauth2@v0.5.0",
+      "info": {
+        "name": "golang.org/x/oauth2",
+        "version": "v0.5.0"
+      }
+    },
+    {
+      "id": "golang.org/x/sys/unix@v0.6.0",
+      "info": {
+        "name": "golang.org/x/sys/unix",
+        "version": "v0.6.0"
+      }
+    },
+    {
+      "id": "golang.org/x/term@v0.6.0",
+      "info": {
+        "name": "golang.org/x/term",
+        "version": "v0.6.0"
+      }
+    },
+    {
+      "id": "golang.org/x/text/transform@v0.8.0",
+      "info": {
+        "name": "golang.org/x/text/transform",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "golang.org/x/text/unicode/bidi@v0.8.0",
+      "info": {
+        "name": "golang.org/x/text/unicode/bidi",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "golang.org/x/text/secure/bidirule@v0.8.0",
+      "info": {
+        "name": "golang.org/x/text/secure/bidirule",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "golang.org/x/text/unicode/norm@v0.8.0",
+      "info": {
+        "name": "golang.org/x/text/unicode/norm",
+        "version": "v0.8.0"
+      }
+    },
+    {
+      "id": "golang.org/x/time/rate@v0.3.0",
+      "info": {
+        "name": "golang.org/x/time/rate",
+        "version": "v0.3.0"
+      }
+    },
+    {
+      "id": "gomodules.xyz/jsonpatch/v2@v2.2.0",
+      "info": {
+        "name": "gomodules.xyz/jsonpatch/v2",
+        "version": "v2.2.0"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/detrand@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/detrand",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/errors@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/errors",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/encoding/protowire@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/encoding/protowire",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/reflect/protoreflect@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/reflect/protoreflect",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/encoding/messageset@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/encoding/messageset",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/strs@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/strs",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/encoding/text@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/encoding/text",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/reflect/protoregistry@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/reflect/protoregistry",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/order@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/order",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/proto@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/proto",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/encoding/prototext@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/encoding/prototext",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/descfmt@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/descfmt",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/encoding/defval@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/encoding/defval",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/filedesc@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/filedesc",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/encoding/tag@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/encoding/tag",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/impl@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/impl",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/internal/filetype@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/internal/filetype",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/types/descriptorpb@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/types/descriptorpb",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/types/known/timestamppb@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/types/known/timestamppb",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/types/known/anypb@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/types/known/anypb",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "google.golang.org/protobuf/types/known/durationpb@v1.28.1",
+      "info": {
+        "name": "google.golang.org/protobuf/types/known/durationpb",
+        "version": "v1.28.1"
+      }
+    },
+    {
+      "id": "gopkg.in/inf.v0@v0.9.1",
+      "info": {
+        "name": "gopkg.in/inf.v0",
+        "version": "v0.9.1"
+      }
+    },
+    {
+      "id": "gopkg.in/yaml.v2@v2.4.0",
+      "info": {
+        "name": "gopkg.in/yaml.v2",
+        "version": "v2.4.0"
+      }
+    },
+    {
+      "id": "gopkg.in/yaml.v3@v3.0.1",
+      "info": {
+        "name": "gopkg.in/yaml.v3",
+        "version": "v3.0.1"
+      }
+    },
+    {
+      "id": "k8s.io/api/admissionregistration/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/admissionregistration/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/admissionregistration/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/admissionregistration/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/admissionregistration/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/admissionregistration/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/apiserverinternal/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/apiserverinternal/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/core/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/core/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/apps/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/apps/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/apps/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/apps/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/apps/v1beta2@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/apps/v1beta2",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/authentication/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/authentication/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/authentication/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/authentication/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/authentication/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/authentication/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/authorization/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/authorization/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/authorization/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/authorization/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/autoscaling/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/autoscaling/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/autoscaling/v2@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/autoscaling/v2",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/autoscaling/v2beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/autoscaling/v2beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/autoscaling/v2beta2@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/autoscaling/v2beta2",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/batch/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/batch/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/batch/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/batch/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/certificates/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/certificates/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/certificates/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/certificates/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/coordination/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/coordination/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/coordination/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/coordination/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/discovery/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/discovery/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/discovery/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/discovery/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/events/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/events/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/events/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/events/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/extensions/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/extensions/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/flowcontrol/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/flowcontrol/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/flowcontrol/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/flowcontrol/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/flowcontrol/v1beta2@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/flowcontrol/v1beta2",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/flowcontrol/v1beta3@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/flowcontrol/v1beta3",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/networking/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/networking/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/networking/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/networking/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/networking/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/networking/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/node/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/node/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/node/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/node/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/node/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/node/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/policy/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/policy/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/policy/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/policy/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/rbac/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/rbac/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/rbac/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/rbac/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/rbac/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/rbac/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/resource/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/resource/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/scheduling/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/scheduling/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/scheduling/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/scheduling/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/scheduling/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/scheduling/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/storage/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/storage/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/storage/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/storage/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/storage/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/storage/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/apidiscovery/v2beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/apidiscovery/v2beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/admission/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/admission/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/api/admission/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/api/admission/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions@v0.26.1",
+      "info": {
+        "name": "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions",
+        "version": "v0.26.1"
+      }
+    },
+    {
+      "id": "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1@v0.26.1",
+      "info": {
+        "name": "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1",
+        "version": "v0.26.1"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/runtime/schema@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/runtime/schema",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/api/resource@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/api/resource",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/third_party/forked/golang/reflect@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/third_party/forked/golang/reflect",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/conversion@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/conversion",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/fields@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/fields",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/sets@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/sets",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/errors@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/errors",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/validation/field@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/validation/field",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/validation@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/validation",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/labels@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/labels",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/types@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/types",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/intstr@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/intstr",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/conversion/queryparams@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/conversion/queryparams",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/json@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/json",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/runtime@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/runtime",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/naming@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/naming",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/runtime@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/runtime",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/net@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/net",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/watch@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/watch",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/apis/meta/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/apis/meta/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/api/meta@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/api/meta",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/runtime/serializer/recognizer@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/runtime/serializer/recognizer",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/framer@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/framer",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/yaml@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/yaml",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/runtime/serializer/json@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/runtime/serializer/json",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/runtime/serializer/protobuf@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/runtime/serializer/protobuf",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/runtime/serializer/versioning@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/runtime/serializer/versioning",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/runtime/serializer@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/runtime/serializer",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/apis/meta/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/apis/meta/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/apis/meta/internalversion@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/apis/meta/internalversion",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/apis/meta/internalversion/scheme@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/apis/meta/internalversion/scheme",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/version@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/version",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/wait@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/wait",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/api/errors@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/api/errors",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/runtime/serializer/streaming@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/runtime/serializer/streaming",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/mergepatch@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/mergepatch",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/third_party/forked/golang/json@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/third_party/forked/golang/json",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/strategicpatch@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/strategicpatch",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/diff@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/diff",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/util/uuid@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/util/uuid",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/apimachinery/pkg/api/equality@v0.26.2",
+      "info": {
+        "name": "k8s.io/apimachinery/pkg/api/equality",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/scheme@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/scheme",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/util/flowcontrol@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/util/flowcontrol",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/pkg/version@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/pkg/version",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/clientcmd/api@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/clientcmd/api",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/util/connrotation@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/util/connrotation",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/util/workqueue@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/util/workqueue",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/transport@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/transport",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/util/cert@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/util/cert",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/pkg/apis/clientauthentication@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/pkg/apis/clientauthentication",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/rest/watch@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/rest/watch",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/metrics@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/metrics",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/pkg/apis/clientauthentication/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/pkg/apis/clientauthentication/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/pkg/apis/clientauthentication/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/pkg/apis/clientauthentication/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/pkg/apis/clientauthentication/install@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/pkg/apis/clientauthentication/install",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/plugin/pkg/client/auth/exec@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/plugin/pkg/client/auth/exec",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/rest@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/rest",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/metadata@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/metadata",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/openapi@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/openapi",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/discovery@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/discovery",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/restmapper@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/restmapper",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/dynamic@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/dynamic",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/applyconfigurations/meta/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/applyconfigurations/meta/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/apiserverinternal/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/apiserverinternal/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/applyconfigurations/core/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/applyconfigurations/core/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/apps/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/apps/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/apps/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/apps/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/apps/v1beta2@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/apps/v1beta2",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/authentication/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/authentication/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/authentication/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/authentication/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/authentication/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/authentication/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/authorization/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/authorization/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/authorization/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/authorization/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/autoscaling/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/autoscaling/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/autoscaling/v2@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/autoscaling/v2",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/autoscaling/v2beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/autoscaling/v2beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/autoscaling/v2beta2@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/autoscaling/v2beta2",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/batch/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/batch/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/batch/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/batch/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/certificates/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/certificates/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/certificates/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/certificates/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/applyconfigurations/coordination/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/applyconfigurations/coordination/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/coordination/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/coordination/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/coordination/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/coordination/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/reference@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/reference",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/core/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/core/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/discovery/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/discovery/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/discovery/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/discovery/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/events/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/events/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/events/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/events/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/extensions/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/extensions/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta2@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta2",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta3@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta3",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/networking/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/networking/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/networking/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/networking/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/networking/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/networking/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/node/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/node/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/node/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/node/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/node/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/node/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/policy/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/policy/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/policy/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/policy/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/rbac/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/rbac/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/rbac/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/rbac/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/rbac/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/rbac/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/resource/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/resource/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/scheduling/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/scheduling/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/scheduling/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/scheduling/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/scheduling/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/scheduling/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/storage/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/storage/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/storage/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/storage/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes/typed/storage/v1beta1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes/typed/storage/v1beta1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/kubernetes@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/kubernetes",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/pager@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/pager",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/cache@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/cache",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/leaderelection/resourcelock@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/leaderelection/resourcelock",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/leaderelection@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/leaderelection",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/record@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/record",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/record/util@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/record/util",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/clientcmd/api/v1@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/clientcmd/api/v1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/clientcmd/api/latest@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/clientcmd/api/latest",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/tools/clientcmd@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/tools/clientcmd",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/util/homedir@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/util/homedir",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/plugin/pkg/client/auth/oidc@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/plugin/pkg/client/auth/oidc",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/plugin/pkg/client/auth/azure@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/plugin/pkg/client/auth/azure",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/client-go/plugin/pkg/client/auth/gcp@v0.26.2",
+      "info": {
+        "name": "k8s.io/client-go/plugin/pkg/client/auth/gcp",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/component-base/config@v0.26.2",
+      "info": {
+        "name": "k8s.io/component-base/config",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/component-base/config/v1alpha1@v0.26.2",
+      "info": {
+        "name": "k8s.io/component-base/config/v1alpha1",
+        "version": "v0.26.2"
+      }
+    },
+    {
+      "id": "k8s.io/klog/v2/internal/severity@v2.90.1",
+      "info": {
+        "name": "k8s.io/klog/v2/internal/severity",
+        "version": "v2.90.1"
+      }
+    },
+    {
+      "id": "k8s.io/klog/v2/internal/buffer@v2.90.1",
+      "info": {
+        "name": "k8s.io/klog/v2/internal/buffer",
+        "version": "v2.90.1"
+      }
+    },
+    {
+      "id": "k8s.io/klog/v2/internal/clock@v2.90.1",
+      "info": {
+        "name": "k8s.io/klog/v2/internal/clock",
+        "version": "v2.90.1"
+      }
+    },
+    {
+      "id": "k8s.io/klog/v2/internal/dbg@v2.90.1",
+      "info": {
+        "name": "k8s.io/klog/v2/internal/dbg",
+        "version": "v2.90.1"
+      }
+    },
+    {
+      "id": "k8s.io/klog/v2/internal/serialize@v2.90.1",
+      "info": {
+        "name": "k8s.io/klog/v2/internal/serialize",
+        "version": "v2.90.1"
+      }
+    },
+    {
+      "id": "k8s.io/klog/v2@v2.90.1",
+      "info": {
+        "name": "k8s.io/klog/v2",
+        "version": "v2.90.1"
+      }
+    },
+    {
+      "id": "k8s.io/kube-openapi/pkg/internal/third_party/go-json-experiment/json@v0.0.0-20221012153701-172d655c2280",
+      "info": {
+        "name": "k8s.io/kube-openapi/pkg/internal/third_party/go-json-experiment/json",
+        "version": "v0.0.0-20221012153701-172d655c2280"
+      }
+    },
+    {
+      "id": "k8s.io/kube-openapi/pkg/validation/spec@v0.0.0-20221012153701-172d655c2280",
+      "info": {
+        "name": "k8s.io/kube-openapi/pkg/validation/spec",
+        "version": "v0.0.0-20221012153701-172d655c2280"
+      }
+    },
+    {
+      "id": "k8s.io/kube-openapi/pkg/common@v0.0.0-20221012153701-172d655c2280",
+      "info": {
+        "name": "k8s.io/kube-openapi/pkg/common",
+        "version": "v0.0.0-20221012153701-172d655c2280"
+      }
+    },
+    {
+      "id": "k8s.io/kube-openapi/pkg/handler3@v0.0.0-20221012153701-172d655c2280",
+      "info": {
+        "name": "k8s.io/kube-openapi/pkg/handler3",
+        "version": "v0.0.0-20221012153701-172d655c2280"
+      }
+    },
+    {
+      "id": "k8s.io/kube-openapi/pkg/schemaconv@v0.0.0-20221012153701-172d655c2280",
+      "info": {
+        "name": "k8s.io/kube-openapi/pkg/schemaconv",
+        "version": "v0.0.0-20221012153701-172d655c2280"
+      }
+    },
+    {
+      "id": "k8s.io/utils/internal/third_party/forked/golang/net@v0.0.0-20230220204549-a5ecb0141aa5",
+      "info": {
+        "name": "k8s.io/utils/internal/third_party/forked/golang/net",
+        "version": "v0.0.0-20230220204549-a5ecb0141aa5"
+      }
+    },
+    {
+      "id": "k8s.io/utils/strings/slices@v0.0.0-20230220204549-a5ecb0141aa5",
+      "info": {
+        "name": "k8s.io/utils/strings/slices",
+        "version": "v0.0.0-20230220204549-a5ecb0141aa5"
+      }
+    },
+    {
+      "id": "k8s.io/utils/clock@v0.0.0-20230220204549-a5ecb0141aa5",
+      "info": {
+        "name": "k8s.io/utils/clock",
+        "version": "v0.0.0-20230220204549-a5ecb0141aa5"
+      }
+    },
+    {
+      "id": "k8s.io/utils/integer@v0.0.0-20230220204549-a5ecb0141aa5",
+      "info": {
+        "name": "k8s.io/utils/integer",
+        "version": "v0.0.0-20230220204549-a5ecb0141aa5"
+      }
+    },
+    {
+      "id": "k8s.io/utils/trace@v0.0.0-20230220204549-a5ecb0141aa5",
+      "info": {
+        "name": "k8s.io/utils/trace",
+        "version": "v0.0.0-20230220204549-a5ecb0141aa5"
+      }
+    },
+    {
+      "id": "k8s.io/utils/buffer@v0.0.0-20230220204549-a5ecb0141aa5",
+      "info": {
+        "name": "k8s.io/utils/buffer",
+        "version": "v0.0.0-20230220204549-a5ecb0141aa5"
+      }
+    },
+    {
+      "id": "k8s.io/utils/pointer@v0.0.0-20230220204549-a5ecb0141aa5",
+      "info": {
+        "name": "k8s.io/utils/pointer",
+        "version": "v0.0.0-20230220204549-a5ecb0141aa5"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/client/apiutil@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/client/apiutil",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/log@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/log",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/client@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/client",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/internal/log@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/internal/log",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/reconcile@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/reconcile",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/internal/field/selector@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/internal/field/selector",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/cache/internal@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/cache/internal",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/cache@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/cache",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/handler@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/handler",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/metrics@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/metrics",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/internal/controller/metrics@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/internal/controller/metrics",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/predicate@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/predicate",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/source/internal@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/source/internal",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/source@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/source",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/internal/controller@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/internal/controller",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/internal/recorder@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/internal/recorder",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/cluster@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/cluster",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/runtime/inject@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/runtime/inject",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/scheme@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/scheme",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/config/v1alpha1@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/config/v1alpha1",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/healthz@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/healthz",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/webhook/internal/metrics@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/webhook/internal/metrics",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/webhook/admission@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/webhook/admission",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/certwatcher/metrics@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/certwatcher/metrics",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/certwatcher@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/certwatcher",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/webhook@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/webhook",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/internal/httpserver@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/internal/httpserver",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/leaderelection@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/leaderelection",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/manager@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/manager",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/controller@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/controller",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/webhook/conversion@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/webhook/conversion",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/builder@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/builder",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/client/config@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/client/config",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/manager/signals@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/manager/signals",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/controller-runtime/pkg/log/zap@v0.14.4",
+      "info": {
+        "name": "sigs.k8s.io/controller-runtime/pkg/log/zap",
+        "version": "v0.14.4"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/json/internal/golang/encoding/json@v0.0.0-20220713155537-f223a00ba0e2",
+      "info": {
+        "name": "sigs.k8s.io/json/internal/golang/encoding/json",
+        "version": "v0.0.0-20220713155537-f223a00ba0e2"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/json@v0.0.0-20220713155537-f223a00ba0e2",
+      "info": {
+        "name": "sigs.k8s.io/json",
+        "version": "v0.0.0-20220713155537-f223a00ba0e2"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/structured-merge-diff/v4/value@v4.2.3",
+      "info": {
+        "name": "sigs.k8s.io/structured-merge-diff/v4/value",
+        "version": "v4.2.3"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/structured-merge-diff/v4/schema@v4.2.3",
+      "info": {
+        "name": "sigs.k8s.io/structured-merge-diff/v4/schema",
+        "version": "v4.2.3"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/structured-merge-diff/v4/fieldpath@v4.2.3",
+      "info": {
+        "name": "sigs.k8s.io/structured-merge-diff/v4/fieldpath",
+        "version": "v4.2.3"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/structured-merge-diff/v4/typed@v4.2.3",
+      "info": {
+        "name": "sigs.k8s.io/structured-merge-diff/v4/typed",
+        "version": "v4.2.3"
+      }
+    },
+    {
+      "id": "sigs.k8s.io/yaml@v1.3.0",
+      "info": {
+        "name": "sigs.k8s.io/yaml",
+        "version": "v1.3.0"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "root-node",
+        "pkgId": "github.com/snyk/kubernetes-scanner@",
+        "deps": [
+          {
+            "nodeId": "github.com/cespare/xxhash/v2@v2.2.0"
+          },
+          {
+            "nodeId": "github.com/davecgh/go-spew/spew@v1.1.1"
+          },
+          {
+            "nodeId": "github.com/emicklei/go-restful/v3/log@v3.10.1"
+          },
+          {
+            "nodeId": "github.com/emicklei/go-restful/v3@v3.10.1"
+          },
+          {
+            "nodeId": "github.com/evanphx/json-patch/v5@v5.6.0"
+          },
+          {
+            "nodeId": "github.com/fsnotify/fsnotify@v1.6.0"
+          },
+          {
+            "nodeId": "github.com/go-logr/logr@v1.2.3"
+          },
+          {
+            "nodeId": "github.com/go-logr/zapr@v1.2.3"
+          },
+          {
+            "nodeId": "github.com/go-openapi/jsonpointer@v0.19.5"
+          },
+          {
+            "nodeId": "github.com/go-openapi/jsonreference/internal@v0.20.0"
+          },
+          {
+            "nodeId": "github.com/go-openapi/jsonreference@v0.20.0"
+          },
+          {
+            "nodeId": "github.com/go-openapi/swag@v0.21.1"
+          },
+          {
+            "nodeId": "github.com/gogo/protobuf/proto@v1.3.2"
+          },
+          {
+            "nodeId": "github.com/gogo/protobuf/sortkeys@v1.3.2"
+          },
+          {
+            "nodeId": "github.com/golang/groupcache/lru@v0.0.0-20210331224755-41bb18bfe9da"
+          },
+          {
+            "nodeId": "github.com/golang/protobuf/proto@v1.5.2"
+          },
+          {
+            "nodeId": "github.com/golang/protobuf/ptypes/timestamp@v1.5.2"
+          },
+          {
+            "nodeId": "github.com/golang/protobuf/ptypes/any@v1.5.2"
+          },
+          {
+            "nodeId": "github.com/golang/protobuf/ptypes/duration@v1.5.2"
+          },
+          {
+            "nodeId": "github.com/google/gnostic/extensions@v0.6.9"
+          },
+          {
+            "nodeId": "github.com/google/gnostic/compiler@v0.6.9"
+          },
+          {
+            "nodeId": "github.com/google/gnostic/openapiv2@v0.6.9"
+          },
+          {
+            "nodeId": "github.com/google/gnostic/openapiv3@v0.6.9"
+          },
+          {
+            "nodeId": "github.com/google/go-cmp/cmp/internal/diff@v0.5.9"
+          },
+          {
+            "nodeId": "github.com/google/go-cmp/cmp/internal/function@v0.5.9"
+          },
+          {
+            "nodeId": "github.com/google/go-cmp/cmp/internal/value@v0.5.9"
+          },
+          {
+            "nodeId": "github.com/google/go-cmp/cmp@v0.5.9"
+          },
+          {
+            "nodeId": "github.com/google/gofuzz@v1.2.0"
+          },
+          {
+            "nodeId": "github.com/google/uuid@v1.3.0"
+          },
+          {
+            "nodeId": "github.com/imdario/mergo@v0.3.13"
+          },
+          {
+            "nodeId": "github.com/json-iterator/go@v1.1.12"
+          },
+          {
+            "nodeId": "github.com/mailru/easyjson/buffer@v0.7.7"
+          },
+          {
+            "nodeId": "github.com/mailru/easyjson/jwriter@v0.7.7"
+          },
+          {
+            "nodeId": "github.com/matttproud/golang_protobuf_extensions/pbutil@v1.0.4"
+          },
+          {
+            "nodeId": "github.com/modern-go/concurrent@v0.0.0-20180306012644-bacd9c7ef1dd"
+          },
+          {
+            "nodeId": "github.com/modern-go/reflect2@v1.0.2"
+          },
+          {
+            "nodeId": "github.com/pkg/errors@v0.9.1"
+          },
+          {
+            "nodeId": "github.com/prometheus/client_golang/prometheus/internal@v1.14.0"
+          },
+          {
+            "nodeId": "github.com/prometheus/client_golang/prometheus@v1.14.0"
+          },
+          {
+            "nodeId": "github.com/prometheus/client_golang/prometheus/collectors@v1.14.0"
+          },
+          {
+            "nodeId": "github.com/prometheus/client_golang/prometheus/promhttp@v1.14.0"
+          },
+          {
+            "nodeId": "github.com/prometheus/client_model/go@v0.3.0"
+          },
+          {
+            "nodeId": "github.com/prometheus/common/model@v0.37.0"
+          },
+          {
+            "nodeId": "github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg@v0.37.0"
+          },
+          {
+            "nodeId": "github.com/prometheus/common/expfmt@v0.37.0"
+          },
+          {
+            "nodeId": "github.com/prometheus/procfs/internal/util@v0.8.0"
+          },
+          {
+            "nodeId": "github.com/prometheus/procfs/internal/fs@v0.8.0"
+          },
+          {
+            "nodeId": "github.com/prometheus/procfs@v0.8.0"
+          },
+          {
+            "nodeId": "github.com/spf13/pflag@v1.0.5"
+          },
+          {
+            "nodeId": "go.uber.org/atomic@v1.9.0"
+          },
+          {
+            "nodeId": "go.uber.org/multierr@v1.8.0"
+          },
+          {
+            "nodeId": "go.uber.org/zap/buffer@v1.24.0"
+          },
+          {
+            "nodeId": "go.uber.org/zap/internal/bufferpool@v1.24.0"
+          },
+          {
+            "nodeId": "go.uber.org/zap/zapcore@v1.24.0"
+          },
+          {
+            "nodeId": "go.uber.org/zap/internal/color@v1.24.0"
+          },
+          {
+            "nodeId": "go.uber.org/zap/internal/exit@v1.24.0"
+          },
+          {
+            "nodeId": "go.uber.org/zap@v1.24.0"
+          },
+          {
+            "nodeId": "golang.org/x/exp/slices@v0.0.0-20230213192124-5e25df0256eb"
+          },
+          {
+            "nodeId": "golang.org/x/net/idna@v0.8.0"
+          },
+          {
+            "nodeId": "golang.org/x/net/http/httpguts@v0.8.0"
+          },
+          {
+            "nodeId": "golang.org/x/net/http2/hpack@v0.8.0"
+          },
+          {
+            "nodeId": "golang.org/x/net/http2@v0.8.0"
+          },
+          {
+            "nodeId": "golang.org/x/oauth2/internal@v0.5.0"
+          },
+          {
+            "nodeId": "golang.org/x/oauth2@v0.5.0"
+          },
+          {
+            "nodeId": "golang.org/x/sys/unix@v0.6.0"
+          },
+          {
+            "nodeId": "golang.org/x/term@v0.6.0"
+          },
+          {
+            "nodeId": "golang.org/x/text/transform@v0.8.0"
+          },
+          {
+            "nodeId": "golang.org/x/text/unicode/bidi@v0.8.0"
+          },
+          {
+            "nodeId": "golang.org/x/text/secure/bidirule@v0.8.0"
+          },
+          {
+            "nodeId": "golang.org/x/text/unicode/norm@v0.8.0"
+          },
+          {
+            "nodeId": "golang.org/x/time/rate@v0.3.0"
+          },
+          {
+            "nodeId": "gomodules.xyz/jsonpatch/v2@v2.2.0"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/detrand@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/errors@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/encoding/protowire@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/reflect/protoreflect@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/encoding/messageset@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/strs@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/encoding/text@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/reflect/protoregistry@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/order@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/proto@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/encoding/prototext@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/descfmt@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/encoding/defval@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/filedesc@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/encoding/tag@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/impl@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/internal/filetype@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/types/descriptorpb@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/types/known/timestamppb@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/types/known/anypb@v1.28.1"
+          },
+          {
+            "nodeId": "google.golang.org/protobuf/types/known/durationpb@v1.28.1"
+          },
+          {
+            "nodeId": "gopkg.in/inf.v0@v0.9.1"
+          },
+          {
+            "nodeId": "gopkg.in/yaml.v2@v2.4.0"
+          },
+          {
+            "nodeId": "gopkg.in/yaml.v3@v3.0.1"
+          },
+          {
+            "nodeId": "k8s.io/api/admissionregistration/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/admissionregistration/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/admissionregistration/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/apiserverinternal/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/core/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/apps/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/apps/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/apps/v1beta2@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/authentication/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/authentication/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/authentication/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/authorization/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/authorization/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/autoscaling/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/autoscaling/v2@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/autoscaling/v2beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/autoscaling/v2beta2@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/batch/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/batch/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/certificates/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/certificates/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/coordination/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/coordination/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/discovery/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/discovery/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/events/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/events/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/extensions/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/flowcontrol/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/flowcontrol/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/flowcontrol/v1beta2@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/flowcontrol/v1beta3@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/networking/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/networking/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/networking/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/node/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/node/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/node/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/policy/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/policy/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/rbac/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/rbac/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/rbac/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/resource/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/scheduling/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/scheduling/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/scheduling/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/storage/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/storage/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/storage/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/apidiscovery/v2beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/admission/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/api/admission/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions@v0.26.1"
+          },
+          {
+            "nodeId": "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1@v0.26.1"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/runtime/schema@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/api/resource@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/third_party/forked/golang/reflect@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/conversion@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/fields@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/sets@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/errors@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/validation/field@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/validation@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/labels@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/types@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/intstr@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/conversion/queryparams@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/json@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/runtime@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/naming@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/runtime@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/net@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/watch@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/apis/meta/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/api/meta@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer/recognizer@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/framer@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/yaml@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer/json@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer/protobuf@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer/versioning@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/apis/meta/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/apis/meta/internalversion@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/apis/meta/internalversion/scheme@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/version@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/wait@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/api/errors@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer/streaming@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/mergepatch@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/third_party/forked/golang/json@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/strategicpatch@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/diff@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/util/uuid@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/apimachinery/pkg/api/equality@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/scheme@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/util/flowcontrol@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/pkg/version@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/clientcmd/api@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/util/connrotation@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/util/workqueue@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/transport@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/util/cert@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/pkg/apis/clientauthentication@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/rest/watch@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/metrics@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/pkg/apis/clientauthentication/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/pkg/apis/clientauthentication/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/pkg/apis/clientauthentication/install@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/plugin/pkg/client/auth/exec@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/rest@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/metadata@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/openapi@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/discovery@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/restmapper@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/dynamic@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/applyconfigurations/meta/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/apiserverinternal/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/applyconfigurations/core/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/apps/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/apps/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/apps/v1beta2@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/authentication/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/authentication/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/authentication/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/authorization/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/authorization/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/autoscaling/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/autoscaling/v2@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/autoscaling/v2beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/autoscaling/v2beta2@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/batch/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/batch/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/certificates/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/certificates/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/applyconfigurations/coordination/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/coordination/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/coordination/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/reference@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/core/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/discovery/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/discovery/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/events/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/events/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/extensions/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta2@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta3@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/networking/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/networking/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/networking/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/node/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/node/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/node/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/policy/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/policy/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/rbac/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/rbac/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/rbac/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/resource/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/scheduling/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/scheduling/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/scheduling/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/storage/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/storage/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes/typed/storage/v1beta1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/kubernetes@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/pager@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/cache@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/leaderelection/resourcelock@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/leaderelection@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/record@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/record/util@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/clientcmd/api/v1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/clientcmd/api/latest@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/tools/clientcmd@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/util/homedir@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/plugin/pkg/client/auth/oidc@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/plugin/pkg/client/auth/azure@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/client-go/plugin/pkg/client/auth/gcp@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/component-base/config@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/component-base/config/v1alpha1@v0.26.2"
+          },
+          {
+            "nodeId": "k8s.io/klog/v2/internal/severity@v2.90.1"
+          },
+          {
+            "nodeId": "k8s.io/klog/v2/internal/buffer@v2.90.1"
+          },
+          {
+            "nodeId": "k8s.io/klog/v2/internal/clock@v2.90.1"
+          },
+          {
+            "nodeId": "k8s.io/klog/v2/internal/dbg@v2.90.1"
+          },
+          {
+            "nodeId": "k8s.io/klog/v2/internal/serialize@v2.90.1"
+          },
+          {
+            "nodeId": "k8s.io/klog/v2@v2.90.1"
+          },
+          {
+            "nodeId": "k8s.io/kube-openapi/pkg/internal/third_party/go-json-experiment/json@v0.0.0-20221012153701-172d655c2280"
+          },
+          {
+            "nodeId": "k8s.io/kube-openapi/pkg/validation/spec@v0.0.0-20221012153701-172d655c2280"
+          },
+          {
+            "nodeId": "k8s.io/kube-openapi/pkg/common@v0.0.0-20221012153701-172d655c2280"
+          },
+          {
+            "nodeId": "k8s.io/kube-openapi/pkg/handler3@v0.0.0-20221012153701-172d655c2280"
+          },
+          {
+            "nodeId": "k8s.io/kube-openapi/pkg/schemaconv@v0.0.0-20221012153701-172d655c2280"
+          },
+          {
+            "nodeId": "k8s.io/utils/internal/third_party/forked/golang/net@v0.0.0-20230220204549-a5ecb0141aa5"
+          },
+          {
+            "nodeId": "k8s.io/utils/strings/slices@v0.0.0-20230220204549-a5ecb0141aa5"
+          },
+          {
+            "nodeId": "k8s.io/utils/clock@v0.0.0-20230220204549-a5ecb0141aa5"
+          },
+          {
+            "nodeId": "k8s.io/utils/integer@v0.0.0-20230220204549-a5ecb0141aa5"
+          },
+          {
+            "nodeId": "k8s.io/utils/trace@v0.0.0-20230220204549-a5ecb0141aa5"
+          },
+          {
+            "nodeId": "k8s.io/utils/buffer@v0.0.0-20230220204549-a5ecb0141aa5"
+          },
+          {
+            "nodeId": "k8s.io/utils/pointer@v0.0.0-20230220204549-a5ecb0141aa5"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/client/apiutil@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/log@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/client@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/log@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/reconcile@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/field/selector@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/cache/internal@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/cache@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/handler@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/metrics@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/controller/metrics@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/predicate@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/source/internal@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/source@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/controller@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/recorder@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/cluster@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/runtime/inject@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/scheme@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/config/v1alpha1@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/healthz@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/webhook/internal/metrics@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/webhook/admission@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/certwatcher/metrics@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/certwatcher@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/webhook@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/httpserver@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/leaderelection@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/manager@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/controller@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/webhook/conversion@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/builder@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/client/config@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/manager/signals@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/controller-runtime/pkg/log/zap@v0.14.4"
+          },
+          {
+            "nodeId": "sigs.k8s.io/json/internal/golang/encoding/json@v0.0.0-20220713155537-f223a00ba0e2"
+          },
+          {
+            "nodeId": "sigs.k8s.io/json@v0.0.0-20220713155537-f223a00ba0e2"
+          },
+          {
+            "nodeId": "sigs.k8s.io/structured-merge-diff/v4/value@v4.2.3"
+          },
+          {
+            "nodeId": "sigs.k8s.io/structured-merge-diff/v4/schema@v4.2.3"
+          },
+          {
+            "nodeId": "sigs.k8s.io/structured-merge-diff/v4/fieldpath@v4.2.3"
+          },
+          {
+            "nodeId": "sigs.k8s.io/structured-merge-diff/v4/typed@v4.2.3"
+          },
+          {
+            "nodeId": "sigs.k8s.io/yaml@v1.3.0"
+          }
+        ]
+      },
+      {
+        "nodeId": "github.com/cespare/xxhash/v2@v2.2.0",
+        "pkgId": "github.com/cespare/xxhash/v2@v2.2.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/davecgh/go-spew/spew@v1.1.1",
+        "pkgId": "github.com/davecgh/go-spew/spew@v1.1.1",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/emicklei/go-restful/v3/log@v3.10.1",
+        "pkgId": "github.com/emicklei/go-restful/v3/log@v3.10.1",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/emicklei/go-restful/v3@v3.10.1",
+        "pkgId": "github.com/emicklei/go-restful/v3@v3.10.1",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/evanphx/json-patch/v5@v5.6.0",
+        "pkgId": "github.com/evanphx/json-patch/v5@v5.6.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/fsnotify/fsnotify@v1.6.0",
+        "pkgId": "github.com/fsnotify/fsnotify@v1.6.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/go-logr/logr@v1.2.3",
+        "pkgId": "github.com/go-logr/logr@v1.2.3",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/go-logr/zapr@v1.2.3",
+        "pkgId": "github.com/go-logr/zapr@v1.2.3",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/go-openapi/jsonpointer@v0.19.5",
+        "pkgId": "github.com/go-openapi/jsonpointer@v0.19.5",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/go-openapi/jsonreference/internal@v0.20.0",
+        "pkgId": "github.com/go-openapi/jsonreference/internal@v0.20.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/go-openapi/jsonreference@v0.20.0",
+        "pkgId": "github.com/go-openapi/jsonreference@v0.20.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/go-openapi/swag@v0.21.1",
+        "pkgId": "github.com/go-openapi/swag@v0.21.1",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/gogo/protobuf/proto@v1.3.2",
+        "pkgId": "github.com/gogo/protobuf/proto@v1.3.2",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/gogo/protobuf/sortkeys@v1.3.2",
+        "pkgId": "github.com/gogo/protobuf/sortkeys@v1.3.2",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/golang/groupcache/lru@v0.0.0-20210331224755-41bb18bfe9da",
+        "pkgId": "github.com/golang/groupcache/lru@v0.0.0-20210331224755-41bb18bfe9da",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/golang/protobuf/proto@v1.5.2",
+        "pkgId": "github.com/golang/protobuf/proto@v1.5.2",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/golang/protobuf/ptypes/timestamp@v1.5.2",
+        "pkgId": "github.com/golang/protobuf/ptypes/timestamp@v1.5.2",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/golang/protobuf/ptypes/any@v1.5.2",
+        "pkgId": "github.com/golang/protobuf/ptypes/any@v1.5.2",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/golang/protobuf/ptypes/duration@v1.5.2",
+        "pkgId": "github.com/golang/protobuf/ptypes/duration@v1.5.2",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/google/gnostic/extensions@v0.6.9",
+        "pkgId": "github.com/google/gnostic/extensions@v0.6.9",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/google/gnostic/compiler@v0.6.9",
+        "pkgId": "github.com/google/gnostic/compiler@v0.6.9",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/google/gnostic/openapiv2@v0.6.9",
+        "pkgId": "github.com/google/gnostic/openapiv2@v0.6.9",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/google/gnostic/openapiv3@v0.6.9",
+        "pkgId": "github.com/google/gnostic/openapiv3@v0.6.9",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/google/go-cmp/cmp/internal/diff@v0.5.9",
+        "pkgId": "github.com/google/go-cmp/cmp/internal/diff@v0.5.9",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/google/go-cmp/cmp/internal/function@v0.5.9",
+        "pkgId": "github.com/google/go-cmp/cmp/internal/function@v0.5.9",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/google/go-cmp/cmp/internal/value@v0.5.9",
+        "pkgId": "github.com/google/go-cmp/cmp/internal/value@v0.5.9",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/google/go-cmp/cmp@v0.5.9",
+        "pkgId": "github.com/google/go-cmp/cmp@v0.5.9",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/google/gofuzz@v1.2.0",
+        "pkgId": "github.com/google/gofuzz@v1.2.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/google/uuid@v1.3.0",
+        "pkgId": "github.com/google/uuid@v1.3.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/imdario/mergo@v0.3.13",
+        "pkgId": "github.com/imdario/mergo@v0.3.13",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/json-iterator/go@v1.1.12",
+        "pkgId": "github.com/json-iterator/go@v1.1.12",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/mailru/easyjson/buffer@v0.7.7",
+        "pkgId": "github.com/mailru/easyjson/buffer@v0.7.7",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/mailru/easyjson/jwriter@v0.7.7",
+        "pkgId": "github.com/mailru/easyjson/jwriter@v0.7.7",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/matttproud/golang_protobuf_extensions/pbutil@v1.0.4",
+        "pkgId": "github.com/matttproud/golang_protobuf_extensions/pbutil@v1.0.4",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/modern-go/concurrent@v0.0.0-20180306012644-bacd9c7ef1dd",
+        "pkgId": "github.com/modern-go/concurrent@v0.0.0-20180306012644-bacd9c7ef1dd",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/modern-go/reflect2@v1.0.2",
+        "pkgId": "github.com/modern-go/reflect2@v1.0.2",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/pkg/errors@v0.9.1",
+        "pkgId": "github.com/pkg/errors@v0.9.1",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/client_golang/prometheus/internal@v1.14.0",
+        "pkgId": "github.com/prometheus/client_golang/prometheus/internal@v1.14.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/client_golang/prometheus@v1.14.0",
+        "pkgId": "github.com/prometheus/client_golang/prometheus@v1.14.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/client_golang/prometheus/collectors@v1.14.0",
+        "pkgId": "github.com/prometheus/client_golang/prometheus/collectors@v1.14.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/client_golang/prometheus/promhttp@v1.14.0",
+        "pkgId": "github.com/prometheus/client_golang/prometheus/promhttp@v1.14.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/client_model/go@v0.3.0",
+        "pkgId": "github.com/prometheus/client_model/go@v0.3.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/common/model@v0.37.0",
+        "pkgId": "github.com/prometheus/common/model@v0.37.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg@v0.37.0",
+        "pkgId": "github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg@v0.37.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/common/expfmt@v0.37.0",
+        "pkgId": "github.com/prometheus/common/expfmt@v0.37.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/procfs/internal/util@v0.8.0",
+        "pkgId": "github.com/prometheus/procfs/internal/util@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/procfs/internal/fs@v0.8.0",
+        "pkgId": "github.com/prometheus/procfs/internal/fs@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/prometheus/procfs@v0.8.0",
+        "pkgId": "github.com/prometheus/procfs@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "github.com/spf13/pflag@v1.0.5",
+        "pkgId": "github.com/spf13/pflag@v1.0.5",
+        "deps": []
+      },
+      {
+        "nodeId": "go.uber.org/atomic@v1.9.0",
+        "pkgId": "go.uber.org/atomic@v1.9.0",
+        "deps": []
+      },
+      {
+        "nodeId": "go.uber.org/multierr@v1.8.0",
+        "pkgId": "go.uber.org/multierr@v1.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "go.uber.org/zap/buffer@v1.24.0",
+        "pkgId": "go.uber.org/zap/buffer@v1.24.0",
+        "deps": []
+      },
+      {
+        "nodeId": "go.uber.org/zap/internal/bufferpool@v1.24.0",
+        "pkgId": "go.uber.org/zap/internal/bufferpool@v1.24.0",
+        "deps": []
+      },
+      {
+        "nodeId": "go.uber.org/zap/zapcore@v1.24.0",
+        "pkgId": "go.uber.org/zap/zapcore@v1.24.0",
+        "deps": []
+      },
+      {
+        "nodeId": "go.uber.org/zap/internal/color@v1.24.0",
+        "pkgId": "go.uber.org/zap/internal/color@v1.24.0",
+        "deps": []
+      },
+      {
+        "nodeId": "go.uber.org/zap/internal/exit@v1.24.0",
+        "pkgId": "go.uber.org/zap/internal/exit@v1.24.0",
+        "deps": []
+      },
+      {
+        "nodeId": "go.uber.org/zap@v1.24.0",
+        "pkgId": "go.uber.org/zap@v1.24.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/exp/slices@v0.0.0-20230213192124-5e25df0256eb",
+        "pkgId": "golang.org/x/exp/slices@v0.0.0-20230213192124-5e25df0256eb",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/net/idna@v0.8.0",
+        "pkgId": "golang.org/x/net/idna@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/net/http/httpguts@v0.8.0",
+        "pkgId": "golang.org/x/net/http/httpguts@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/net/http2/hpack@v0.8.0",
+        "pkgId": "golang.org/x/net/http2/hpack@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/net/http2@v0.8.0",
+        "pkgId": "golang.org/x/net/http2@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/oauth2/internal@v0.5.0",
+        "pkgId": "golang.org/x/oauth2/internal@v0.5.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/oauth2@v0.5.0",
+        "pkgId": "golang.org/x/oauth2@v0.5.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/sys/unix@v0.6.0",
+        "pkgId": "golang.org/x/sys/unix@v0.6.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/term@v0.6.0",
+        "pkgId": "golang.org/x/term@v0.6.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/text/transform@v0.8.0",
+        "pkgId": "golang.org/x/text/transform@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/text/unicode/bidi@v0.8.0",
+        "pkgId": "golang.org/x/text/unicode/bidi@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/text/secure/bidirule@v0.8.0",
+        "pkgId": "golang.org/x/text/secure/bidirule@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/text/unicode/norm@v0.8.0",
+        "pkgId": "golang.org/x/text/unicode/norm@v0.8.0",
+        "deps": []
+      },
+      {
+        "nodeId": "golang.org/x/time/rate@v0.3.0",
+        "pkgId": "golang.org/x/time/rate@v0.3.0",
+        "deps": []
+      },
+      {
+        "nodeId": "gomodules.xyz/jsonpatch/v2@v2.2.0",
+        "pkgId": "gomodules.xyz/jsonpatch/v2@v2.2.0",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/detrand@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/detrand@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/errors@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/errors@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/encoding/protowire@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/encoding/protowire@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/reflect/protoreflect@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/reflect/protoreflect@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/encoding/messageset@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/encoding/messageset@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/strs@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/strs@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/encoding/text@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/encoding/text@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/reflect/protoregistry@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/reflect/protoregistry@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/order@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/order@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/proto@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/proto@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/encoding/prototext@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/encoding/prototext@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/descfmt@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/descfmt@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/encoding/defval@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/encoding/defval@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/filedesc@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/filedesc@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/encoding/tag@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/encoding/tag@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/impl@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/impl@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/internal/filetype@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/internal/filetype@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/types/descriptorpb@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/types/descriptorpb@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/types/known/timestamppb@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/types/known/timestamppb@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/types/known/anypb@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/types/known/anypb@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "google.golang.org/protobuf/types/known/durationpb@v1.28.1",
+        "pkgId": "google.golang.org/protobuf/types/known/durationpb@v1.28.1",
+        "deps": []
+      },
+      {
+        "nodeId": "gopkg.in/inf.v0@v0.9.1",
+        "pkgId": "gopkg.in/inf.v0@v0.9.1",
+        "deps": []
+      },
+      {
+        "nodeId": "gopkg.in/yaml.v2@v2.4.0",
+        "pkgId": "gopkg.in/yaml.v2@v2.4.0",
+        "deps": []
+      },
+      {
+        "nodeId": "gopkg.in/yaml.v3@v3.0.1",
+        "pkgId": "gopkg.in/yaml.v3@v3.0.1",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/admissionregistration/v1@v0.26.2",
+        "pkgId": "k8s.io/api/admissionregistration/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/admissionregistration/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/api/admissionregistration/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/admissionregistration/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/admissionregistration/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/apiserverinternal/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/api/apiserverinternal/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/core/v1@v0.26.2",
+        "pkgId": "k8s.io/api/core/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/apps/v1@v0.26.2",
+        "pkgId": "k8s.io/api/apps/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/apps/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/apps/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/apps/v1beta2@v0.26.2",
+        "pkgId": "k8s.io/api/apps/v1beta2@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/authentication/v1@v0.26.2",
+        "pkgId": "k8s.io/api/authentication/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/authentication/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/api/authentication/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/authentication/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/authentication/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/authorization/v1@v0.26.2",
+        "pkgId": "k8s.io/api/authorization/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/authorization/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/authorization/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/autoscaling/v1@v0.26.2",
+        "pkgId": "k8s.io/api/autoscaling/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/autoscaling/v2@v0.26.2",
+        "pkgId": "k8s.io/api/autoscaling/v2@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/autoscaling/v2beta1@v0.26.2",
+        "pkgId": "k8s.io/api/autoscaling/v2beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/autoscaling/v2beta2@v0.26.2",
+        "pkgId": "k8s.io/api/autoscaling/v2beta2@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/batch/v1@v0.26.2",
+        "pkgId": "k8s.io/api/batch/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/batch/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/batch/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/certificates/v1@v0.26.2",
+        "pkgId": "k8s.io/api/certificates/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/certificates/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/certificates/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/coordination/v1@v0.26.2",
+        "pkgId": "k8s.io/api/coordination/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/coordination/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/coordination/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/discovery/v1@v0.26.2",
+        "pkgId": "k8s.io/api/discovery/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/discovery/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/discovery/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/events/v1@v0.26.2",
+        "pkgId": "k8s.io/api/events/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/events/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/events/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/extensions/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/extensions/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/flowcontrol/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/api/flowcontrol/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/flowcontrol/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/flowcontrol/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/flowcontrol/v1beta2@v0.26.2",
+        "pkgId": "k8s.io/api/flowcontrol/v1beta2@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/flowcontrol/v1beta3@v0.26.2",
+        "pkgId": "k8s.io/api/flowcontrol/v1beta3@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/networking/v1@v0.26.2",
+        "pkgId": "k8s.io/api/networking/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/networking/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/api/networking/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/networking/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/networking/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/node/v1@v0.26.2",
+        "pkgId": "k8s.io/api/node/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/node/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/api/node/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/node/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/node/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/policy/v1@v0.26.2",
+        "pkgId": "k8s.io/api/policy/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/policy/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/policy/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/rbac/v1@v0.26.2",
+        "pkgId": "k8s.io/api/rbac/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/rbac/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/api/rbac/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/rbac/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/rbac/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/resource/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/api/resource/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/scheduling/v1@v0.26.2",
+        "pkgId": "k8s.io/api/scheduling/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/scheduling/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/api/scheduling/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/scheduling/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/scheduling/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/storage/v1@v0.26.2",
+        "pkgId": "k8s.io/api/storage/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/storage/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/api/storage/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/storage/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/storage/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/apidiscovery/v2beta1@v0.26.2",
+        "pkgId": "k8s.io/api/apidiscovery/v2beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/admission/v1@v0.26.2",
+        "pkgId": "k8s.io/api/admission/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/api/admission/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/api/admission/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions@v0.26.1",
+        "pkgId": "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions@v0.26.1",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1@v0.26.1",
+        "pkgId": "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1@v0.26.1",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/runtime/schema@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/runtime/schema@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/api/resource@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/api/resource@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/third_party/forked/golang/reflect@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/third_party/forked/golang/reflect@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/conversion@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/conversion@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/fields@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/fields@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/sets@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/sets@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/errors@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/errors@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/validation/field@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/validation/field@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/validation@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/validation@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/labels@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/labels@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/types@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/types@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/intstr@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/intstr@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/conversion/queryparams@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/conversion/queryparams@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/json@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/json@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/runtime@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/runtime@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/naming@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/naming@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/runtime@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/runtime@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/net@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/net@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/watch@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/watch@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/apis/meta/v1@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/apis/meta/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/api/meta@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/api/meta@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer/recognizer@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/runtime/serializer/recognizer@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/framer@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/framer@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/yaml@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/yaml@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer/json@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/runtime/serializer/json@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer/protobuf@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/runtime/serializer/protobuf@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer/versioning@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/runtime/serializer/versioning@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/runtime/serializer@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/apis/meta/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/apis/meta/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/apis/meta/internalversion@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/apis/meta/internalversion@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/apis/meta/internalversion/scheme@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/apis/meta/internalversion/scheme@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/version@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/version@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/wait@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/wait@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/api/errors@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/api/errors@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/runtime/serializer/streaming@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/runtime/serializer/streaming@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/mergepatch@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/mergepatch@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/third_party/forked/golang/json@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/third_party/forked/golang/json@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/strategicpatch@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/strategicpatch@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/diff@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/diff@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/util/uuid@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/util/uuid@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/apimachinery/pkg/api/equality@v0.26.2",
+        "pkgId": "k8s.io/apimachinery/pkg/api/equality@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/scheme@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/scheme@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/util/flowcontrol@v0.26.2",
+        "pkgId": "k8s.io/client-go/util/flowcontrol@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/pkg/version@v0.26.2",
+        "pkgId": "k8s.io/client-go/pkg/version@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/clientcmd/api@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/clientcmd/api@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/util/connrotation@v0.26.2",
+        "pkgId": "k8s.io/client-go/util/connrotation@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/util/workqueue@v0.26.2",
+        "pkgId": "k8s.io/client-go/util/workqueue@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/transport@v0.26.2",
+        "pkgId": "k8s.io/client-go/transport@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/util/cert@v0.26.2",
+        "pkgId": "k8s.io/client-go/util/cert@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/pkg/apis/clientauthentication@v0.26.2",
+        "pkgId": "k8s.io/client-go/pkg/apis/clientauthentication@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/rest/watch@v0.26.2",
+        "pkgId": "k8s.io/client-go/rest/watch@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/metrics@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/metrics@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/pkg/apis/clientauthentication/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/pkg/apis/clientauthentication/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/pkg/apis/clientauthentication/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/pkg/apis/clientauthentication/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/pkg/apis/clientauthentication/install@v0.26.2",
+        "pkgId": "k8s.io/client-go/pkg/apis/clientauthentication/install@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/plugin/pkg/client/auth/exec@v0.26.2",
+        "pkgId": "k8s.io/client-go/plugin/pkg/client/auth/exec@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/rest@v0.26.2",
+        "pkgId": "k8s.io/client-go/rest@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/metadata@v0.26.2",
+        "pkgId": "k8s.io/client-go/metadata@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/openapi@v0.26.2",
+        "pkgId": "k8s.io/client-go/openapi@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/discovery@v0.26.2",
+        "pkgId": "k8s.io/client-go/discovery@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/restmapper@v0.26.2",
+        "pkgId": "k8s.io/client-go/restmapper@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/dynamic@v0.26.2",
+        "pkgId": "k8s.io/client-go/dynamic@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/applyconfigurations/meta/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/applyconfigurations/meta/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/admissionregistration/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/apiserverinternal/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/apiserverinternal/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/applyconfigurations/core/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/applyconfigurations/core/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/apps/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/apps/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/apps/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/apps/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/apps/v1beta2@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/apps/v1beta2@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/authentication/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/authentication/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/authentication/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/authentication/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/authentication/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/authentication/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/authorization/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/authorization/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/authorization/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/authorization/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/autoscaling/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/autoscaling/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/autoscaling/v2@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/autoscaling/v2@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/autoscaling/v2beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/autoscaling/v2beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/autoscaling/v2beta2@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/autoscaling/v2beta2@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/batch/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/batch/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/batch/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/batch/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/certificates/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/certificates/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/certificates/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/certificates/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/applyconfigurations/coordination/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/applyconfigurations/coordination/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/coordination/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/coordination/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/coordination/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/coordination/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/reference@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/reference@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/core/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/core/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/discovery/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/discovery/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/discovery/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/discovery/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/events/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/events/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/events/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/events/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/extensions/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/extensions/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta2@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta2@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta3@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta3@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/networking/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/networking/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/networking/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/networking/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/networking/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/networking/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/node/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/node/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/node/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/node/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/node/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/node/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/policy/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/policy/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/policy/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/policy/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/rbac/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/rbac/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/rbac/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/rbac/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/rbac/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/rbac/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/resource/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/resource/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/scheduling/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/scheduling/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/scheduling/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/scheduling/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/scheduling/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/scheduling/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/storage/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/storage/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/storage/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/storage/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes/typed/storage/v1beta1@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes/typed/storage/v1beta1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/kubernetes@v0.26.2",
+        "pkgId": "k8s.io/client-go/kubernetes@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/pager@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/pager@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/cache@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/cache@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/leaderelection/resourcelock@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/leaderelection/resourcelock@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/leaderelection@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/leaderelection@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/record@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/record@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/record/util@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/record/util@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/clientcmd/api/v1@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/clientcmd/api/v1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/clientcmd/api/latest@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/clientcmd/api/latest@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/tools/clientcmd@v0.26.2",
+        "pkgId": "k8s.io/client-go/tools/clientcmd@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/util/homedir@v0.26.2",
+        "pkgId": "k8s.io/client-go/util/homedir@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/plugin/pkg/client/auth/oidc@v0.26.2",
+        "pkgId": "k8s.io/client-go/plugin/pkg/client/auth/oidc@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/plugin/pkg/client/auth/azure@v0.26.2",
+        "pkgId": "k8s.io/client-go/plugin/pkg/client/auth/azure@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/client-go/plugin/pkg/client/auth/gcp@v0.26.2",
+        "pkgId": "k8s.io/client-go/plugin/pkg/client/auth/gcp@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/component-base/config@v0.26.2",
+        "pkgId": "k8s.io/component-base/config@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/component-base/config/v1alpha1@v0.26.2",
+        "pkgId": "k8s.io/component-base/config/v1alpha1@v0.26.2",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/klog/v2/internal/severity@v2.90.1",
+        "pkgId": "k8s.io/klog/v2/internal/severity@v2.90.1",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/klog/v2/internal/buffer@v2.90.1",
+        "pkgId": "k8s.io/klog/v2/internal/buffer@v2.90.1",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/klog/v2/internal/clock@v2.90.1",
+        "pkgId": "k8s.io/klog/v2/internal/clock@v2.90.1",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/klog/v2/internal/dbg@v2.90.1",
+        "pkgId": "k8s.io/klog/v2/internal/dbg@v2.90.1",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/klog/v2/internal/serialize@v2.90.1",
+        "pkgId": "k8s.io/klog/v2/internal/serialize@v2.90.1",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/klog/v2@v2.90.1",
+        "pkgId": "k8s.io/klog/v2@v2.90.1",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/kube-openapi/pkg/internal/third_party/go-json-experiment/json@v0.0.0-20221012153701-172d655c2280",
+        "pkgId": "k8s.io/kube-openapi/pkg/internal/third_party/go-json-experiment/json@v0.0.0-20221012153701-172d655c2280",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/kube-openapi/pkg/validation/spec@v0.0.0-20221012153701-172d655c2280",
+        "pkgId": "k8s.io/kube-openapi/pkg/validation/spec@v0.0.0-20221012153701-172d655c2280",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/kube-openapi/pkg/common@v0.0.0-20221012153701-172d655c2280",
+        "pkgId": "k8s.io/kube-openapi/pkg/common@v0.0.0-20221012153701-172d655c2280",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/kube-openapi/pkg/handler3@v0.0.0-20221012153701-172d655c2280",
+        "pkgId": "k8s.io/kube-openapi/pkg/handler3@v0.0.0-20221012153701-172d655c2280",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/kube-openapi/pkg/schemaconv@v0.0.0-20221012153701-172d655c2280",
+        "pkgId": "k8s.io/kube-openapi/pkg/schemaconv@v0.0.0-20221012153701-172d655c2280",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/utils/internal/third_party/forked/golang/net@v0.0.0-20230220204549-a5ecb0141aa5",
+        "pkgId": "k8s.io/utils/internal/third_party/forked/golang/net@v0.0.0-20230220204549-a5ecb0141aa5",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/utils/strings/slices@v0.0.0-20230220204549-a5ecb0141aa5",
+        "pkgId": "k8s.io/utils/strings/slices@v0.0.0-20230220204549-a5ecb0141aa5",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/utils/clock@v0.0.0-20230220204549-a5ecb0141aa5",
+        "pkgId": "k8s.io/utils/clock@v0.0.0-20230220204549-a5ecb0141aa5",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/utils/integer@v0.0.0-20230220204549-a5ecb0141aa5",
+        "pkgId": "k8s.io/utils/integer@v0.0.0-20230220204549-a5ecb0141aa5",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/utils/trace@v0.0.0-20230220204549-a5ecb0141aa5",
+        "pkgId": "k8s.io/utils/trace@v0.0.0-20230220204549-a5ecb0141aa5",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/utils/buffer@v0.0.0-20230220204549-a5ecb0141aa5",
+        "pkgId": "k8s.io/utils/buffer@v0.0.0-20230220204549-a5ecb0141aa5",
+        "deps": []
+      },
+      {
+        "nodeId": "k8s.io/utils/pointer@v0.0.0-20230220204549-a5ecb0141aa5",
+        "pkgId": "k8s.io/utils/pointer@v0.0.0-20230220204549-a5ecb0141aa5",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/client/apiutil@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/client/apiutil@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/log@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/log@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/client@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/client@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/log@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/internal/log@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/reconcile@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/reconcile@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/field/selector@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/internal/field/selector@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/cache/internal@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/cache/internal@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/cache@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/cache@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/handler@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/handler@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/metrics@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/metrics@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/controller/metrics@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/internal/controller/metrics@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/predicate@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/predicate@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/source/internal@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/source/internal@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/source@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/source@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/controller@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/internal/controller@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/recorder@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/internal/recorder@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/cluster@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/cluster@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/runtime/inject@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/runtime/inject@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/scheme@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/scheme@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/config/v1alpha1@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/config/v1alpha1@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/healthz@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/healthz@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/webhook/internal/metrics@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/webhook/internal/metrics@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/webhook/admission@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/webhook/admission@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/certwatcher/metrics@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/certwatcher/metrics@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/certwatcher@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/certwatcher@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/webhook@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/webhook@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/internal/httpserver@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/internal/httpserver@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/leaderelection@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/leaderelection@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/manager@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/manager@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/controller@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/controller@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/webhook/conversion@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/webhook/conversion@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/builder@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/builder@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/client/config@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/client/config@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/manager/signals@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/manager/signals@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/controller-runtime/pkg/log/zap@v0.14.4",
+        "pkgId": "sigs.k8s.io/controller-runtime/pkg/log/zap@v0.14.4",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/json/internal/golang/encoding/json@v0.0.0-20220713155537-f223a00ba0e2",
+        "pkgId": "sigs.k8s.io/json/internal/golang/encoding/json@v0.0.0-20220713155537-f223a00ba0e2",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/json@v0.0.0-20220713155537-f223a00ba0e2",
+        "pkgId": "sigs.k8s.io/json@v0.0.0-20220713155537-f223a00ba0e2",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/structured-merge-diff/v4/value@v4.2.3",
+        "pkgId": "sigs.k8s.io/structured-merge-diff/v4/value@v4.2.3",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/structured-merge-diff/v4/schema@v4.2.3",
+        "pkgId": "sigs.k8s.io/structured-merge-diff/v4/schema@v4.2.3",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/structured-merge-diff/v4/fieldpath@v4.2.3",
+        "pkgId": "sigs.k8s.io/structured-merge-diff/v4/fieldpath@v4.2.3",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/structured-merge-diff/v4/typed@v4.2.3",
+        "pkgId": "sigs.k8s.io/structured-merge-diff/v4/typed@v4.2.3",
+        "deps": []
+      },
+      {
+        "nodeId": "sigs.k8s.io/yaml@v1.3.0",
+        "pkgId": "sigs.k8s.io/yaml@v1.3.0",
+        "deps": []
+      }
+    ]
+  }
+}
+DepGraph target:
+docker-image|snyk/kubernetes-scanner:/kubernetes-scanner
+DepGraph end
+
+
+
