@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -61,7 +62,7 @@ func TestDepGraphsToSBOM(t *testing.T) {
 				http.DefaultClient,
 				mockSBOMService.URL,
 				orgID,
-				[][]byte{[]byte("{}")},
+				[]json.RawMessage{[]byte("{}")},
 				nil,
 				tt.format,
 				logger,
@@ -87,7 +88,36 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 	})
 	logger := log.New(&bytes.Buffer{}, "", 0)
 	errFactory := errors.NewErrorFactory(logger)
-	depGraphs := [][]byte{[]byte("{}"), []byte("{}")}
+	depGraphs := []json.RawMessage{[]byte("{}"), []byte("{}")}
+	subject := NewSubject("goof", "0.0.0")
+
+	_, err := DepGraphsToSBOM(
+		http.DefaultClient,
+		mockSBOMService.URL,
+		orgID,
+		depGraphs,
+		subject,
+		format,
+		logger,
+		errFactory,
+	)
+	assert.NoError(t, err)
+}
+
+func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
+	format := "cyclonedx1.4+json"
+	expectedContentType := "application/vnd.cyclonedx+json"
+	mockBody := []byte("{}")
+	response := mocks.NewMockResponse(expectedContentType, mockBody, http.StatusOK)
+	mockSBOMService := mocks.NewMockSBOMService(response, func(r *http.Request) {
+		body, err := io.ReadAll(r.Body)
+		defer r.Body.Close()
+		require.NoError(t, err)
+		assert.JSONEq(t, `{"depGraphs":[{}],"subject":{"name":"goof","version":"0.0.0"}}`, string(body))
+	})
+	logger := log.New(&bytes.Buffer{}, "", 0)
+	errFactory := errors.NewErrorFactory(logger)
+	depGraphs := []json.RawMessage{[]byte("{}")}
 	subject := NewSubject("goof", "0.0.0")
 
 	_, err := DepGraphsToSBOM(
@@ -111,7 +141,7 @@ func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
 		http.DefaultClient,
 		"http://0.0.0.0",
 		orgID,
-		[][]byte{[]byte("{}")},
+		[]json.RawMessage{[]byte("{}")},
 		nil,
 		"cyclonedx1.4+json",
 		logger,
@@ -162,7 +192,7 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 				http.DefaultClient,
 				mockSBOMService.URL,
 				orgID,
-				[][]byte{[]byte("{}")},
+				[]json.RawMessage{[]byte("{}")},
 				nil,
 				"cyclonedx1.4+json",
 				logger,

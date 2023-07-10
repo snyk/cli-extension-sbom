@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	stderr "errors"
 	"fmt"
 	"io"
@@ -19,9 +20,9 @@ type (
 		MIMEType string
 	}
 
-	subject struct {
-		name    string
-		version string
+	Subject struct {
+		Name    string `json:"name"`
+		Version string `json:"version"`
 	}
 )
 
@@ -36,10 +37,10 @@ var sbomFormats = [...]string{
 	"spdx2.3+json",
 }
 
-func NewSubject(name, version string) *subject {
-	return &subject{
-		name:    name,
-		version: version,
+func NewSubject(name, version string) *Subject {
+	return &Subject{
+		Name:    name,
+		Version: version,
 	}
 }
 
@@ -47,8 +48,8 @@ func DepGraphsToSBOM(
 	client *http.Client,
 	apiURL string,
 	orgID string,
-	depGraphs [][]byte,
-	subject *subject,
+	depGraphs []json.RawMessage,
+	subject *Subject,
 	format string,
 	logger *log.Logger,
 	errFactory *errors.ErrorFactory,
@@ -126,26 +127,30 @@ func ValidateSBOMFormat(errFactory *errors.ErrorFactory, candidate string) error
 	return errFactory.NewInvalidFormatError(candidate, sbomFormats[:])
 }
 
-func preparePayload(depGraphs [][]byte, subject *subject) ([]byte, error) {
-	if len(depGraphs) == 1 {
-		return singleDepGraphReqBody(depGraphs[0]), nil
-	} else {
-		return multipleDepGraphsReqBody(depGraphs, subject)
-	}
-}
+func preparePayload(depGraphs []json.RawMessage, subject *Subject) ([]byte, error) {
+	// by using json.RawMessage everywhere we expect a json-encoded []byte, we can embed this
+	// directly in Go types and call `json.Marshal` on it to embed the JSON directly.
 
-func singleDepGraphReqBody(depGraph []byte) []byte {
-	return []byte(fmt.Sprintf(`{"depGraph":%s}`, depGraph))
-}
+	// only send the request with a single depGraph if there's no subject. If there is a subject, we
+	// want to use the multi-depgraph-endpoint so that we can overwrite the depGraph's name &
+	// version with the name & version from the subject.
+	if subject == nil || subject.Name == "" {
+		if len(depGraphs) != 1 {
+			return []byte{}, stderr.New("no subject defined for multiple depgraphs")
+		}
 
-func multipleDepGraphsReqBody(depGraphs [][]byte, subject *subject) ([]byte, error) {
-	if subject == nil {
-		return []byte{}, stderr.New("no subject defined for multiple depgraphs")
+		type dg struct {
+			DepGraph json.RawMessage `json:"depGraph"`
+		}
+		return json.Marshal(&dg{DepGraph: depGraphs[0]})
 	}
-	return []byte(fmt.Sprintf(
-		`{"depGraphs":[%s],"subject":{"name":%q,"version":%q}}`,
-		bytes.Join(depGraphs, []byte(",")),
-		subject.name,
-		subject.version,
-	)), nil
+
+	type dgs struct {
+		DepGraphs []json.RawMessage `json:"depGraphs"`
+		Subject   *Subject          `json:"subject"`
+	}
+	return json.Marshal(&dgs{
+		DepGraphs: depGraphs,
+		Subject:   subject,
+	})
 }
