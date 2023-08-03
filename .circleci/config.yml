@@ -56,6 +56,10 @@ workflows:
           context:
             - snyk-bot-slack
           channel: team-link-pipeline-info
+          filters:
+            branches:
+              ignore:
+                - main          
       - unit-test:
           name: Unit Test
       - lint:
