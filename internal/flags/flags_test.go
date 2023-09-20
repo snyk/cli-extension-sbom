@@ -66,6 +66,11 @@ func TestGetFlagSet(t *testing.T) {
 			isBool:   false,
 			expected: "",
 		},
+		{
+			flagName: FlagYarnWorkspaces,
+			isBool:   true,
+			expected: false,
+		},
 	}
 
 	for _, tt := range tc {

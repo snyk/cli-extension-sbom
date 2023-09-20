@@ -23,6 +23,7 @@ const (
 	FlagConfigurationMatching        = "configuration-matching"
 	FlagConfigurationAttributes      = "configuration-attributes"
 	FlagInitScript                   = "init-script"
+	FlagYarnWorkspaces               = "yarn-workspaces"
 )
 
 func GetFlagSet() *pflag.FlagSet {
@@ -31,6 +32,7 @@ func GetFlagSet() *pflag.FlagSet {
 	flagSet.Bool(FlagExperimental, false, "Deprecated. Will be ignored.")
 	flagSet.Bool(FlagUnmanaged, false, "For C/C++ only, scan all files for known open source dependencies and build an SBOM.")
 	flagSet.Bool(FlagAllProjects, false, "Auto-detect all projects in the working directory (including Yarn workspaces).")
+	flagSet.Bool(FlagYarnWorkspaces, false, "Detect and scan Yarn Workspaces only when a lockfile is in the root.")
 	flagSet.String(FlagExclude, "", "Can be used with --all-projects to indicate directory names and file names to exclude. Must be comma separated.")
 	flagSet.String(FlagDetectionDepth, "", "Use with --all-projects to indicate how many subdirectories to search. "+
 		"DEPTH must be a number, 1 or greater; zero (0) is the current directory.")
