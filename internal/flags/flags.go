@@ -26,6 +26,7 @@ const (
 	FlagYarnWorkspaces               = "yarn-workspaces"
 	FlagPythonCommand                = "command"
 	FlagPythonSkipUnresolved         = "skip-unresolved"
+	FlagPythonPackageManager         = "package-manager"
 )
 
 func GetFlagSet() *pflag.FlagSet {
@@ -55,6 +56,7 @@ func GetFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagInitScript, "", "Use for projects that contain a Gradle initialization script.")
 	flagSet.String(FlagPythonCommand, "", "Indicate which specific Python commands to use based on the Python version.")
 	flagSet.Bool(FlagPythonSkipUnresolved, false, "Skip Python packages that cannot be found in the environment.")
+	flagSet.String(FlagPythonPackageManager, "", `Add --package-manager=pip to your command if the file name is not "requirements.txt".`)
 
 	return flagSet
 }

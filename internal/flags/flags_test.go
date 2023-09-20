@@ -81,6 +81,11 @@ func TestGetFlagSet(t *testing.T) {
 			isBool:   true,
 			expected: false,
 		},
+		{
+			flagName: FlagPythonPackageManager,
+			isBool:   false,
+			expected: "",
+		},
 	}
 
 	for _, tt := range tc {
