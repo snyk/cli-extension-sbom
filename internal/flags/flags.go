@@ -24,6 +24,7 @@ const (
 	FlagConfigurationAttributes      = "configuration-attributes"
 	FlagInitScript                   = "init-script"
 	FlagYarnWorkspaces               = "yarn-workspaces"
+	FlagPythonCommand                = "command"
 )
 
 func GetFlagSet() *pflag.FlagSet {
@@ -51,6 +52,7 @@ func GetFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagConfigurationMatching, "", "Resolve dependencies using only configuration(s) that match the specified Java regular expression.")
 	flagSet.String(FlagConfigurationAttributes, "", "Select certain values of configuration attributes to install and resolve dependencies.")
 	flagSet.String(FlagInitScript, "", "Use for projects that contain a Gradle initialization script.")
+	flagSet.String(FlagPythonCommand, "", "Indicate which specific Python commands to use based on the Python version.")
 
 	return flagSet
 }
