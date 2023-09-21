@@ -30,6 +30,7 @@ const (
 	FlagNPMStrictOutOfSync           = "strict-out-of-sync"
 	FlagNugetAssetsProjectName       = "assets-project-name"
 	FlagNugetPkgsFolder              = "packages-folder"
+	FlagUnmanagedMaxDepth            = "max-depth"
 )
 
 func GetFlagSet() *pflag.FlagSet {
@@ -64,6 +65,7 @@ func GetFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagPythonCommand, "", "Indicate which specific Python commands to use based on the Python version.")
 	flagSet.Bool(FlagPythonSkipUnresolved, false, "Skip Python packages that cannot be found in the environment.")
 	flagSet.String(FlagPythonPackageManager, "", `Add --package-manager=pip to your command if the file name is not "requirements.txt".`)
+	flagSet.Int(FlagUnmanagedMaxDepth, 0, "Specify the maximum level of archive extraction for unmanaged scanning.")
 
 	return flagSet
 }
