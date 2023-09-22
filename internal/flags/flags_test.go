@@ -66,6 +66,26 @@ func TestGetFlagSet(t *testing.T) {
 			isBool:   false,
 			expected: "",
 		},
+		{
+			flagName: FlagYarnWorkspaces,
+			isBool:   true,
+			expected: false,
+		},
+		{
+			flagName: FlagPythonCommand,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagPythonSkipUnresolved,
+			isBool:   true,
+			expected: false,
+		},
+		{
+			flagName: FlagPythonPackageManager,
+			isBool:   false,
+			expected: "",
+		},
 	}
 
 	for _, tt := range tc {
