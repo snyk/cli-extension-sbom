@@ -27,6 +27,9 @@ const (
 	FlagPythonCommand                = "command"
 	FlagPythonSkipUnresolved         = "skip-unresolved"
 	FlagPythonPackageManager         = "package-manager"
+	FlagNPMStrictOutOfSync           = "strict-out-of-sync"
+	FlagNugetAssetsProjectName       = "assets-project-name"
+	FlagNugetPkgsFolder              = "packages-folder"
 )
 
 func GetFlagSet() *pflag.FlagSet {
@@ -51,6 +54,10 @@ func GetFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagSubProject, "", "Name of Gradle sub-project to test.")
 	flagSet.String(FlagGradleSubProject, "", "Name of Gradle sub-project to test.")
 	flagSet.Bool(FlagAllSubProjects, false, "Test all sub-projects in a multi-project build.")
+	flagSet.Bool(FlagNPMStrictOutOfSync, true, "Prevent testing out-of-sync lockfiles.")
+	flagSet.String(FlagNugetAssetsProjectName, "",
+		"When you are monitoring a .NET project using NuGet PackageReference uses the project name in project.assets.json if found.")
+	flagSet.String(FlagNugetPkgsFolder, "", "Specify a custom path to the packages folder when using NuGet.")
 	flagSet.String(FlagConfigurationMatching, "", "Resolve dependencies using only configuration(s) that match the specified Java regular expression.")
 	flagSet.String(FlagConfigurationAttributes, "", "Select certain values of configuration attributes to install and resolve dependencies.")
 	flagSet.String(FlagInitScript, "", "Use for projects that contain a Gradle initialization script.")
