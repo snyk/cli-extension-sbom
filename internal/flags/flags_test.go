@@ -93,8 +93,8 @@ func TestGetFlagSet(t *testing.T) {
 		},
 		{
 			flagName: FlagNugetAssetsProjectName,
-			isBool:   false,
-			expected: "",
+			isBool:   true,
+			expected: false,
 		},
 		{
 			flagName: FlagNugetPkgsFolder,
