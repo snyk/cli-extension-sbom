@@ -88,8 +88,8 @@ func TestGetFlagSet(t *testing.T) {
 		},
 		{
 			flagName: FlagNPMStrictOutOfSync,
-			isBool:   true,
-			expected: true,
+			isBool:   false,
+			expected: "true",
 		},
 		{
 			flagName: FlagNugetAssetsProjectName,
