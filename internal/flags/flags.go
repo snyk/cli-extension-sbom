@@ -63,7 +63,7 @@ func GetFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagConfigurationAttributes, "", "Select certain values of configuration attributes to install and resolve dependencies.")
 	flagSet.String(FlagInitScript, "", "Use for projects that contain a Gradle initialization script.")
 	flagSet.String(FlagPythonCommand, "", "Indicate which specific Python commands to use based on the Python version.")
-	flagSet.Bool(FlagPythonSkipUnresolved, false, "Skip Python packages that cannot be found in the environment.")
+	flagSet.String(FlagPythonSkipUnresolved, "", "Skip Python packages that cannot be found in the environment.")
 	flagSet.String(FlagPythonPackageManager, "", `Add --package-manager=pip to your command if the file name is not "requirements.txt".`)
 	flagSet.Int(FlagUnmanagedMaxDepth, 0, "Specify the maximum level of archive extraction for unmanaged scanning.")
 

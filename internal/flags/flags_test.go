@@ -78,8 +78,8 @@ func TestGetFlagSet(t *testing.T) {
 		},
 		{
 			flagName: FlagPythonSkipUnresolved,
-			isBool:   true,
-			expected: false,
+			isBool:   false,
+			expected: "",
 		},
 		{
 			flagName: FlagPythonPackageManager,
