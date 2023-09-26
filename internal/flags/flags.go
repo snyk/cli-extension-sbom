@@ -55,7 +55,7 @@ func GetFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagSubProject, "", "Name of Gradle sub-project to test.")
 	flagSet.String(FlagGradleSubProject, "", "Name of Gradle sub-project to test.")
 	flagSet.Bool(FlagAllSubProjects, false, "Test all sub-projects in a multi-project build.")
-	flagSet.Bool(FlagNPMStrictOutOfSync, true, "Prevent testing out-of-sync lockfiles.")
+	flagSet.String(FlagNPMStrictOutOfSync, "true", "Prevent testing out-of-sync lockfiles.")
 	flagSet.Bool(FlagNugetAssetsProjectName, false,
 		"When you are monitoring a .NET project using NuGet PackageReference uses the project name in project.assets.json if found.")
 	flagSet.String(FlagNugetPkgsFolder, "", "Specify a custom path to the packages folder when using NuGet.")
