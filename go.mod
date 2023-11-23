@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/golang/mock v1.6.0
-	github.com/snyk/go-application-framework v0.0.0-20230608152503-40b6d700aefa
+	github.com/snyk/go-application-framework v0.0.0-20231116141714-376c41e7746c
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
 )
@@ -12,6 +12,7 @@ require (
 require (
 	github.com/alexbrainman/sspi v0.0.0-20210105120005-909beea2cc74 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect

@@ -64,6 +64,7 @@ func TestDepGraphsToSBOM(t *testing.T) {
 				orgID,
 				[]json.RawMessage{[]byte("{}")},
 				nil,
+				nil,
 				tt.format,
 				logger,
 				errFactory,
@@ -84,12 +85,15 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 		body, err := io.ReadAll(r.Body)
 		defer r.Body.Close()
 		require.NoError(t, err)
-		assert.JSONEq(t, `{"depGraphs":[{},{}],"subject":{"name":"goof","version":"0.0.0"}}`, string(body))
+		assert.JSONEq(t, `{"depGraphs":[{},{}],"subject":{"name":"goof","version":"0.0.0"},`+
+			`"tools":[{"name":"snyk-cli","vendor":"Snyk","version":"1.2.3"}]}`,
+			string(body))
 	})
 	logger := log.New(&bytes.Buffer{}, "", 0)
 	errFactory := errors.NewErrorFactory(logger)
 	depGraphs := []json.RawMessage{[]byte("{}"), []byte("{}")}
 	subject := NewSubject("goof", "0.0.0")
+	tool := &Tool{Vendor: "Snyk", Name: "snyk-cli", Version: "1.2.3"}
 
 	_, err := DepGraphsToSBOM(
 		http.DefaultClient,
@@ -97,6 +101,7 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 		orgID,
 		depGraphs,
 		subject,
+		tool,
 		format,
 		logger,
 		errFactory,
@@ -113,12 +118,15 @@ func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
 		body, err := io.ReadAll(r.Body)
 		defer r.Body.Close()
 		require.NoError(t, err)
-		assert.JSONEq(t, `{"depGraphs":[{}],"subject":{"name":"goof","version":"0.0.0"}}`, string(body))
+		assert.JSONEq(t, `{"depGraphs":[{}],"subject":{"name":"goof","version":"0.0.0"},`+
+			`"tools":[{"name":"snyk-cli","vendor":"Snyk","version":"1.2.3"}]}`,
+			string(body))
 	})
 	logger := log.New(&bytes.Buffer{}, "", 0)
 	errFactory := errors.NewErrorFactory(logger)
 	depGraphs := []json.RawMessage{[]byte("{}")}
 	subject := NewSubject("goof", "0.0.0")
+	tool := &Tool{Vendor: "Snyk", Name: "snyk-cli", Version: "1.2.3"}
 
 	_, err := DepGraphsToSBOM(
 		http.DefaultClient,
@@ -126,6 +134,7 @@ func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
 		orgID,
 		depGraphs,
 		subject,
+		tool,
 		format,
 		logger,
 		errFactory,
@@ -142,6 +151,7 @@ func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
 		"http://0.0.0.0",
 		orgID,
 		[]json.RawMessage{[]byte("{}")},
+		nil,
 		nil,
 		"cyclonedx1.4+json",
 		logger,
@@ -193,6 +203,7 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 				mockSBOMService.URL,
 				orgID,
 				[]json.RawMessage{[]byte("{}")},
+				nil,
 				nil,
 				"cyclonedx1.4+json",
 				logger,

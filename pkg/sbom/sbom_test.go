@@ -12,6 +12,7 @@ import (
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/mocks"
 	"github.com/snyk/go-application-framework/pkg/networking"
+	"github.com/snyk/go-application-framework/pkg/runtimeinfo"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -131,7 +132,10 @@ func TestSBOMWorkflow_MultipleDepGraphs(t *testing.T) {
 		body, err := io.ReadAll(r.Body)
 		defer r.Body.Close()
 		require.NoError(t, err)
-		assert.JSONEq(t, `{"depGraphs":[{"pkgManager":{"name":"npm"}},{"pkgManager":{"name":"nuget"}}],"subject":{"name":"goof","version":"0.0.0"}}`, string(body))
+		assert.JSONEq(t, `{"depGraphs":[{"pkgManager":{"name":"npm"}},{"pkgManager":{"name":"nuget"}}],`+
+			`"subject":{"name":"goof","version":"0.0.0"},`+
+			`"tools":[{"name":"test-app","vendor":"Snyk","version":"1.2.3"}]}`,
+			string(body))
 	})
 	defer mockSBOMService.Close()
 	mockEngine := newMockEngine(ctrl, []workflow.Data{
@@ -159,7 +163,10 @@ func TestSBOMWorkflow_MergeSubject(t *testing.T) {
 		body, err := io.ReadAll(r.Body)
 		defer r.Body.Close()
 		require.NoError(t, err)
-		assert.JSONEq(t, `{"depGraphs":[{},{}],"subject":{"name":"sbom","version":""}}`, string(body), "Fall back to working directory name.")
+		assert.JSONEq(t, `{"depGraphs":[{},{}],"subject":{"name":"sbom","version":""},`+
+			`"tools":[{"name":"test-app","vendor":"Snyk","version":"1.2.3"}]}`,
+			string(body),
+			"Fall back to working directory name.")
 	})
 	defer mockSBOMService.Close()
 	mockEngine := newMockEngine(ctrl, []workflow.Data{newDepGraphData(t, []byte(`{}`)), newDepGraphData(t, []byte(`{}`))}, nil)
@@ -189,6 +196,10 @@ func mockInvocationContext(
 	mockConfig.Set("name", "goof")
 	mockConfig.Set("version", "0.0.0")
 
+	mockRuntimeInfo := runtimeinfo.New(
+		runtimeinfo.WithName("test-app"),
+		runtimeinfo.WithVersion("1.2.3"))
+
 	if mockEngine == nil {
 		mockEngine = newMockEngine(
 			ctrl,
@@ -202,6 +213,7 @@ func mockInvocationContext(
 	ictx.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
 	ictx.EXPECT().GetNetworkAccess().Return(networking.NewNetworkAccess(mockConfig)).AnyTimes()
 	ictx.EXPECT().GetLogger().Return(mockLogger).AnyTimes()
+	ictx.EXPECT().GetRuntimeInfo().Return(mockRuntimeInfo).AnyTimes()
 
 	return ictx
 }

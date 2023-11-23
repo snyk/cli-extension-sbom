@@ -77,12 +77,15 @@ func SBOMWorkflow(
 		logger.Printf("Document subject: { Name: %q, Version: %q }\n", name, version)
 	}
 
+	ri := ictx.GetRuntimeInfo()
+
 	result, err := service.DepGraphsToSBOM(
 		ictx.GetNetworkAccess().GetHttpClient(),
 		config.GetString(configuration.API_URL),
 		orgID,
 		depGraphsBytes,
 		service.NewSubject(name, version),
+		&service.Tool{Vendor: "Snyk", Name: ri.GetName(), Version: ri.GetVersion()},
 		format,
 		logger,
 		errFactory,
