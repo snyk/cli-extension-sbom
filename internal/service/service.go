@@ -50,11 +50,12 @@ func DepGraphsToSBOM(
 	orgID string,
 	depGraphs []json.RawMessage,
 	subject *Subject,
+	t *Tool,
 	format string,
 	logger *log.Logger,
 	errFactory *errors.ErrorFactory,
 ) (result *SBOMResult, err error) {
-	payload, err := preparePayload(depGraphs, subject)
+	payload, err := preparePayload(depGraphs, subject, t)
 	if err != nil {
 		return nil, errFactory.NewInternalError(err)
 	}
@@ -127,7 +128,7 @@ func ValidateSBOMFormat(errFactory *errors.ErrorFactory, candidate string) error
 	return errFactory.NewInvalidFormatError(candidate, sbomFormats[:])
 }
 
-func preparePayload(depGraphs []json.RawMessage, subject *Subject) ([]byte, error) {
+func preparePayload(depGraphs []json.RawMessage, subject *Subject, t *Tool) ([]byte, error) {
 	// by using json.RawMessage everywhere we expect a json-encoded []byte, we can embed this
 	// directly in Go types and call `json.Marshal` on it to embed the JSON directly.
 
@@ -139,17 +140,14 @@ func preparePayload(depGraphs []json.RawMessage, subject *Subject) ([]byte, erro
 			return []byte{}, stderr.New("no subject defined for multiple depgraphs")
 		}
 
-		type dg struct {
-			DepGraph json.RawMessage `json:"depGraph"`
-		}
-		return json.Marshal(&dg{DepGraph: depGraphs[0]})
+		return json.Marshal(&payloadSingleDepGraph{
+			Tools:    []*Tool{t},
+			DepGraph: depGraphs[0],
+		})
 	}
 
-	type dgs struct {
-		DepGraphs []json.RawMessage `json:"depGraphs"`
-		Subject   *Subject          `json:"subject"`
-	}
-	return json.Marshal(&dgs{
+	return json.Marshal(&payloadMultipleDepGraphs{
+		Tools:     []*Tool{t},
 		DepGraphs: depGraphs,
 		Subject:   subject,
 	})
