@@ -220,7 +220,7 @@ func TestValidateSBOMFormat_EmptyFormat(t *testing.T) {
 	errFactory := errors.NewErrorFactory(logger)
 	err := ValidateSBOMFormat(errFactory, "")
 	assert.ErrorContains(t, err, "Must set `--format` flag to specify an SBOM format. "+
-		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json")
+		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, cyclonedx1.5+json, cyclonedx1.5+xml, spdx2.3+json")
 }
 
 func TestValidateSBOMFormat_InvalidFormat(t *testing.T) {
@@ -228,5 +228,25 @@ func TestValidateSBOMFormat_InvalidFormat(t *testing.T) {
 	errFactory := errors.NewErrorFactory(logger)
 	err := ValidateSBOMFormat(errFactory, "not+a+format")
 	assert.ErrorContains(t, err, "The format provided (not+a+format) is not one of the available formats. "+
-		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json")
+		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, cyclonedx1.5+json, cyclonedx1.5+xml, spdx2.3+json")
+}
+
+func TestValidateSBOMFormat_ValidFormats(t *testing.T) {
+	logger := log.New(&bytes.Buffer{}, "", 0)
+	errFactory := errors.NewErrorFactory(logger)
+
+	tc := []string{
+		"cyclonedx1.4+json",
+		"cyclonedx1.4+xml",
+		"cyclonedx1.5+json",
+		"cyclonedx1.5+xml",
+		"spdx2.3+json",
+	}
+
+	for _, tt := range tc {
+		t.Run(tt, func(t *testing.T) {
+			err := ValidateSBOMFormat(errFactory, tt)
+			assert.NoError(t, err)
+		})
+	}
 }
