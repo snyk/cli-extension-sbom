@@ -9,6 +9,7 @@ import (
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
+	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/service"
@@ -102,6 +103,11 @@ func SBOMWorkflow(
 }
 
 func Init(e workflow.Engine) error {
+	// Register the "sbom test" command
+	if err := sbomtest.RegisterWorkflows(e); err != nil {
+		return err
+	}
+
 	flagset := flags.GetFlagSet()
 
 	c := workflow.ConfigurationOptionsFromFlagset(flagset)

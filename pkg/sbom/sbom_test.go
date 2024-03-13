@@ -6,7 +6,12 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"testing"
+
+	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
+	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
+	"github.com/snyk/cli-extension-sbom/pkg/sbom"
 
 	"github.com/golang/mock/gomock"
 	"github.com/snyk/go-application-framework/pkg/configuration"
@@ -16,9 +21,6 @@ import (
 	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
-	"github.com/snyk/cli-extension-sbom/pkg/sbom"
 )
 
 //go:embed testdata/cyclonedx_document.json
@@ -37,9 +39,8 @@ func TestInit(t *testing.T) {
 	err = sbom.Init(e)
 	assert.NoError(t, err)
 
-	wflw, ok := e.GetWorkflow(sbom.WorkflowID)
-	assert.True(t, ok)
-	assert.NotNil(t, wflw)
+	assertWorkflowExists(t, e, sbom.WorkflowID)
+	assertWorkflowExists(t, e, sbomtest.WorkflowID)
 }
 
 func TestSBOMWorkflow_Success(t *testing.T) {
@@ -238,4 +239,12 @@ func newDepGraphData(t *testing.T, bts []byte) workflow.Data {
 		"application/json",
 		bts,
 	)
+}
+
+func assertWorkflowExists(t *testing.T, e workflow.Engine, id *url.URL) {
+	t.Helper()
+
+	wflw, ok := e.GetWorkflow(id)
+	assert.True(t, ok)
+	assert.NotNil(t, wflw)
 }
