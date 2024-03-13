@@ -33,7 +33,7 @@ const (
 	FlagUnmanagedMaxDepth            = "max-depth"
 )
 
-func GetFlagSet() *pflag.FlagSet {
+func GetSBOMExportFlagSet() *pflag.FlagSet {
 	flagSet := pflag.NewFlagSet("snyk-cli-extension-sbom", pflag.ExitOnError)
 
 	flagSet.Bool(FlagExperimental, false, "Deprecated. Will be ignored.")
@@ -66,6 +66,15 @@ func GetFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagPythonSkipUnresolved, "", "Skip Python packages that cannot be found in the environment.")
 	flagSet.String(FlagPythonPackageManager, "", `Add --package-manager=pip to your command if the file name is not "requirements.txt".`)
 	flagSet.Int(FlagUnmanagedMaxDepth, 0, "Specify the maximum level of archive extraction for unmanaged scanning.")
+
+	return flagSet
+}
+
+func GetSBOMTestFlagSet() *pflag.FlagSet {
+	flagSet := pflag.NewFlagSet("snyk-cli-extension-sbom-test", pflag.ExitOnError)
+
+	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom test command.")
+	flagSet.String(FlagFile, "", "Specify a SBOM file.")
 
 	return flagSet
 }
