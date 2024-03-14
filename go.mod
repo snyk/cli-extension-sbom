@@ -3,6 +3,7 @@ module github.com/snyk/cli-extension-sbom
 go 1.19
 
 require (
+	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/golang/mock v1.6.0
 	github.com/snyk/go-application-framework v0.0.0-20231116141714-376c41e7746c
 	github.com/spf13/pflag v1.0.5
