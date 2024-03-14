@@ -108,7 +108,7 @@ func Init(e workflow.Engine) error {
 		return err
 	}
 
-	flagset := flags.GetFlagSet()
+	flagset := flags.GetSBOMExportFlagSet()
 
 	c := workflow.ConfigurationOptionsFromFlagset(flagset)
 

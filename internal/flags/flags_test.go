@@ -8,8 +8,8 @@ import (
 	. "github.com/snyk/cli-extension-sbom/internal/flags"
 )
 
-func TestGetFlagSet(t *testing.T) {
-	flagSet := GetFlagSet()
+func TestGetSBOMExportFlagSet(t *testing.T) {
+	flagSet := GetSBOMExportFlagSet()
 
 	tc := []struct {
 		flagName string

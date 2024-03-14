@@ -4,12 +4,14 @@ import (
 	"fmt"
 
 	"github.com/snyk/go-application-framework/pkg/workflow"
+
+	"github.com/snyk/cli-extension-sbom/internal/flags"
 )
 
 var WorkflowID = workflow.NewWorkflowIdentifier("sbom.test")
 
 func RegisterWorkflows(e workflow.Engine) error {
-	sbomFlagset := GetSBOMFlagSet()
+	sbomFlagset := flags.GetSBOMTestFlagSet()
 
 	c := workflow.ConfigurationOptionsFromFlagset(sbomFlagset)
 
@@ -25,8 +27,8 @@ func TestWorkflow(
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
-	experimental := config.GetBool(SBOMFlagExperimental)
-	filename := config.GetString(SBOMFlagFile)
+	experimental := config.GetBool(flags.FlagExperimental)
+	filename := config.GetString(flags.FlagFile)
 
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
 	if !experimental {
