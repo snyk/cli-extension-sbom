@@ -33,7 +33,7 @@ const (
 	FlagUnmanagedMaxDepth            = "max-depth"
 )
 
-func GetSBOMExportFlagSet() *pflag.FlagSet {
+func GetSBOMCreateFlagSet() *pflag.FlagSet {
 	flagSet := pflag.NewFlagSet("snyk-cli-extension-sbom", pflag.ExitOnError)
 
 	flagSet.Bool(FlagExperimental, false, "Deprecated. Will be ignored.")

@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetSBOMExportFlagSet(t *testing.T) {
-	flagSet := GetSBOMExportFlagSet()
+	flagSet := GetSBOMCreateFlagSet()
 
 	tc := []struct {
 		flagName string
