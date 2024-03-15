@@ -9,6 +9,7 @@ type response struct {
 	contentType string
 	body        []byte
 	status      int
+	headers     http.Header
 }
 
 func NewMockSBOMService(response response, assertions ...func(r *http.Request)) *httptest.Server {
@@ -18,9 +19,16 @@ func NewMockSBOMService(response response, assertions ...func(r *http.Request)) 
 		}
 
 		w.Header().Set("Content-Type", response.contentType)
+		for k, values := range response.headers {
+			for _, v := range values {
+				w.Header().Set(k, v)
+			}
+		}
+
 		if response.status >= http.StatusContinue {
 			w.WriteHeader(response.status)
 		}
+
 		if _, err := w.Write(response.body); err != nil {
 			panic(err)
 		}
@@ -34,5 +42,15 @@ func NewMockResponse(c string, b []byte, status int) response {
 		contentType: c,
 		body:        b,
 		status:      status,
+		headers:     http.Header{},
+	}
+}
+
+func NewMockResponseWithHeaders(c string, b []byte, status int, headers http.Header) response {
+	return response{
+		contentType: c,
+		body:        b,
+		status:      status,
+		headers:     headers,
 	}
 }
