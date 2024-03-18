@@ -37,5 +37,15 @@ func TestWorkflow(
 
 	logger.Println("SBOM workflow test with file:", filename)
 
-	return []workflow.Data{}, nil
+	mockResult := TestResult{ // TODO: assign the actual test result
+		Summary: TestSummary{TotalVulnerabilities: 42},
+	}
+	data, contentType, err := newPresenter(ictx).Render(mockResult)
+
+	return []workflow.Data{workflowData(data, contentType)}, err
+}
+
+func workflowData(data []byte, contentType string) workflow.Data {
+	id := workflow.NewTypeIdentifier(WorkflowID, "sbom.test")
+	return workflow.NewDataFromInput(nil, id, contentType, data)
 }
