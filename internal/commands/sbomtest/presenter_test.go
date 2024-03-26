@@ -16,6 +16,7 @@ var snapshotter = cupaloy.New(cupaloy.SnapshotSubdirectory("testdata/snapshots")
 func TestPresenter_Pretty(t *testing.T) {
 	mockICTX := createMockICTX(t)
 	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 
 	data, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
@@ -30,6 +31,7 @@ func TestPresenter_JSON(t *testing.T) {
 	mockICTX := createMockICTX(t)
 	mockICTX.GetConfiguration().Set("experimental", true)
 	mockICTX.GetConfiguration().Set("json", true)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 
 	data, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
