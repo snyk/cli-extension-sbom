@@ -11,20 +11,58 @@ import (
 
 func TestIsSupportedSBOMFormat_Success(t *testing.T) {
 	testCases := []struct {
-		name    string
-		content string
+		name           string
+		content        string
+		expectedResult bool
 	}{
 		{
-			name:    "Test is cyclonedx json supported",
-			content: "CycloneDX/bomFormat",
+			name:           "Test is cyclonedx json supported",
+			content:        "CycloneDX/bomFormat",
+			expectedResult: true,
 		},
 		{
-			name:    "Test is cyclonedx xml supported",
-			content: "cyclonedx/xmlns",
+			name:           "Test is cyclonedx xml is not supported",
+			content:        "cyclonedx/xmlns",
+			expectedResult: false,
 		},
 		{
-			name:    "Test is spdx supported",
-			content: `SPDXRef-DOCUMENT/"spdxVersion"`,
+			name:           "Test is spdx supported",
+			content:        `SPDXRef-DOCUMENT/"spdxVersion"`,
+			expectedResult: true,
+		},
+		{
+			name: "Document not supported",
+			content: `Lorem ipsum dolor sit amet,
+						consectetur adipiscing elit,
+						sed do eiusmod tempor incididunt ut labore et dolore magna aliqua`,
+			expectedResult: false,
+		},
+		{
+			name:           "Test is not spdx - missing version",
+			content:        `SPDXRef-DOCUMENT`,
+			expectedResult: false,
+		},
+		{
+			name:           "Test is not spdx - missing document",
+			content:        `"spdxVersion"`,
+			expectedResult: false,
+		},
+		{
+			name:           "Test is not cyclonedx json - missing format",
+			content:        "CycloneDX",
+			expectedResult: false,
+		},
+		{
+			name:           "Test is not cyclonedx json - missing document",
+			content:        "bomFormat",
+			expectedResult: false,
+		},
+		{
+			name: "Test is cyclonedx matches over multiple lines",
+			content: `CycloneDX
+								asdf
+								bomFormat`,
+			expectedResult: true,
 		},
 	}
 
@@ -35,7 +73,7 @@ func TestIsSupportedSBOMFormat_Success(t *testing.T) {
 			ok, err := sbomtest.IsSupportedSBOMFormat(reader)
 
 			require.NoError(t, err)
-			require.True(t, ok)
+			require.Equal(t, tc.expectedResult, ok)
 		})
 	}
 }

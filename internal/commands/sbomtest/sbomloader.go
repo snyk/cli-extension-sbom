@@ -1,27 +1,68 @@
 package sbomtest
 
 import (
-	"bytes"
+	"bufio"
 	"errors"
+	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
+type foundMatch struct {
+	first  bool
+	second bool
+}
+
+type sbomMatchTuple struct {
+	first  string
+	second string
+}
+
+func (t sbomMatchTuple) key() string {
+	return t.first + "-" + t.second
+}
+
+var supportedSBOMFormatTuples []sbomMatchTuple = []sbomMatchTuple{
+	{"CycloneDX", "bomFormat"},
+	{"SPDXRef-DOCUMENT", `"spdxVersion"`},
+}
+
 func IsSupportedSBOMFormat(inputFile io.Reader) (bool, error) {
-	input, err := io.ReadAll(inputFile)
-	if err != nil {
-		return false, err
-	}
-	if bytes.Contains(input, []byte("CycloneDX")) && bytes.Contains(input, []byte("bomFormat")) {
-		return true, nil
+	var foundMatches = make(map[string]foundMatch)
+	for _, t := range supportedSBOMFormatTuples {
+		foundMatches[t.key()] = foundMatch{false, false}
 	}
 
-	if bytes.Contains(input, []byte("cyclonedx")) && bytes.Contains(input, []byte("xmlns")) {
-		return true, nil
-	}
+	bufReader := bufio.NewReader(inputFile)
 
-	if bytes.Contains(input, []byte("SPDXRef-DOCUMENT")) && bytes.Contains(input, []byte(`"spdxVersion"`)) {
-		return true, nil
+	for {
+		line, err := bufReader.ReadString('\n')
+		if err != nil && err != io.EOF {
+			return false, err
+		}
+
+		for _, t := range supportedSBOMFormatTuples {
+			foundMatch := foundMatches[t.key()]
+
+			if strings.Contains(line, t.first) {
+				foundMatch.first = true
+			}
+
+			if strings.Contains(line, t.second) {
+				foundMatch.second = true
+			}
+
+			if foundMatch.first && foundMatch.second {
+				return true, nil
+			}
+
+			foundMatches[t.key()] = foundMatch
+		}
+
+		if err == io.EOF {
+			break
+		}
 	}
 
 	return false, nil
@@ -49,4 +90,23 @@ func OpenFile(filename string) (*os.File, error) {
 	}
 
 	return file, nil
+}
+
+func OpenSBOMFile(filename string) (*os.File, error) {
+	file, err := OpenFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	isValidSBOM, err := IsSupportedSBOMFormat(file)
+	if err != nil {
+		return nil, err
+	}
+
+	if !isValidSBOM {
+		return nil, fmt.Errorf("file is not a supported SBOM format")
+	}
+
+	return OpenFile(filename)
 }
