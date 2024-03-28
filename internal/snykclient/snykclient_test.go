@@ -30,6 +30,7 @@ func TestSnykClient_CreateSBOMTest(t *testing.T) {
 		[]byte(`{"data": {"id": "test-id"}}`),
 		http.StatusCreated,
 	)
+	sbomContent := `{"foo":"bar"}`
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
 		assert.Equal(t, "/rest/orgs/org1/sbom_tests?version=2023-08-31~beta", r.RequestURI)
@@ -37,13 +38,15 @@ func TestSnykClient_CreateSBOMTest(t *testing.T) {
 
 		body, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
-		assert.Equal(t, "test content", string(body))
+
+		expectedContent := string(JsonAPIPrefixBytes) + sbomContent + string(JsonAPISuffixBytes)
+		assert.Equal(t, expectedContent, string(body))
 	})
 
 	client := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
 
-	sbomContent := strings.NewReader("test content")
-	sbomTest, err := client.CreateSBOMTest(context.Background(), sbomContent)
+	sbomReader := strings.NewReader(sbomContent)
+	sbomTest, err := client.CreateSBOMTest(context.Background(), sbomReader)
 
 	assert.NoError(t, err)
 	assert.Equal(t, "test-id", sbomTest.ID)
