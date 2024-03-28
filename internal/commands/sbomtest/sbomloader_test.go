@@ -1,6 +1,7 @@
 package sbomtest_test
 
 import (
+	_ "embed"
 	"strings"
 	"testing"
 
@@ -9,70 +10,57 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
 )
 
-func TestIsSupportedSBOMFormat_Success(t *testing.T) {
+//go:embed testdata/bom.json
+var sbomJson string
+
+func TestIsSBOMJSON(t *testing.T) {
 	testCases := []struct {
 		name           string
 		content        string
 		expectedResult bool
 	}{
 		{
-			name:           "Test is cyclonedx json supported",
-			content:        "CycloneDX/bomFormat",
+			name:           "is json",
+			content:        `{"foo":"bar"}`,
 			expectedResult: true,
 		},
 		{
-			name:           "Test is cyclonedx xml is not supported",
-			content:        "cyclonedx/xmlns",
-			expectedResult: false,
-		},
-		{
-			name:           "Test is spdx supported",
-			content:        `SPDXRef-DOCUMENT/"spdxVersion"`,
+			name:           "bom.json",
+			content:        sbomJson,
 			expectedResult: true,
 		},
 		{
-			name: "Document not supported",
-			content: `Lorem ipsum dolor sit amet,
-						consectetur adipiscing elit,
-						sed do eiusmod tempor incididunt ut labore et dolore magna aliqua`,
-			expectedResult: false,
-		},
-		{
-			name:           "Test is not spdx - missing version",
-			content:        `SPDXRef-DOCUMENT`,
-			expectedResult: false,
-		},
-		{
-			name:           "Test is not spdx - missing document",
-			content:        `"spdxVersion"`,
-			expectedResult: false,
-		},
-		{
-			name:           "Test is not cyclonedx json - missing format",
-			content:        "CycloneDX",
-			expectedResult: false,
-		},
-		{
-			name:           "Test is not cyclonedx json - missing document",
-			content:        "bomFormat",
-			expectedResult: false,
-		},
-		{
-			name: "Test is cyclonedx matches over multiple lines",
-			content: `CycloneDX
-								asdf
-								bomFormat`,
+			name: "is padded json",
+			content: `
+
+			{
+				"foo": "bar"
+			}`,
 			expectedResult: true,
+		},
+		{
+			name:           "is array of json",
+			content:        `[{"foo":"bar"}]`,
+			expectedResult: false,
+		},
+		{
+			name:           "is string",
+			content:        `I am a string`,
+			expectedResult: false,
+		},
+		{
+			name:           "base64 encoded string",
+			content:        `SSBhbSBhIHN0cmluZwo=`,
+			expectedResult: false,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(tt *testing.T) {
-			reader := strings.NewReader(tc.content)
+			r := strings.NewReader(tc.content)
 
-			ok, err := sbomtest.IsSupportedSBOMFormat(reader)
+			ok := sbomtest.IsSBOMJSON(r)
 
-			require.NoError(t, err)
 			require.Equal(t, tc.expectedResult, ok)
 		})
 	}
@@ -81,7 +69,7 @@ func TestIsSupportedSBOMFormat_Success(t *testing.T) {
 func TestOpenFile_FileDoesNotExist(t *testing.T) {
 	filename := "testdata/this-file-does-not-exist.txt"
 
-	reader, err := sbomtest.OpenFile(filename)
+	reader, err := sbomtest.OpenSBOMFile(filename)
 
 	require.Error(t, err)
 	require.Equal(t, "file does not exist", err.Error())
@@ -91,7 +79,7 @@ func TestOpenFile_FileDoesNotExist(t *testing.T) {
 func TestOpenFile_FileIsDirectory(t *testing.T) {
 	folder := "testdata"
 
-	reader, err := sbomtest.OpenFile(folder)
+	reader, err := sbomtest.OpenSBOMFile(folder)
 
 	require.Error(t, err)
 	require.Equal(t, "file is a directory", err.Error())

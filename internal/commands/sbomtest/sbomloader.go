@@ -1,7 +1,6 @@
 package sbomtest
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"io"
@@ -9,66 +8,23 @@ import (
 	"strings"
 )
 
-type foundMatch struct {
-	first  bool
-	second bool
-}
-
-type sbomMatchTuple struct {
-	first  string
-	second string
-}
-
-func (t sbomMatchTuple) key() string {
-	return t.first + "-" + t.second
-}
-
-var supportedSBOMFormatTuples []sbomMatchTuple = []sbomMatchTuple{
-	{"CycloneDX", "bomFormat"},
-	{"SPDXRef-DOCUMENT", `"spdxVersion"`},
-}
-
-func IsSupportedSBOMFormat(inputFile io.Reader) (bool, error) {
-	var foundMatches = make(map[string]foundMatch)
-	for _, t := range supportedSBOMFormatTuples {
-		foundMatches[t.key()] = foundMatch{false, false}
+// IsSBOMJSON checks that a reader looks like it could be a SBOM JSON file.
+// It only looks at the first 64 bytes of the reader. It then Trims the whitespace
+// and checks if the first character is a '{'. '[' would not be a valid SBOM JSON file.
+// This is a very basic check and avoids having to load the entire file into memory.
+func IsSBOMJSON(r io.Reader) bool {
+	var buf [64]byte
+	n, err := r.Read(buf[:])
+	if err != nil && err != io.EOF {
+		return false
 	}
 
-	bufReader := bufio.NewReader(inputFile)
+	str := strings.TrimSpace(string(buf[:n]))
 
-	for {
-		line, err := bufReader.ReadString('\n')
-		if err != nil && err != io.EOF {
-			return false, err
-		}
-
-		for _, t := range supportedSBOMFormatTuples {
-			foundMatch := foundMatches[t.key()]
-
-			if strings.Contains(line, t.first) {
-				foundMatch.first = true
-			}
-
-			if strings.Contains(line, t.second) {
-				foundMatch.second = true
-			}
-
-			if foundMatch.first && foundMatch.second {
-				return true, nil
-			}
-
-			foundMatches[t.key()] = foundMatch
-		}
-
-		if err == io.EOF {
-			break
-		}
-	}
-
-	return false, nil
+	return strings.HasPrefix(str, "{")
 }
 
-func OpenFile(filename string) (*os.File, error) {
+func openFile(filename string) (*os.File, error) {
 	// Check if file exists
 	info, err := os.Stat(filename)
 	if err != nil {
@@ -93,20 +49,17 @@ func OpenFile(filename string) (*os.File, error) {
 }
 
 func OpenSBOMFile(filename string) (*os.File, error) {
-	file, err := OpenFile(filename)
+	file, err := openFile(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	isValidSBOM, err := IsSupportedSBOMFormat(file)
-	if err != nil {
-		return nil, err
-	}
+	isValidSBOM := IsSBOMJSON(file)
 
 	if !isValidSBOM {
 		return nil, fmt.Errorf("file is not a supported SBOM format")
 	}
 
-	return OpenFile(filename)
+	return openFile(filename)
 }
