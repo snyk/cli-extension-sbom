@@ -2,7 +2,6 @@ package sbomtest_test
 
 import (
 	_ "embed"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -44,6 +43,12 @@ func TestIsSBOMJSON(t *testing.T) {
 			expectedResult: false,
 		},
 		{
+			name: "is ndjson",
+			content: `{"foo":"bar"},
+{"boo":"baz"}`,
+			expectedResult: false,
+		},
+		{
 			name:           "is string",
 			content:        `I am a string`,
 			expectedResult: false,
@@ -57,7 +62,7 @@ func TestIsSBOMJSON(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(tt *testing.T) {
-			r := strings.NewReader(tc.content)
+			r := []byte(tc.content)
 
 			ok := sbomtest.IsSBOMJSON(r)
 
@@ -66,22 +71,29 @@ func TestIsSBOMJSON(t *testing.T) {
 	}
 }
 
-func TestOpenFile_FileDoesNotExist(t *testing.T) {
+func TestReadSBOMFile_FileDoesNotExist(t *testing.T) {
 	filename := "testdata/this-file-does-not-exist.txt"
 
-	reader, err := sbomtest.OpenSBOMFile(filename)
+	sbomContent, err := sbomtest.ReadSBOMFile(filename)
 
 	require.Error(t, err)
 	require.Equal(t, "file does not exist", err.Error())
-	require.Nil(t, reader)
+	require.Nil(t, sbomContent)
 }
 
-func TestOpenFile_FileIsDirectory(t *testing.T) {
+func TestReadSBOMFile_FileIsDirectory(t *testing.T) {
 	folder := "testdata"
 
-	reader, err := sbomtest.OpenSBOMFile(folder)
+	sbomContent, err := sbomtest.ReadSBOMFile(folder)
 
 	require.Error(t, err)
 	require.Equal(t, "file is a directory", err.Error())
-	require.Nil(t, reader)
+	require.Nil(t, sbomContent)
+}
+
+func TestReadSBOMSuccessfully(t *testing.T) {
+	sbomContent, err := sbomtest.ReadSBOMFile("testdata/bom.json")
+
+	require.NoError(t, err)
+	require.Equal(t, sbomJson, string(sbomContent))
 }

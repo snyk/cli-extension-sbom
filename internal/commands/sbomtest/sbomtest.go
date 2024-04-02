@@ -39,11 +39,10 @@ func TestWorkflow(
 		return nil, fmt.Errorf("file flag not set")
 	}
 
-	file, err := OpenSBOMFile(filename)
+	_, err := ReadSBOMFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
 
 	logger.Println("SBOM workflow test with file:", filename)
 
