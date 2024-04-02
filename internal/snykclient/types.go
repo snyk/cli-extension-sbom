@@ -1,6 +1,8 @@
 //nolint:tagliatelle // Allowing snake case for API response schemas
 package snykclient
 
+import "time"
+
 type CreateSBOMTestRunResponseBody struct {
 	JSONAPI *JSONAPI                       `json:"jsonapi,omitempty"`
 	Data    *CreateSBOMTestRunResponseData `json:"data,omitempty"`
@@ -48,6 +50,46 @@ type GetSBOMTestResultResponseBody struct {
 }
 
 type Includes []interface{} // List of packages and vulnerabilities
+
+type Vulnerability struct {
+	ID         string                  `json:"id"`
+	Type       string                  `json:"type"`
+	Attributes VulnerabilityAttributes `json:"attributes"`
+}
+
+type VulnerabilityAttributes struct {
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+	Problems    []struct {
+		ID     string `json:"id"`
+		Source string `json:"source"`
+	} `json:"problems"`
+	Coordinates []struct {
+		Remedies []struct {
+			Description string `json:"description"`
+			Details     struct {
+				UpgradePackage string `json:"upgrade_package"`
+			} `json:"details"`
+			Type string `json:"type"`
+		} `json:"remedies"`
+		Representation []struct {
+			ResourcePath string `json:"resource_path"`
+		} `json:"representation"`
+	} `json:"coordinates"`
+	Severities []struct {
+		Source string  `json:"source"`
+		Level  string  `json:"level"`
+		Score  float32 `json:"score"`
+		Vector string  `json:"vector"`
+	} `json:"severities"`
+	EffectiveSeverityLevel string `json:"effective_severity_level"`
+	Slots                  []struct {
+		DisclosureTime  time.Time `json:"disclosure_time"`
+		PublicationTime time.Time `json:"publication_time"`
+	} `json:"slots"`
+}
 
 type GetSBOMTestResultResponseData struct {
 	ID            string                      `json:"id"`

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 )
 
@@ -35,16 +36,7 @@ func newPresenter(ictx workflow.InvocationContext) *Presenter {
 	}
 }
 
-// TODO: this is just a temporary type def which should get replaced
-// with a definition from the SBOM Test Client.
-type TestResult struct {
-	Summary TestSummary `json:"summary"`
-}
-type TestSummary struct {
-	TotalVulnerabilities int `json:"total_vulnerabilities"`
-}
-
-func (p Presenter) Render(result TestResult) (data []byte, contentType string, err error) {
+func (p Presenter) Render(result *snykclient.GetSBOMTestResultResponseBody) (data []byte, contentType string, err error) {
 	switch p.format {
 	default:
 		return nil, "", errors.New("presenter has no format")
@@ -55,10 +47,38 @@ func (p Presenter) Render(result TestResult) (data []byte, contentType string, e
 	}
 }
 
-func renderJSONResult(result TestResult) (data []byte, contentType string, err error) {
+type JSONOutput struct {
+	OK              bool             `json:"ok"`
+	DependencyCount int              `json:"dependencyCount"`
+	UniqueCount     int              `json:"uniqueCount"`
+	Summary         string           `json:"summary"`
+	Remediation     interface{}      `json:"remediation,omitempty"`
+	Filtered        interface{}      `json:"filtered,omitempty"`
+	Vulnerabilities []*Vulnerability `json:"vulnerabilities"`
+}
+
+type Vulnerability struct {
+	ID    string
+	Title string
+}
+
+func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) JSONOutput {
+	vulns := make([]*Vulnerability, 0)
+	res := body.Data.Attributes
+
+	return JSONOutput{
+		OK:              res.Summary.TotalIssues == 0,
+		DependencyCount: len(res.Summary.Tested) + len(res.Summary.Untested),
+		UniqueCount:     133, // what is this??
+		Summary:         fmt.Sprintf("Found %d vulnerabilities", res.Summary.TotalVulnerabilities),
+		Vulnerabilities: vulns,
+	}
+}
+
+func renderJSONResult(result *snykclient.GetSBOMTestResultResponseBody) (data []byte, contentType string, err error) {
 	contentType = MIMETypeJSON
 
-	data, err = json.Marshal(result)
+	data, err = json.Marshal(resultToJSONOutput(result))
 	if err != nil {
 		return nil, contentType, err
 	}
@@ -66,12 +86,12 @@ func renderJSONResult(result TestResult) (data []byte, contentType string, err e
 	return data, contentType, nil
 }
 
-func renderPrettyResult(result TestResult) (data []byte, contentType string, err error) {
+func renderPrettyResult(result *snykclient.GetSBOMTestResultResponseBody) (data []byte, contentType string, err error) {
 	// TODO: this is a mock template. Should get replaced.
 	tpl := `TEST RESULTS
 ------------
 ❌ Found a total of %d vulnerabilities
 `
 
-	return []byte(fmt.Sprintf(tpl, result.Summary.TotalVulnerabilities)), MIMETypeText, nil
+	return []byte(fmt.Sprintf(tpl, result.Data.Attributes.Summary.TotalVulnerabilities)), MIMETypeText, nil
 }

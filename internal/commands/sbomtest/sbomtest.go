@@ -6,6 +6,7 @@ import (
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
 	"github.com/snyk/cli-extension-sbom/internal/flags"
+	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
 var WorkflowID = workflow.NewWorkflowIdentifier("sbom.test")
@@ -37,10 +38,18 @@ func TestWorkflow(
 
 	logger.Println("SBOM workflow test with file:", filename)
 
-	mockResult := TestResult{ // TODO: assign the actual test result
-		Summary: TestSummary{TotalVulnerabilities: 42},
+	mockResult := snykclient.GetSBOMTestResultResponseBody{ // TODO: assign the actual test result
+		Data: &snykclient.GetSBOMTestResultResponseData{
+			Attributes: snykclient.SBOMTestRunAttributes{
+				Summary: snykclient.SBOMTestRunSummary{
+					TotalIssues:          42,
+					TotalVulnerabilities: 42,
+					TotalLicenseIssues:   0,
+				},
+			},
+		},
 	}
-	data, contentType, err := newPresenter(ictx).Render(mockResult)
+	data, contentType, err := newPresenter(ictx).Render(&mockResult)
 
 	return []workflow.Data{workflowData(data, contentType)}, err
 }
