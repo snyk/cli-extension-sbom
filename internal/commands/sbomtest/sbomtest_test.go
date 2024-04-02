@@ -25,9 +25,29 @@ func TestSBOMTestWorkflow_NoExperimentalFlag(t *testing.T) {
 	assert.ErrorContains(t, err, "experimental flag not set")
 }
 
-func TestSBOMTestWorkflow_SupplyExperimentalFlag(t *testing.T) {
+func TestSBOMTestWorkflow_NoFileFlag(t *testing.T) {
 	mockICTX := createMockICTX(t)
 	mockICTX.GetConfiguration().Set("experimental", true)
+
+	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+
+	assert.ErrorContains(t, err, "file flag not set")
+}
+
+func TestSBOMTestWorkflow_SupplyMissingFile(t *testing.T) {
+	mockICTX := createMockICTX(t)
+	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set("file", "missing-file.txt")
+
+	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+
+	assert.ErrorContains(t, err, "file does not exist")
+}
+
+func TestSBOMTestWorkflow_Success(t *testing.T) {
+	mockICTX := createMockICTX(t)
+	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 

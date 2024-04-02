@@ -35,6 +35,15 @@ func TestWorkflow(
 		return nil, fmt.Errorf("experimental flag not set")
 	}
 
+	if filename == "" {
+		return nil, fmt.Errorf("file flag not set")
+	}
+
+	_, err := ReadSBOMFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
 	logger.Println("SBOM workflow test with file:", filename)
 
 	mockResult := TestResult{ // TODO: assign the actual test result
