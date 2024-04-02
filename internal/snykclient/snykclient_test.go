@@ -6,7 +6,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -31,6 +30,7 @@ func TestSnykClient_CreateSBOMTest(t *testing.T) {
 		http.StatusCreated,
 	)
 	sbomContent := `{"foo":"bar"}`
+	expectedRequestBody := `{"data":{"type":"sbom_test","attributes":{"sbom":` + sbomContent + `}}}`
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
 		assert.Equal(t, "/rest/orgs/org1/sbom_tests?version=2023-08-31~beta", r.RequestURI)
@@ -39,14 +39,12 @@ func TestSnykClient_CreateSBOMTest(t *testing.T) {
 		body, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
 
-		expectedContent := string(JsonAPIPrefixBytes) + sbomContent + string(JsonAPISuffixBytes)
-		assert.Equal(t, expectedContent, string(body))
+		assert.Equal(t, expectedRequestBody, string(body))
 	})
 
 	client := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
 
-	sbomReader := strings.NewReader(sbomContent)
-	sbomTest, err := client.CreateSBOMTest(context.Background(), sbomReader)
+	sbomTest, err := client.CreateSBOMTest(context.Background(), []byte(sbomContent))
 
 	assert.NoError(t, err)
 	assert.Equal(t, "test-id", sbomTest.ID)

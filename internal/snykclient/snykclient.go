@@ -1,11 +1,10 @@
 package snykclient
 
 import (
-	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -48,17 +47,10 @@ func NewSnykClient(c *http.Client, apiBaseURL, orgID string) *SnykClient {
 	}
 }
 
-var JsonAPIPrefixBytes = []byte(`{"data":{"type":"sbom_test","attributes":{"sbom":`)
-var JsonAPISuffixBytes = []byte(`}}}`)
-
-func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON io.Reader) (*SBOMTest, error) {
+func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte) (*SBOMTest, error) {
 	url := fmt.Sprintf("%s/rest/orgs/%s/sbom_tests?version=%s", t.apiBaseURL, t.orgID, sbomTestAPIVersion)
 
-	jsonAPIReader := io.MultiReader(
-		bytes.NewReader(JsonAPIPrefixBytes),
-		sbomJSON,
-		bytes.NewReader(JsonAPISuffixBytes),
-	)
+	jsonAPIReader := strings.NewReader(fmt.Sprintf(`{"data":{"type":"sbom_test","attributes":{"sbom":%s}}}`, sbomJSON))
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, jsonAPIReader)
 	if err != nil {
