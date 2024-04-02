@@ -8,17 +8,9 @@ import (
 )
 
 func IsSBOMJSON(b []byte) bool {
-	var sbom interface{}
+	var sbom map[string]interface{}
 	err := json.Unmarshal(b, &sbom)
-	if err != nil {
-		return false
-	}
-
-	if _, ok := sbom.(map[string]interface{}); !ok {
-		return false
-	}
-
-	return true
+	return err == nil
 }
 
 func ReadSBOMFile(filename string) ([]byte, error) {
