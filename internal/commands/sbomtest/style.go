@@ -2,9 +2,10 @@ package sbomtest
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+
+	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
 type Mode int
@@ -60,18 +61,17 @@ var CriticalStyle = lipgloss.NewStyle().
 	Bold(true).
 	Foreground(lipgloss.AdaptiveColor{Light: "5", Dark: "5"})
 
-func RenderTitle(severity, desc string) string {
-	severity = strings.ToUpper(severity)
+func RenderTitle(severity snykclient.SeverityLevel, desc string) string {
 	title := fmt.Sprintf("✗ [%s] %s", severity, desc)
 
 	switch severity {
-	case "LOW":
+	case snykclient.LowSeverity:
 		return LowStyle.Render(title)
-	case "MEDIUM":
+	case snykclient.MediumSeverity:
 		return MediumStyle.Render(title)
-	case "HIGH":
+	case snykclient.HighSeverity:
 		return HighStyle.Render(title)
-	case "CRITICAL":
+	case snykclient.CriticalSeverity:
 		return CriticalStyle.Render(title)
 	}
 

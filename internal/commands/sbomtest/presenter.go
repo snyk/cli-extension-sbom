@@ -6,8 +6,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 	"github.com/snyk/go-application-framework/pkg/workflow"
+
+	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
 type presenterFormat int
@@ -129,7 +130,7 @@ func AsHumanReadable(dir string, resp *snykclient.GetSBOMTestResultResponseBody,
     Introduced through: %s
     URL: https://security.snyk.io/vuln/%s
 
-`, RenderTitle(severity.String(), title), name, id)
+`, RenderTitle(severity, title), name, id)
 	}
 
 	summary := fmt.Sprintf("Tested %d dependencies for known issues, found %d.\n\n",

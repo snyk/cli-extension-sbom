@@ -2,7 +2,9 @@
 package snykclient
 
 import (
-	"strings"
+	"cmp"
+	"encoding/json"
+	"fmt"
 	"time"
 
 	"golang.org/x/exp/slices"
@@ -54,55 +56,51 @@ type GetSBOMTestResultResponseBody struct {
 	Included []*Includes                    `json:"included,omitempty"`
 }
 
-type SeverityLevel string
+type SeverityLevel int
 
 func (l SeverityLevel) String() string {
-	return string(l)
+	switch l {
+	default:
+		return ""
+	case LowSeverity:
+		return "LOW"
+	case MediumSeverity:
+		return "MEDIUM"
+	case HighSeverity:
+		return "HIGH"
+	case CriticalSeverity:
+		return "CRITICAL"
+	}
+}
+
+func (l *SeverityLevel) UnmarshalJSON(b []byte) error {
+	var sev string
+	if err := json.Unmarshal(b, &sev); err != nil {
+		return err
+	}
+
+	switch sev {
+	default:
+		return fmt.Errorf("invalid severity level: %s", sev)
+	case "low":
+		*l = LowSeverity
+	case "medium":
+		*l = MediumSeverity
+	case "high":
+		*l = HighSeverity
+	case "critical":
+		*l = CriticalSeverity
+	}
+
+	return nil
 }
 
 const (
-	LowSeverity      = SeverityLevel("low")
-	MediumSeverity   = SeverityLevel("medium")
-	HighSeverity     = SeverityLevel("high")
-	CriticalSeverity = SeverityLevel("critical")
+	LowSeverity SeverityLevel = iota
+	MediumSeverity
+	HighSeverity
+	CriticalSeverity
 )
-
-func CmpSeverityLevel(a, b SeverityLevel) int {
-	a = SeverityLevel(strings.ToLower(string(a)))
-	b = SeverityLevel(strings.ToLower(string(b)))
-
-	if a == b {
-		return 0
-	}
-
-	switch {
-	case a == LowSeverity:
-		return -1
-
-	case b == LowSeverity:
-		return 1
-
-	case a == MediumSeverity:
-		return -1
-
-	case b == MediumSeverity:
-		return 1
-
-	case a == HighSeverity:
-		return -1
-
-	case b == HighSeverity:
-		return 1
-
-	case a == CriticalSeverity:
-		return -1
-
-	case b == CriticalSeverity:
-		return 1
-	}
-
-	return 0
-}
 
 type SortedView struct {
 	Packages, Remedies, Vulnerabilities []*Includes
@@ -155,7 +153,7 @@ func cmpIncludes(a, b *Includes) int {
 	// the relationship between packages and vulnerabilities.
 	switch {
 	case a.Type == b.Type:
-		return CmpSeverityLevel(a.Attributes.EffectiveSeverityLevel, b.Attributes.EffectiveSeverityLevel)
+		return cmp.Compare(a.Attributes.EffectiveSeverityLevel, b.Attributes.EffectiveSeverityLevel)
 
 	case a.Type == Packages:
 		return -1
