@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
-	"github.com/snyk/go-application-framework/pkg/workflow"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -13,31 +12,30 @@ import (
 
 var snapshotter = cupaloy.New(cupaloy.SnapshotSubdirectory("testdata/snapshots"))
 
-func TestPresenter_Pretty(t *testing.T) {
-	mockICTX := createMockICTX(t)
-	mockICTX.GetConfiguration().Set("experimental", true)
-	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+var mockResult = sbomtest.TestResult{ // TODO: assign the actual test result
+	Summary: sbomtest.TestSummary{TotalVulnerabilities: 42},
+}
 
-	data, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+func TestPresenter_Pretty(t *testing.T) {
+	presenter := &sbomtest.Presenter{
+		Format: sbomtest.PresenterFormatPretty,
+	}
+
+	data, contentType, err := presenter.Render(mockResult)
 
 	require.NoError(t, err)
-	require.Len(t, data, 1)
-
-	assert.Equal(t, "text/plain", data[0].GetContentType())
-	snapshotter.SnapshotT(t, data[0].GetPayload())
+	assert.Equal(t, "text/plain", contentType)
+	snapshotter.SnapshotT(t, data)
 }
 
 func TestPresenter_JSON(t *testing.T) {
-	mockICTX := createMockICTX(t)
-	mockICTX.GetConfiguration().Set("experimental", true)
-	mockICTX.GetConfiguration().Set("json", true)
-	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	presenter := &sbomtest.Presenter{
+		Format: sbomtest.PresenterFormatJSON,
+	}
 
-	data, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+	data, contentType, err := presenter.Render(mockResult)
 
 	require.NoError(t, err)
-	require.Len(t, data, 1)
-
-	assert.Equal(t, "application/json", data[0].GetContentType())
-	snapshotter.SnapshotT(t, data[0].GetPayload())
+	assert.Equal(t, "application/json", contentType)
+	snapshotter.SnapshotT(t, data)
 }
