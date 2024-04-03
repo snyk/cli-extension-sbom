@@ -41,6 +41,21 @@ type SBOMTestRunAttributes struct {
 	Summary SBOMTestRunSummary `json:"test_summary"`
 }
 
+type GetSBOMTestStatusResponseBody struct {
+	JSONAPI *JSONAPI                       `json:"jsonapi,omitempty"`
+	Data    *GetSBOMTestStatusResponseData `json:"data,omitempty"`
+}
+
+type GetSBOMTestStatusResponseData struct {
+	ID         string                   `json:"id"`
+	Type       string                   `json:"type"`
+	Attributes SBOMTestStatusAttributes `json:"attributes"`
+}
+
+type SBOMTestStatusAttributes struct {
+	Status string `json:"status"`
+}
+
 type GetSBOMTestResultResponseBody struct {
 	JSONAPI  *JSONAPI                       `json:"jsonapi,omitempty"`
 	Data     *GetSBOMTestResultResponseData `json:"data,omitempty"`
