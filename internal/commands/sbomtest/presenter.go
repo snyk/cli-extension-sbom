@@ -95,3 +95,47 @@ func renderPrettyResult(result *snykclient.GetSBOMTestResultResponseBody) (data 
 
 	return []byte(fmt.Sprintf(tpl, result.Data.Attributes.Summary.TotalVulnerabilities)), MIMETypeText, nil
 }
+
+func AsHumanReadable(dir string, resp *snykclient.GetSBOMTestResultResponseBody, printDeps bool) string {
+	view := snykclient.SortIncludes(resp.Included)
+
+	var pkgs string
+
+	if printDeps {
+		pkgs = fmt.Sprintf("\n" + SectionStyle.Render("Packages:") + "\n\n")
+
+		for _, val := range view.Packages {
+			pkgs += fmt.Sprintf(`
+  %s
+  purl: %s
+`, val.ID, val.Attributes.Purl)
+		}
+	}
+
+	issues := fmt.Sprintf("\n" + SectionStyle.Render("Issues:") + "\n\n")
+
+	for _, val := range view.Vulnerabilities {
+		id := val.ID
+
+		name, ok := view.Relationship[val.ID]
+		if !ok {
+			name = "-"
+		}
+
+		title := val.Attributes.Title
+		severity := val.Attributes.EffectiveSeverityLevel
+
+		issues += fmt.Sprintf(`%s
+    Introduced through: %s
+    URL: https://security.snyk.io/vuln/%s
+
+`, RenderTitle(severity.String(), title), name, id)
+	}
+
+	summary := fmt.Sprintf("Tested %d dependencies for known issues, found %d.\n\n",
+		len(resp.Data.Attributes.Summary.Tested),
+		resp.Data.Attributes.Summary.TotalIssues,
+	)
+
+	return fmt.Sprintf("Testing %s\n%s\n%s\n%s\n\n", dir, pkgs, issues, summary)
+}
