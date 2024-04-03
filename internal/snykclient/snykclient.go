@@ -114,6 +114,14 @@ func (t *SBOMTest) GetStatus(ctx context.Context) (SBOMTestStatus, error) {
 		return SBOMTestStatusIndeterminate, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
+	var body GetSBOMTestStatusResponseBody
+	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
+		return SBOMTestStatusIndeterminate, err
+	}
+	if body.Data.Attributes.Status == "error" {
+		return SBOMTestStatusError, nil
+	}
+
 	return SBOMTestStatusProcessing, nil
 }
 
@@ -132,7 +140,9 @@ func (t *SBOMTest) WaitUntilCompleteWithBackoff(ctx context.Context, backoff bac
 			return fmt.Errorf("failed to get test status: %w", err)
 		}
 
-		if status == SBOMTestStatusError || status == SBOMTestStatusFinished {
+		if status == SBOMTestStatusError {
+			return fmt.Errorf("job failed")
+		} else if status == SBOMTestStatusFinished {
 			break
 		}
 
