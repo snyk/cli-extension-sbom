@@ -41,25 +41,25 @@ type Result struct {
 var SectionStyle = lipgloss.NewStyle().
 	Bold(true)
 
-// LowStyle renders blue and bold.
+// LowStyle renders white and bold.
 var LowStyle = lipgloss.NewStyle().
 	Bold(true).
-	Foreground(lipgloss.AdaptiveColor{Light: "#0000FF", Dark: "#0000FF"})
-
-// HighStyle renders red and bold.
-var HighStyle = lipgloss.NewStyle().
-	Bold(true).
-	Foreground(lipgloss.AdaptiveColor{Light: "9", Dark: "9"})
+	Foreground(lipgloss.NoColor{}) // White
 
 // MediumStyle renders yellow and bold.
 var MediumStyle = lipgloss.NewStyle().
 	Bold(true).
-	Foreground(lipgloss.AdaptiveColor{Light: "227", Dark: "227"})
+	Foreground(lipgloss.Color("3")) // Yellow
+
+// HighStyle renders red and bold.
+var HighStyle = lipgloss.NewStyle().
+	Bold(true).
+	Foreground(lipgloss.Color("1")) // Red
 
 // CriticalStyle renders magenta and bold.
 var CriticalStyle = lipgloss.NewStyle().
 	Bold(true).
-	Foreground(lipgloss.AdaptiveColor{Light: "5", Dark: "5"})
+	Foreground(lipgloss.Color("5")) // Magenta
 
 func RenderTitle(severity snykclient.SeverityLevel, desc string) string {
 	title := fmt.Sprintf("✗ [%s] %s", severity, desc)
