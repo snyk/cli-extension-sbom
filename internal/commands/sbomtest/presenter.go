@@ -20,7 +20,7 @@ const (
 )
 
 type Presenter struct {
-	format presenterFormat
+	Format presenterFormat
 }
 
 func newPresenter(ictx workflow.InvocationContext) *Presenter {
@@ -31,7 +31,7 @@ func newPresenter(ictx workflow.InvocationContext) *Presenter {
 	}
 
 	return &Presenter{
-		format: f,
+		Format: f,
 	}
 }
 
@@ -45,7 +45,7 @@ type TestSummary struct {
 }
 
 func (p Presenter) Render(result TestResult) (data []byte, contentType string, err error) {
-	switch p.format {
+	switch p.Format {
 	default:
 		return nil, "", errors.New("presenter has no format")
 	case PresenterFormatJSON:
