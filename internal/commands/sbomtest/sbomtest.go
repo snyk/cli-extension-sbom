@@ -49,7 +49,7 @@ func TestWorkflow(
 	mockResult := TestResult{ // TODO: assign the actual test result
 		Summary: TestSummary{TotalVulnerabilities: 42},
 	}
-	data, contentType, err := newPresenter(ictx).Render(mockResult)
+	data, contentType, err := NewPresenter(ictx).Render(mockResult)
 
 	return []workflow.Data{workflowData(data, contentType)}, err
 }
