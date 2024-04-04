@@ -1,7 +1,6 @@
 package sbomtest
 
 import (
-	"cmp"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -175,10 +174,26 @@ func SortVulns(vulns map[string]snykclient.VulnerabilityResource) []snykclient.V
 
 	slices.SortFunc(result, func(a, b snykclient.VulnerabilityResource) int {
 		if a.SeverityLevel != b.SeverityLevel {
-			return cmp.Compare(a.SeverityLevel, b.SeverityLevel)
+			if a.SeverityLevel < b.SeverityLevel {
+				return -1
+			}
+
+			if a.SeverityLevel > b.SeverityLevel {
+				return +1
+			}
+
+			return 0
 		}
 
-		return cmp.Compare(a.ID, b.ID)
+		if a.ID < b.ID {
+			return -1
+		}
+
+		if a.ID > b.ID {
+			return +1
+		}
+
+		return 0
 	})
 
 	return result

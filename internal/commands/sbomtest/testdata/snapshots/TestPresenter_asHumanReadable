@@ -2,7 +2,6 @@ Testing ./fake/dir
 
 Packages:
 
-
   ca-certificates@2021.2.50-72.amzn2.0.5
   purl: pkg:rpm/amzn/ca-certificates@2021.2.50-72.amzn2.0.5?arch=noarch&upstream=ca-certificates-2021.2.50-72.amzn2.0.5.src.rpm&distro=amzn-2
 
