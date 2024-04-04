@@ -174,15 +174,7 @@ func SortVulns(vulns map[string]snykclient.VulnerabilityResource) []snykclient.V
 
 	slices.SortFunc(result, func(a, b snykclient.VulnerabilityResource) int {
 		if a.SeverityLevel != b.SeverityLevel {
-			if a.SeverityLevel < b.SeverityLevel {
-				return -1
-			}
-
-			if a.SeverityLevel > b.SeverityLevel {
-				return +1
-			}
-
-			return 0
+			return int(a.SeverityLevel - b.SeverityLevel)
 		}
 
 		if a.ID < b.ID {
