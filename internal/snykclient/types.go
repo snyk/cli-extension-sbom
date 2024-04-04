@@ -2,12 +2,9 @@
 package snykclient
 
 import (
-	"cmp"
 	"encoding/json"
 	"fmt"
 	"time"
-
-	"golang.org/x/exp/slices"
 )
 
 type CreateSBOMTestRunResponseBody struct {
@@ -112,70 +109,6 @@ const (
 	Remedies        = "remedies"
 	Vulnerabilities = "vulnerabilities"
 )
-
-func SortIncludes(i []*Includes) SortedView {
-	slices.SortFunc(i, cmpIncludes)
-
-	var p, r, v int
-
-	relationship := map[string]string{}
-
-	// NOTE(dekelund): Remedies must have higher precedence than
-	// vulnerabilities in snykclient.CmpIncludes for this to
-	// work.
-	for _, val := range i {
-		switch val.Type {
-		case Packages:
-			p++
-			r++
-			v++
-
-		case Remedies:
-			r++
-			v++
-			relationship[val.Relationships.Vulnerability.Data.ID] = val.Relationships.AffectedPackage.Data.ID
-
-		case Vulnerabilities:
-			v++
-		}
-	}
-
-	return SortedView{
-		Packages:        i[:p],
-		Remedies:        i[p:r],
-		Vulnerabilities: i[r:v],
-		Relationship:    relationship,
-	}
-}
-
-func cmpIncludes(a, b *Includes) int {
-	// NOTE(dekelund): SortIncludes relays on the order to compute
-	// the relationship between packages and vulnerabilities.
-	switch {
-	case a.Type == b.Type:
-		return cmp.Compare(a.Attributes.EffectiveSeverityLevel, b.Attributes.EffectiveSeverityLevel)
-
-	case a.Type == Packages:
-		return -1
-
-	case b.Type == Packages:
-		return 1
-
-	case a.Type == Remedies:
-		return -1
-
-	case b.Type == Remedies:
-		return 1
-
-	case a.Type == Vulnerabilities:
-		return -1
-
-	case b.Type == Vulnerabilities:
-		return 1
-	}
-
-	return 0
-}
 
 type Includes struct {
 	Type string `json:"type"`
@@ -312,4 +245,72 @@ type RelationshipsData struct {
 type ResourceReference struct {
 	Type string `json:"type"`
 	ID   string `json:"id"`
+}
+
+type VulnerabilityResource struct {
+	ID, Name, Version, PURL string
+
+	Title    string
+	Packages []*PackageResource
+
+	SeverityLevel SeverityLevel
+}
+
+type PackageResource struct {
+	ID, Name, Version, PURL string
+	Vulnerabilities         []*VulnerabilityResource
+}
+
+type Resources struct {
+	Packages        map[string]PackageResource
+	Vulnerabilities map[string]VulnerabilityResource
+}
+
+func ToResources(i []*Includes) Resources {
+	resources := Resources{
+		Packages:        make(map[string]PackageResource),
+		Vulnerabilities: make(map[string]VulnerabilityResource),
+	}
+
+	remedies := map[string]string{}
+
+	for _, val := range i {
+		switch val.Type {
+		case Packages:
+			resources.Packages[val.ID] = PackageResource{
+				ID:      val.ID,
+				Name:    val.Attributes.Name,
+				Version: val.Attributes.Version,
+				PURL:    val.Attributes.Purl,
+			}
+
+		case Vulnerabilities:
+			resources.Vulnerabilities[val.ID] = VulnerabilityResource{
+				ID: val.ID,
+
+				Name:    val.Attributes.Name,
+				Version: val.Attributes.Version,
+				PURL:    val.Attributes.Purl,
+				Title:   val.Attributes.Title,
+
+				SeverityLevel: val.Attributes.EffectiveSeverityLevel,
+			}
+
+		case Remedies:
+			remedies[val.Relationships.Vulnerability.Data.ID] = val.Relationships.AffectedPackage.Data.ID
+		}
+	}
+
+	for vulnID, pkgID := range remedies {
+		pkg := resources.Packages[pkgID]
+		vuln := resources.Vulnerabilities[vulnID]
+
+		pkg.Vulnerabilities = append(pkg.Vulnerabilities, &vuln)
+		vuln.Packages = append(vuln.Packages, &pkg)
+
+		resources.Packages[pkgID] = pkg
+		resources.Vulnerabilities[vulnID] = vuln
+	}
+
+	return resources
 }

@@ -45,22 +45,49 @@ func TestPresenter_JSON(t *testing.T) {
 
 func TestPresenter_asHumanReadable(t *testing.T) {
 	fd, err := os.Open("testdata/humanReadable.input")
-	assert.Nil(t, err)
+	require.Nil(t, err)
 
 	var body snykclient.GetSBOMTestResultResponseBody
 
 	err = json.NewDecoder(fd).Decode(&body)
-	assert.Nil(t, err)
+	require.Nil(t, err)
 
 	result := sbomtest.AsHumanReadable("./fake/dir", &body, true)
 
 	snapshotter.SnapshotT(t, result)
+}
 
-	dst, err := os.Create("/tmp/result.json")
-	require.Nil(t, err)
-	defer dst.Close()
+func TestSortVulns(t *testing.T) {
+	vulns := map[string]snykclient.VulnerabilityResource{
+		"0": {
+			ID:            "0",
+			SeverityLevel: snykclient.MediumSeverity,
+		},
+		"1": {
+			ID:            "1",
+			SeverityLevel: snykclient.CriticalSeverity,
+		},
+		"2": {
+			ID:            "2",
+			SeverityLevel: snykclient.LowSeverity,
+		},
+		"3": {
+			ID:            "3",
+			SeverityLevel: snykclient.HighSeverity,
+		},
+	}
 
-	dst.WriteString(result)
-	//enc := json.NewEncoder(dst)
-	//enc.Encode(result)
+	result := sbomtest.SortVulns(vulns)
+
+	require.Equal(t, "2", result[0].ID)
+	require.Equal(t, snykclient.LowSeverity, result[0].SeverityLevel)
+
+	require.Equal(t, "0", result[1].ID)
+	require.Equal(t, snykclient.MediumSeverity, result[1].SeverityLevel)
+
+	require.Equal(t, "3", result[2].ID)
+	require.Equal(t, snykclient.HighSeverity, result[2].SeverityLevel)
+
+	require.Equal(t, "1", result[3].ID)
+	require.Equal(t, snykclient.CriticalSeverity, result[3].SeverityLevel)
 }

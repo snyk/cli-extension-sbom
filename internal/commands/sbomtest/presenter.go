@@ -2,11 +2,14 @@
 package sbomtest
 
 import (
+	"cmp"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/snyk/go-application-framework/pkg/workflow"
+	"golang.org/x/exp/slices"
 
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
@@ -98,39 +101,47 @@ func renderPrettyResult(result *snykclient.GetSBOMTestResultResponseBody) (data 
 }
 
 func AsHumanReadable(dir string, resp *snykclient.GetSBOMTestResultResponseBody, printDeps bool) string {
-	view := snykclient.SortIncludes(resp.Included)
+	result := snykclient.ToResources(resp.Included)
 
-	var pkgs string
+	var depsSection string
 
 	if printDeps {
-		pkgs = fmt.Sprintf("\n" + SectionStyle.Render("Packages:") + "\n\n")
+		depsSection = fmt.Sprintf("\n" + SectionStyle.Render("Packages:") + "\n")
 
-		for _, val := range view.Packages {
-			pkgs += fmt.Sprintf(`
-  %s
-  purl: %s
-`, val.ID, val.Attributes.Purl)
+		keys := make([]string, 0, len(result.Packages))
+		for k := range result.Packages {
+			keys = append(keys, k)
+		}
+
+		slices.Sort(keys)
+
+		for _, k := range keys {
+			pkg := result.Packages[k]
+			depsSection += SprintDependencies(pkg.ID, pkg.PURL)
 		}
 	}
 
-	issues := fmt.Sprintf("\n" + SectionStyle.Render("Issues:") + "\n\n")
+	issuesSection := fmt.Sprintf("\n" + SectionStyle.Render("Issues:") + "\n\n")
 
-	for _, val := range view.Vulnerabilities {
-		id := val.ID
+	vulns := SortVulns(result.Vulnerabilities)
 
-		name, ok := view.Relationship[val.ID]
-		if !ok {
-			name = "-"
+	for i := range vulns {
+		var introducedBy []string
+
+		for _, pkg := range vulns[i].Packages {
+			introducedBy = append(introducedBy, pkg.ID)
 		}
 
-		title := val.Attributes.Title
-		severity := val.Attributes.EffectiveSeverityLevel
+		if len(introducedBy) == 0 {
+			introducedBy = []string{"-"}
+		} else {
+			slices.Sort(introducedBy)
+		}
 
-		issues += fmt.Sprintf(`%s
-    Introduced through: %s
-    URL: https://security.snyk.io/vuln/%s
+		title := vulns[i].Title
+		severity := vulns[i].SeverityLevel
 
-`, RenderTitle(severity, title), name, id)
+		issuesSection += SprintIssue(title, vulns[i].ID, introducedBy, severity)
 	}
 
 	summary := fmt.Sprintf("Tested %d dependencies for known issues, found %d.\n\n",
@@ -138,5 +149,38 @@ func AsHumanReadable(dir string, resp *snykclient.GetSBOMTestResultResponseBody,
 		resp.Data.Attributes.Summary.TotalIssues,
 	)
 
-	return fmt.Sprintf("Testing %s\n%s\n%s\n%s\n\n", dir, pkgs, issues, summary)
+	return fmt.Sprintf("Testing %s\n%s\n%s\n%s\n\n", dir, depsSection, issuesSection, summary)
+}
+
+func SprintDependencies(id, purl string) string {
+	return fmt.Sprintf(`
+  %s
+  purl: %s
+`, id, purl)
+}
+
+func SprintIssue(title, id string, introducedBy []string, severity snykclient.SeverityLevel) string {
+	return fmt.Sprintf(`%s
+    Introduced through: %s
+    URL: https://security.snyk.io/vuln/%s
+
+`, RenderTitle(severity, title), strings.Join(introducedBy, ","), id)
+}
+
+func SortVulns(vulns map[string]snykclient.VulnerabilityResource) []snykclient.VulnerabilityResource {
+	result := make([]snykclient.VulnerabilityResource, 0, len(vulns))
+
+	for id := range vulns {
+		result = append(result, vulns[id])
+	}
+
+	slices.SortFunc(result, func(a, b snykclient.VulnerabilityResource) int {
+		if a.SeverityLevel != b.SeverityLevel {
+			return cmp.Compare(a.SeverityLevel, b.SeverityLevel)
+		}
+
+		return cmp.Compare(a.ID, b.ID)
+	})
+
+	return result
 }
