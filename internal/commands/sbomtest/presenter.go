@@ -1,4 +1,3 @@
-//nolint:tagliatelle // Disabling for snake-case in JSON payloads.
 package sbomtest
 
 import (
