@@ -17,9 +17,9 @@ var mockResult = sbomtest.TestResult{ // TODO: assign the actual test result
 }
 
 func TestPresenter_Pretty(t *testing.T) {
-	presenter := &sbomtest.Presenter{
-		Format: sbomtest.PresenterFormatPretty,
-	}
+	mockICTX := createMockICTX(t)
+	mockICTX.GetConfiguration().Set("json", false)
+	presenter := sbomtest.NewPresenter(mockICTX)
 
 	data, contentType, err := presenter.Render(mockResult)
 
@@ -29,9 +29,9 @@ func TestPresenter_Pretty(t *testing.T) {
 }
 
 func TestPresenter_JSON(t *testing.T) {
-	presenter := &sbomtest.Presenter{
-		Format: sbomtest.PresenterFormatJSON,
-	}
+	mockICTX := createMockICTX(t)
+	mockICTX.GetConfiguration().Set("json", true)
+	presenter := sbomtest.NewPresenter(mockICTX)
 
 	data, contentType, err := presenter.Render(mockResult)
 
