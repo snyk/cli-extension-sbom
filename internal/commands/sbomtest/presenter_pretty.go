@@ -64,16 +64,17 @@ func SprintSummary(resources snykclient.Resources) string {
 func SprintDependencies(resources snykclient.Resources) string {
 	result := fmt.Sprintf("\n" + SectionStyle.Render("Packages:") + "\n")
 
-	keys := make([]string, 0, len(resources.Packages))
-	for k := range resources.Packages {
-		keys = append(keys, k)
-	}
+	packages := make([]string, len(resources.Tested))
+	_ = copy(packages, resources.Tested)
 
-	slices.Sort(keys)
+	slices.Sort(packages)
 
-	for _, k := range keys {
-		pkg := resources.Packages[k]
-		result += SprintDependency(pkg.ID, pkg.PURL)
+	for _, k := range packages {
+		tmp := strings.SplitN(k, ":", 2)
+		slices.Reverse(tmp)
+		id := strings.SplitN(tmp[0], "?", 2)[0]
+
+		result += SprintDependency(id, k)
 	}
 
 	return result
