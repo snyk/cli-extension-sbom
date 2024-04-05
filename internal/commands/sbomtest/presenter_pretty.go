@@ -17,6 +17,12 @@ func renderPrettyResult(path string, body *snykclient.GetSBOMTestResultResponseB
 }
 
 func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool) string {
+	summary := SprintSummary(resources)
+
+	if len(resources.Tested) == 0 {
+		return fmt.Sprintf("Testing %s\n%s\n\n", path, summary)
+	}
+
 	var depsSection string
 
 	if printDeps {
@@ -58,12 +64,14 @@ func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool
 		issuesSection += SprintIssue(title, vulns[i].ID, introducedBy, severity)
 	}
 
-	summary := fmt.Sprintf("Tested %d dependencies for known issues, found %d.\n\n",
+	return fmt.Sprintf("Testing %s\n%s\n%s\n%s\n\n", path, depsSection, issuesSection, summary)
+}
+
+func SprintSummary(resources snykclient.Resources) string {
+	return fmt.Sprintf("Tested %d dependencies for known issues, found %d.\n\n",
 		len(resources.Tested),
 		len(resources.Vulnerabilities),
 	)
-
-	return fmt.Sprintf("Testing %s\n%s\n%s\n%s\n\n", path, depsSection, issuesSection, summary)
 }
 
 func SprintDependencies(id, purl string) string {
