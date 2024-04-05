@@ -9,40 +9,35 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
-func renderPrettyResult(result *snykclient.GetSBOMTestResultResponseBody) (data []byte, contentType string, err error) {
-	// TODO: this is a mock template. Should get replaced.
-	tpl := `TEST RESULTS
-------------
-❌ Found a total of %d vulnerabilities
-`
+func renderPrettyResult(path string, body *snykclient.GetSBOMTestResultResponseBody, printDeps bool) (data []byte, contentType string, err error) {
+	resources := snykclient.ToResources(body.Data.Attributes.Summary.Tested, body.Included)
+	output := AsHumanReadable(path, resources, printDeps)
 
-	return []byte(fmt.Sprintf(tpl, result.Data.Attributes.Summary.TotalVulnerabilities)), MIMETypeText, nil
+	return []byte(output), MIMETypeText, nil
 }
 
-func AsHumanReadable(dir string, resp *snykclient.GetSBOMTestResultResponseBody, printDeps bool) string {
-	result := snykclient.ToResources(resp.Included)
-
+func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool) string {
 	var depsSection string
 
 	if printDeps {
 		depsSection = fmt.Sprintf("\n" + SectionStyle.Render("Packages:") + "\n")
 
-		keys := make([]string, 0, len(result.Packages))
-		for k := range result.Packages {
+		keys := make([]string, 0, len(resources.Packages))
+		for k := range resources.Packages {
 			keys = append(keys, k)
 		}
 
 		slices.Sort(keys)
 
 		for _, k := range keys {
-			pkg := result.Packages[k]
+			pkg := resources.Packages[k]
 			depsSection += SprintDependencies(pkg.ID, pkg.PURL)
 		}
 	}
 
 	issuesSection := fmt.Sprintf("\n" + SectionStyle.Render("Issues:") + "\n\n")
 
-	vulns := SortVulns(result.Vulnerabilities)
+	vulns := SortVulns(resources.Vulnerabilities)
 
 	for i := range vulns {
 		var introducedBy []string
@@ -64,11 +59,11 @@ func AsHumanReadable(dir string, resp *snykclient.GetSBOMTestResultResponseBody,
 	}
 
 	summary := fmt.Sprintf("Tested %d dependencies for known issues, found %d.\n\n",
-		len(resp.Data.Attributes.Summary.Tested),
-		resp.Data.Attributes.Summary.TotalIssues,
+		len(resources.Tested),
+		len(resources.Vulnerabilities),
 	)
 
-	return fmt.Sprintf("Testing %s\n%s\n%s\n%s\n\n", dir, depsSection, issuesSection, summary)
+	return fmt.Sprintf("Testing %s\n%s\n%s\n%s\n\n", path, depsSection, issuesSection, summary)
 }
 
 func SprintDependencies(id, purl string) string {

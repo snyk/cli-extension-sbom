@@ -262,19 +262,23 @@ type PackageResource struct {
 }
 
 type Resources struct {
+	Tested          []string
 	Packages        map[string]PackageResource
 	Vulnerabilities map[string]VulnerabilityResource
 }
 
-func ToResources(i []*Includes) Resources {
+func ToResources(tested []string, includes []*Includes) Resources {
 	resources := Resources{
+		Tested:          make([]string, len(tested)),
 		Packages:        make(map[string]PackageResource),
 		Vulnerabilities: make(map[string]VulnerabilityResource),
 	}
 
+	_ = copy(resources.Tested, tested)
+
 	remedies := map[string]string{}
 
-	for _, val := range i {
+	for _, val := range includes {
 		switch val.Type {
 		case Packages:
 			resources.Packages[val.ID] = PackageResource{

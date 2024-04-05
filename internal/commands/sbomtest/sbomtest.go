@@ -49,7 +49,9 @@ func TestWorkflow(
 			},
 		},
 	}
-	data, contentType, err := newPresenter(ictx).Render(&mockResult)
+
+	printDeps := true
+	data, contentType, err := newPresenter(ictx).Render(filename, &mockResult, printDeps)
 
 	return []workflow.Data{workflowData(data, contentType)}, err
 }
