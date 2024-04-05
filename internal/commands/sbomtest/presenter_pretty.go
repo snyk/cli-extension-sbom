@@ -121,3 +121,29 @@ func SprintIssue(title, id string, introducedBy []string, severity snykclient.Se
 
 `, RenderTitle(severity, title), strings.Join(introducedBy, ","), id)
 }
+
+func SortVulns(vulns map[string]snykclient.VulnerabilityResource) []snykclient.VulnerabilityResource {
+	result := make([]snykclient.VulnerabilityResource, 0, len(vulns))
+
+	for id := range vulns {
+		result = append(result, vulns[id])
+	}
+
+	slices.SortFunc(result, func(a, b snykclient.VulnerabilityResource) int {
+		if a.SeverityLevel != b.SeverityLevel {
+			return int(a.SeverityLevel - b.SeverityLevel)
+		}
+
+		if a.ID < b.ID {
+			return -1
+		}
+
+		if a.ID > b.ID {
+			return +1
+		}
+
+		return 0
+	})
+
+	return result
+}

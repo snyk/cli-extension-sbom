@@ -1,8 +1,6 @@
 package sbomtest_test
 
 import (
-	"encoding/json"
-	"os"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
@@ -41,26 +39,6 @@ func TestPresenter_JSON(t *testing.T) {
 
 	assert.Equal(t, "application/json", data[0].GetContentType())
 	snapshotter.SnapshotT(t, data[0].GetPayload())
-}
-
-func TestPresenter_asHumanReadable(t *testing.T) {
-	fd, err := os.Open("testdata/humanReadable.input")
-	require.Nil(t, err)
-
-	var body snykclient.GetSBOMTestResultResponseBody
-
-	err = json.NewDecoder(fd).Decode(&body)
-	require.Nil(t, err)
-
-	resources := snykclient.ToResources(
-		body.Data.Attributes.Summary.Tested,
-		body.Data.Attributes.Summary.Untested,
-		body.Included,
-	)
-
-	result := sbomtest.AsHumanReadable("./fake/dir", resources, true)
-
-	snapshotter.SnapshotT(t, result)
 }
 
 func TestSortVulns(t *testing.T) {

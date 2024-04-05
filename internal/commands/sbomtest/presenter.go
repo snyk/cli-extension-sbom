@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/snyk/go-application-framework/pkg/workflow"
-	"golang.org/x/exp/slices"
 
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
@@ -44,30 +43,4 @@ func (p Presenter) Render(file string, result *snykclient.GetSBOMTestResultRespo
 	case PresenterFormatPretty:
 		return renderPrettyResult(file, result, printDeps)
 	}
-}
-
-func SortVulns(vulns map[string]snykclient.VulnerabilityResource) []snykclient.VulnerabilityResource {
-	result := make([]snykclient.VulnerabilityResource, 0, len(vulns))
-
-	for id := range vulns {
-		result = append(result, vulns[id])
-	}
-
-	slices.SortFunc(result, func(a, b snykclient.VulnerabilityResource) int {
-		if a.SeverityLevel != b.SeverityLevel {
-			return int(a.SeverityLevel - b.SeverityLevel)
-		}
-
-		if a.ID < b.ID {
-			return -1
-		}
-
-		if a.ID > b.ID {
-			return +1
-		}
-
-		return 0
-	})
-
-	return result
 }
