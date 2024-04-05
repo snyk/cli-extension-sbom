@@ -26,22 +26,48 @@ func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool
 	var depsSection string
 
 	if printDeps {
-		depsSection = fmt.Sprintf("\n" + SectionStyle.Render("Packages:") + "\n")
-
-		keys := make([]string, 0, len(resources.Packages))
-		for k := range resources.Packages {
-			keys = append(keys, k)
-		}
-
-		slices.Sort(keys)
-
-		for _, k := range keys {
-			pkg := resources.Packages[k]
-			depsSection += SprintDependencies(pkg.ID, pkg.PURL)
-		}
+		depsSection = SprintDependencies(resources)
 	}
 
-	issuesSection := fmt.Sprintf("\n" + SectionStyle.Render("Issues:") + "\n\n")
+	issuesSection := SprintIssues(resources)
+
+	return fmt.Sprintf("Testing %s\n%s\n%s\n%s\n", path, depsSection, issuesSection, summary)
+}
+
+func SprintSummary(resources snykclient.Resources) string {
+	return fmt.Sprintf("Tested %d dependencies for known issues, found %d.",
+		len(resources.Tested),
+		len(resources.Vulnerabilities),
+	)
+}
+
+func SprintDependencies(resources snykclient.Resources) string {
+	result := fmt.Sprintf("\n" + SectionStyle.Render("Packages:") + "\n")
+
+	keys := make([]string, 0, len(resources.Packages))
+	for k := range resources.Packages {
+		keys = append(keys, k)
+	}
+
+	slices.Sort(keys)
+
+	for _, k := range keys {
+		pkg := resources.Packages[k]
+		result += SprintDependency(pkg.ID, pkg.PURL)
+	}
+
+	return result
+}
+
+func SprintDependency(id, purl string) string {
+	return fmt.Sprintf(`
+  %s
+  purl: %s
+`, id, purl)
+}
+
+func SprintIssues(resources snykclient.Resources) string {
+	result := fmt.Sprintf("\n" + SectionStyle.Render("Issues:") + "\n\n")
 
 	vulns := SortVulns(resources.Vulnerabilities)
 
@@ -61,24 +87,10 @@ func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool
 		title := vulns[i].Title
 		severity := vulns[i].SeverityLevel
 
-		issuesSection += SprintIssue(title, vulns[i].ID, introducedBy, severity)
+		result += SprintIssue(title, vulns[i].ID, introducedBy, severity)
 	}
 
-	return fmt.Sprintf("Testing %s\n%s\n%s\n%s\n\n", path, depsSection, issuesSection, summary)
-}
-
-func SprintSummary(resources snykclient.Resources) string {
-	return fmt.Sprintf("Tested %d dependencies for known issues, found %d.\n\n",
-		len(resources.Tested),
-		len(resources.Vulnerabilities),
-	)
-}
-
-func SprintDependencies(id, purl string) string {
-	return fmt.Sprintf(`
-  %s
-  purl: %s
-`, id, purl)
+	return result
 }
 
 func SprintIssue(title, id string, introducedBy []string, severity snykclient.SeverityLevel) string {
