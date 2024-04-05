@@ -10,7 +10,12 @@ import (
 )
 
 func renderPrettyResult(path string, body *snykclient.GetSBOMTestResultResponseBody, printDeps bool) (data []byte, contentType string, err error) {
-	resources := snykclient.ToResources(body.Data.Attributes.Summary.Tested, body.Included)
+	resources := snykclient.ToResources(
+		body.Data.Attributes.Summary.Tested,
+		body.Data.Attributes.Summary.Untested,
+		body.Included,
+	)
+
 	output := AsHumanReadable(path, resources, printDeps)
 
 	return []byte(output), MIMETypeText, nil
@@ -19,19 +24,34 @@ func renderPrettyResult(path string, body *snykclient.GetSBOMTestResultResponseB
 func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool) string {
 	summary := SprintSummary(resources)
 
+	var untestedSection string
+	if len(resources.Untested) > 0 {
+		untestedSection = SprintUntestedComponents(resources) + "\n"
+	}
+
 	if len(resources.Tested) == 0 {
-		return fmt.Sprintf("Testing %s\n%s\n\n", path, summary)
+		return fmt.Sprintf("Testing %s\n%s%s\n\n", path, untestedSection, summary)
 	}
 
 	var depsSection string
 
 	if printDeps {
-		depsSection = SprintDependencies(resources)
+		depsSection = SprintDependencies(resources) + "\n"
 	}
 
 	issuesSection := SprintIssues(resources)
 
-	return fmt.Sprintf("Testing %s\n%s\n%s\n%s\n", path, depsSection, issuesSection, summary)
+	return fmt.Sprintf("Testing %s\n%s%s%s\n%s\n", path, depsSection, untestedSection, issuesSection, summary)
+}
+
+func SprintUntestedComponents(resources snykclient.Resources) string {
+	result := fmt.Sprintf("\n" + SectionStyle.Render("Untested:") + "\n")
+
+	for i := range resources.Untested {
+		result += fmt.Sprintf("\n%s\n", RenderUntestedComponent(resources.Untested[i].BOMRef, resources.Untested[i].Reason))
+	}
+
+	return result
 }
 
 func SprintSummary(resources snykclient.Resources) string {

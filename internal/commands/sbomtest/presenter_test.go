@@ -52,7 +52,12 @@ func TestPresenter_asHumanReadable(t *testing.T) {
 	err = json.NewDecoder(fd).Decode(&body)
 	require.Nil(t, err)
 
-	resources := snykclient.ToResources(body.Data.Attributes.Summary.Tested, body.Included)
+	resources := snykclient.ToResources(
+		body.Data.Attributes.Summary.Tested,
+		body.Data.Attributes.Summary.Untested,
+		body.Included,
+	)
+
 	result := sbomtest.AsHumanReadable("./fake/dir", resources, true)
 
 	snapshotter.SnapshotT(t, result)

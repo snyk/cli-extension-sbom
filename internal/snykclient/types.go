@@ -261,20 +261,31 @@ type PackageResource struct {
 	Vulnerabilities         []*VulnerabilityResource
 }
 
+type UnsupportedComponentResource struct {
+	BOMRef string
+	Reason string
+}
+
 type Resources struct {
 	Tested          []string
+	Untested        []UnsupportedComponentResource
 	Packages        map[string]PackageResource
 	Vulnerabilities map[string]VulnerabilityResource
 }
 
-func ToResources(tested []string, includes []*Includes) Resources {
+func ToResources(tested []string, untested []UnsupportedComponent, includes []*Includes) Resources {
 	resources := Resources{
 		Tested:          make([]string, len(tested)),
+		Untested:        make([]UnsupportedComponentResource, len(untested)),
 		Packages:        make(map[string]PackageResource),
 		Vulnerabilities: make(map[string]VulnerabilityResource),
 	}
 
 	_ = copy(resources.Tested, tested)
+
+	for i, uc := range untested {
+		resources.Untested[i] = UnsupportedComponentResource(uc)
+	}
 
 	remedies := map[string]string{}
 

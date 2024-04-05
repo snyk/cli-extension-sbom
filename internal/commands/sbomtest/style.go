@@ -26,6 +26,11 @@ var (
 	criticalStyle = severityStyle.Copy().Foreground(magenta)
 )
 
+func RenderUntestedComponent(ref, reason string) string {
+	title := mediumStyle.Render(fmt.Sprintf(`✗ %s`, ref))
+	return fmt.Sprintf("%s\n    %s", title, reason)
+}
+
 func RenderTitle(severity snykclient.SeverityLevel, desc string) string {
 	title := fmt.Sprintf("✗ [%s] %s", severity, desc)
 
