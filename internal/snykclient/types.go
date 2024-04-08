@@ -174,10 +174,12 @@ type Includes struct {
 }
 
 type Slots struct {
-	DisclosureTime  string `json:"disclosure_time"`
-	Exploit         string `json:"exploit"`
-	PublicationTime string `json:"publication_time"`
-	References      []struct {
+	DisclosureTime  SBOMTime `json:"disclosure_time"`
+	PublicationTime SBOMTime `json:"publication_time"`
+
+	Exploit string `json:"exploit"`
+
+	References []struct {
 		URL   string `json:"url"`
 		Title string `json:"title"`
 	} `json:"references"`
@@ -249,17 +251,37 @@ type ResourceReference struct {
 	ID   string `json:"id"`
 }
 
+type SBOMTime time.Time
+
+func (t *SBOMTime) UnmarshalJSON(b []byte) error {
+	tmp, err := time.Parse("\"2006-01-02 15:04:05 +0000 UTC\"", string(b))
+	if err != nil {
+		return err
+	}
+
+	*t = SBOMTime(tmp)
+
+	return nil
+}
+
 type VulnerabilityResource struct {
 	ID, Name, Version, PURL string
 
 	Title    string
 	Packages []*PackageResource
 
-	DisclosureTime string
-	Exploit        string
+	CreatedAt   time.Time
+	DisclosedAt time.Time
+	PublishedAt time.Time
+	ModifiedAt  time.Time
+
+	Exploit string
 
 	CWE, CVE string
 	SemVer   []string
+
+	From        []string
+	UpgradePath []any
 
 	SeverityLevel SeverityLevel
 }
@@ -339,8 +361,13 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 				PURL:    val.Attributes.Purl,
 				Title:   val.Attributes.Title,
 
-				DisclosureTime: slots.DisclosureTime,
-				Exploit:        slots.Exploit,
+				CreatedAt:  val.Attributes.CreatedAt,
+				ModifiedAt: val.Attributes.UpdatedAt,
+
+				DisclosedAt: time.Time(slots.DisclosureTime),
+				PublishedAt: time.Time(slots.PublicationTime),
+
+				Exploit: slots.Exploit,
 
 				CVE: cve,
 				CWE: cwe,

@@ -20,17 +20,20 @@ type (
 	}
 
 	Vulnerability struct {
+		CreationTime         time.Time  `json:"creationTime,omitempty"`
 		DisclosureTime       time.Time  `json:"disclosureTime,omitempty"`
 		Exploit              string     `json:"exploit,omitempty"`
 		ID                   string     `json:"id,omitempty"`
 		Identifiers          Identifier `json:"identifiers,omitempty"`
+		ModificationTime     time.Time  `json:"modificationTime,omitempty"`
 		PackageName          string     `json:"packageName,omitempty"`
-		SemVer               SemVer   `json:"semver,omitempty"`
-		Severity             string   `json:"severity,omitempty"`
-		SeverityWithCritical string   `json:"severityWithCritical,omitempty"`
-		Title                string   `json:"title,omitempty"`
-		Version              string   `json:"version,omitempty"`
-		Name                 string   `json:"name,omitempty"`
+		PublicationTime      time.Time  `json:"publicationTime,omitempty"`
+		SemVer               SemVer     `json:"semver,omitempty"`
+		Severity             string     `json:"severity,omitempty"`
+		SeverityWithCritical string     `json:"severityWithCritical,omitempty"`
+		Title                string     `json:"title,omitempty"`
+		Version              string     `json:"version,omitempty"`
+		Name                 string     `json:"name,omitempty"`
 	}
 
 	Identifier struct {
@@ -75,11 +78,6 @@ func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) (JSONOut
 			severityWithoutCritical = snykclient.HighSeverity
 		}
 
-		disclosureTime, err := time.Parse("2006-01-02 15:04:05 +0000 UTC", vuln.DisclosureTime)
-		if err != nil {
-			return JSONOutput{}, err // Maybe use specific error type?
-		}
-
 		var cve, cwe []string
 
 		if vuln.CVE != "" {
@@ -92,9 +90,12 @@ func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) (JSONOut
 
 		for pid, pkg := range resources.Vulnerabilities {
 			vulns = append(vulns, Vulnerability{
-				DisclosureTime: disclosureTime,
-				Exploit:        vuln.Exploit,
-				ID: id,
+				CreationTime:     vuln.CreatedAt,
+				PublicationTime:  vuln.PublishedAt,
+				DisclosureTime:   vuln.DisclosedAt,
+				ModificationTime: vuln.ModifiedAt,
+				Exploit:          vuln.Exploit,
+				ID:               id,
 				Identifiers: Identifier{
 					CVE: cve,
 					CWE: cwe,
@@ -107,7 +108,7 @@ func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) (JSONOut
 				SeverityWithCritical: vuln.SeverityLevel.String(),
 				Title:                pkg.Title,
 				Version:              pkg.Version,
-				Name: pkg.Name,
+				Name:                 pkg.Name,
 			})
 		}
 	}
