@@ -88,27 +88,31 @@ func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) (JSONOut
 			cve = append(cve, vuln.CWE)
 		}
 
-		for pid, pkg := range resources.Vulnerabilities {
+		for pid := range resources.Packages {
 			vulns = append(vulns, Vulnerability{
+				ID:          id,
+				PackageName: pid,
+				Name:        resources.Packages[pid].Name,
+				Version:     resources.Packages[pid].Version,
+
+				Title: resources.Vulnerabilities[id].Title,
+
 				CreationTime:     vuln.CreatedAt,
 				PublicationTime:  vuln.PublishedAt,
 				DisclosureTime:   vuln.DisclosedAt,
 				ModificationTime: vuln.ModifiedAt,
-				Exploit:          vuln.Exploit,
-				ID:               id,
+
+				Exploit: vuln.Exploit,
+
 				Identifiers: Identifier{
 					CVE: cve,
 					CWE: cwe,
 				},
-				PackageName: pid,
 				SemVer: SemVer{
 					Vulnerable: vuln.SemVer,
 				},
 				Severity:             severityWithoutCritical.String(),
 				SeverityWithCritical: vuln.SeverityLevel.String(),
-				Title:                pkg.Title,
-				Version:              pkg.Version,
-				Name:                 pkg.Name,
 			})
 		}
 	}
