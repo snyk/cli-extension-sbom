@@ -169,16 +169,18 @@ type Includes struct {
 
 		EffectiveSeverityLevel SeverityLevel `json:"effective_severity_level"`
 
-		Slots []struct {
-			DisclosureTime  string `json:"disclosure_time"`
-			Exploit         string `json:"exploit"`
-			PublicationTime string `json:"publication_time"`
-			References      []struct {
-				URL   string `json:"url"`
-				Title string `json:"title"`
-			} `json:"references"`
-		} `json:"slots"`
+		Slots []Slots `json:"slots"`
 	} `json:"attributes,omitempty"`
+}
+
+type Slots struct {
+	DisclosureTime  string `json:"disclosure_time"`
+	Exploit         string `json:"exploit"`
+	PublicationTime string `json:"publication_time"`
+	References      []struct {
+		URL   string `json:"url"`
+		Title string `json:"title"`
+	} `json:"references"`
 }
 
 type Vulnerability struct {
@@ -253,6 +255,12 @@ type VulnerabilityResource struct {
 	Title    string
 	Packages []*PackageResource
 
+	DisclosureTime string
+	Exploit        string
+
+	CWE, CVE string
+	SemVer   []string
+
 	SeverityLevel SeverityLevel
 }
 
@@ -290,6 +298,17 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 	remedies := map[string]string{}
 
 	for _, val := range includes {
+		var slots Slots
+
+		switch {
+		case len(val.Attributes.Slots) == 1:
+			slots = val.Attributes.Slots[0]
+
+		case len(val.Attributes.Slots) > 1:
+			// TODO(dekelund): handle this scenario
+			panic(fmt.Sprintf("unexpected number of slots for %s", val.ID))
+		}
+
 		switch val.Type {
 		case Packages:
 			resources.Packages[val.ID] = PackageResource{
@@ -300,6 +319,18 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 			}
 
 		case Vulnerabilities:
+			var cve, cwe string
+
+			for i := range val.Attributes.Problems {
+				switch val.Attributes.Problems[i].Source {
+				case "CWE":
+					cwe = val.Attributes.Problems[i].ID
+
+				case "cve":
+					cve = val.Attributes.Problems[i].ID
+				}
+			}
+
 			resources.Vulnerabilities[val.ID] = VulnerabilityResource{
 				ID: val.ID,
 
@@ -308,10 +339,17 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 				PURL:    val.Attributes.Purl,
 				Title:   val.Attributes.Title,
 
+				DisclosureTime: slots.DisclosureTime,
+				Exploit:        slots.Exploit,
+
+				CVE: cve,
+				CWE: cwe,
+
 				SeverityLevel: val.Attributes.EffectiveSeverityLevel,
 			}
 
 		case Remedies:
+			// TODO(dekelund): consider one to many relationship.
 			remedies[val.Relationships.Vulnerability.Data.ID] = val.Relationships.AffectedPackage.Data.ID
 		}
 	}
@@ -322,6 +360,8 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 
 		pkg.Vulnerabilities = append(pkg.Vulnerabilities, &vuln)
 		vuln.Packages = append(vuln.Packages, &pkg)
+
+		vuln.SemVer = append(vuln.SemVer, pkg.Version)
 
 		resources.Packages[pkgID] = pkg
 		resources.Vulnerabilities[vulnID] = vuln
