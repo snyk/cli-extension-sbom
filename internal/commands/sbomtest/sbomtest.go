@@ -53,20 +53,6 @@ func TestWorkflow(
 		panic(err)
 	}
 
-	/*
-		mockResult := snykclient.GetSBOMTestResultResponseBody{ // TODO: assign the actual test result
-			Data: &snykclient.GetSBOMTestResultResponseData{
-				Attributes: snykclient.SBOMTestRunAttributes{
-					Summary: snykclient.SBOMTestRunSummary{
-						TotalIssues:          42,
-						TotalVulnerabilities: 42,
-						TotalLicenseIssues:   0,
-					},
-				},
-			},
-		}
-	*/
-
 	data, contentType, err := newPresenter(ictx).Render(filename, &body, printDeps)
 
 	return []workflow.Data{workflowData(data, contentType)}, err

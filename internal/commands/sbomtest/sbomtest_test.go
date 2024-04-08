@@ -28,6 +28,7 @@ func TestSBOMTestWorkflow_NoExperimentalFlag(t *testing.T) {
 func TestSBOMTestWorkflow_SupplyExperimentalFlag(t *testing.T) {
 	mockICTX := createMockICTX(t)
 	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set("file", "testdata/humanReadable.input")
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
