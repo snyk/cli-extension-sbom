@@ -1,7 +1,9 @@
 package sbomtest
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
@@ -29,6 +31,7 @@ func TestWorkflow(
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
 	experimental := config.GetBool(flags.FlagExperimental)
+	printDeps := config.GetBool(flags.FlagPrintDeps)
 	filename := config.GetString(flags.FlagFile)
 
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
@@ -38,20 +41,33 @@ func TestWorkflow(
 
 	logger.Println("SBOM workflow test with file:", filename)
 
-	mockResult := snykclient.GetSBOMTestResultResponseBody{ // TODO: assign the actual test result
-		Data: &snykclient.GetSBOMTestResultResponseData{
-			Attributes: snykclient.SBOMTestRunAttributes{
-				Summary: snykclient.SBOMTestRunSummary{
-					TotalIssues:          42,
-					TotalVulnerabilities: 42,
-					TotalLicenseIssues:   0,
-				},
-			},
-		},
+	fd, err := os.Open(filename)
+	if err != nil {
+		panic(err)
 	}
 
-	printDeps := true
-	data, contentType, err := newPresenter(ictx).Render(filename, &mockResult, printDeps)
+	var body snykclient.GetSBOMTestResultResponseBody
+
+	err = json.NewDecoder(fd).Decode(&body)
+	if err != nil {
+		panic(err)
+	}
+
+	/*
+		mockResult := snykclient.GetSBOMTestResultResponseBody{ // TODO: assign the actual test result
+			Data: &snykclient.GetSBOMTestResultResponseData{
+				Attributes: snykclient.SBOMTestRunAttributes{
+					Summary: snykclient.SBOMTestRunSummary{
+						TotalIssues:          42,
+						TotalVulnerabilities: 42,
+						TotalLicenseIssues:   0,
+					},
+				},
+			},
+		}
+	*/
+
+	data, contentType, err := newPresenter(ictx).Render(filename, &body, printDeps)
 
 	return []workflow.Data{workflowData(data, contentType)}, err
 }

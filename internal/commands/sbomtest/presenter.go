@@ -34,13 +34,13 @@ func newPresenter(ictx workflow.InvocationContext) *Presenter {
 	}
 }
 
-func (p Presenter) Render(file string, result *snykclient.GetSBOMTestResultResponseBody, printDeps bool) (data []byte, contentType string, err error) {
+func (p Presenter) Render(file string, body *snykclient.GetSBOMTestResultResponseBody, printDeps bool) (data []byte, contentType string, err error) {
 	switch p.format {
 	default:
 		return nil, "", errors.New("presenter has no format")
 	case PresenterFormatJSON:
-		return asJSON(result)
+		return asJSON(body)
 	case PresenterFormatPretty:
-		return renderPrettyResult(file, result, printDeps)
+		return renderPrettyResult(file, body, printDeps)
 	}
 }

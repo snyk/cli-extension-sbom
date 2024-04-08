@@ -31,6 +31,7 @@ const (
 	FlagNugetAssetsProjectName       = "assets-project-name"
 	FlagNugetPkgsFolder              = "packages-folder"
 	FlagUnmanagedMaxDepth            = "max-depth"
+	FlagPrintDeps                    = "print-deps"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
