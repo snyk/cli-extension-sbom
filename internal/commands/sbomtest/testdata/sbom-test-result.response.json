@@ -1,0 +1,24 @@
+{
+  "data": {
+    "id": "f2a46742-363a-4865-bd13-e7197345454d",
+    "type": "sbom_test_results",
+    "attributes": {
+      "sbom": {
+        "format": "CycloneDX JSON"
+      },
+      "test_summary": {
+        "tested": [],
+        "untested": [],
+        "total_issues": 42,
+        "total_license_issues": 0,
+        "total_vulnerabilities": 52,
+        "vulnerabilities_by_severity": {
+          "critical": 8,
+          "high": 19,
+          "medium": 22,
+          "low": 3
+        }
+      }
+    }
+  }
+}
