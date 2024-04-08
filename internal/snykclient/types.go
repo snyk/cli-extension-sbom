@@ -319,7 +319,7 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 		resources.Untested[i] = UnsupportedComponentResource(uc)
 	}
 
-	remedies := map[string]string{}
+	remedies := map[string][]string{}
 
 	for _, val := range includes {
 		var slots Slots
@@ -392,22 +392,25 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 			}
 
 		case Remedies:
-			// TODO(dekelund): consider one to many relationship.
-			remedies[val.Relationships.Vulnerability.Data.ID] = val.Relationships.AffectedPackage.Data.ID
+			pkgs := remedies[val.Relationships.Vulnerability.Data.ID]
+			pkgs = append(pkgs, val.Relationships.AffectedPackage.Data.ID)
+			remedies[val.Relationships.Vulnerability.Data.ID] = pkgs
 		}
 	}
 
-	for vulnID, pkgID := range remedies {
-		pkg := resources.Packages[pkgID]
+	for vulnID, pkgs := range remedies {
 		vuln := resources.Vulnerabilities[vulnID]
+		for _, pkgID := range pkgs {
+			pkg := resources.Packages[pkgID]
 
-		pkg.Vulnerabilities = append(pkg.Vulnerabilities, &vuln)
-		vuln.Packages = append(vuln.Packages, &pkg)
+			pkg.Vulnerabilities = append(pkg.Vulnerabilities, &vuln)
+			vuln.Packages = append(vuln.Packages, &pkg)
 
-		vuln.SemVer = append(vuln.SemVer, pkg.Version)
+			vuln.SemVer = append(vuln.SemVer, pkg.Version)
 
-		resources.Packages[pkgID] = pkg
-		resources.Vulnerabilities[vulnID] = vuln
+			resources.Packages[pkgID] = pkg
+			resources.Vulnerabilities[vulnID] = vuln
+		}
 	}
 
 	return resources
