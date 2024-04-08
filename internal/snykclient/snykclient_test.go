@@ -174,6 +174,7 @@ func TestSBOMTest_WaitUntilComplete(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() { numRequests++ }()
 		if numRequests < 5 {
+			//nolint:errcheck // No need to test the mock server write err
 			w.Write([]byte(`{"data":{"id":"123","type":"sbom_tests","attributes":{"status":"processing"}},"jsonapi":{"version":"1.0"}}`))
 			return
 		}
@@ -197,6 +198,7 @@ func TestSBOMTest_WaitUntilCompleteErrors(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() { numRequests++ }()
 		if numRequests < 5 {
+			//nolint:errcheck // No need to test the mock server write err
 			w.Write([]byte(`{"data":{"id":"123","type":"sbom_tests","attributes":{"status":"processing"}},"jsonapi":{"version":"1.0"}}`))
 			return
 		}
