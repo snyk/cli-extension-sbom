@@ -277,8 +277,10 @@ type VulnerabilityResource struct {
 
 	Exploit string
 
-	CWE, CVE string
-	SemVer   []string
+	CWE, CVE  string
+	CVSSv3    string
+	CVSSscore float64
+	SemVer    []string
 
 	From        []string
 	UpgradePath []any
@@ -353,6 +355,17 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 				}
 			}
 
+			var cvssScore float64
+			var cvssV3 string
+
+			for i := range val.Attributes.Severities {
+				switch val.Attributes.Severities[i].Source {
+				case "Snyk":
+					cvssScore = val.Attributes.Severities[i].Score
+					cvssV3 = val.Attributes.Severities[i].Vector
+				}
+			}
+
 			resources.Vulnerabilities[val.ID] = VulnerabilityResource{
 				ID: val.ID,
 
@@ -371,6 +384,9 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 
 				CVE: cve,
 				CWE: cwe,
+
+				CVSSv3:    cvssV3,
+				CVSSscore: cvssScore,
 
 				SeverityLevel: val.Attributes.EffectiveSeverityLevel,
 			}

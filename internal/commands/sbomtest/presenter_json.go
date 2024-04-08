@@ -34,6 +34,8 @@ type (
 		Title                string     `json:"title,omitempty"`
 		Version              string     `json:"version,omitempty"`
 		Name                 string     `json:"name,omitempty"`
+		CVSSv3               string     `json:"CVSSv3,omitempty"`
+		CVSSScore            float64    `json:"cvssScore,omitempty"`
 	}
 
 	Identifier struct {
@@ -108,9 +110,14 @@ func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) (JSONOut
 					CVE: cve,
 					CWE: cwe,
 				},
+
 				SemVer: SemVer{
 					Vulnerable: vuln.SemVer,
 				},
+
+				CVSSv3:    vuln.CVSSv3,
+				CVSSScore: vuln.CVSSscore,
+
 				Severity:             severityWithoutCritical.String(),
 				SeverityWithCritical: vuln.SeverityLevel.String(),
 			})
