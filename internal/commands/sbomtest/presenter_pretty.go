@@ -10,22 +10,22 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
-func renderPrettyResult(path string, body *snykclient.GetSBOMTestResultResponseBody, printDeps bool) (data []byte, contentType string, err error) {
+func renderPrettyResult(path string, body *snykclient.GetSBOMTestResultResponseBody, printDeps bool, org string) (data []byte, contentType string, err error) {
 	resources := snykclient.ToResources(
 		body.Data.Attributes.Summary.Tested,
 		body.Data.Attributes.Summary.Untested,
 		body.Included,
 	)
 
-	output := AsHumanReadable(path, resources, printDeps)
+	output := AsHumanReadable(path, resources, printDeps, org, body.Data.Attributes.Summary)
 
 	return []byte(output), MIMETypeText, nil
 }
 
-func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool) string {
+func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool, org string, sum snykclient.SBOMTestRunSummary) string {
 	intro := SprintIntro(path)
 
-	summary := SprintSummary(resources)
+	summary := SprintSummary(resources, org, path, sum)
 
 	var untestedSection string
 	if len(resources.Untested) > 0 {
@@ -61,11 +61,34 @@ func SprintUntestedComponents(resources snykclient.Resources) string {
 -------------------------------------------------------`, result)
 }
 
-func SprintSummary(resources snykclient.Resources) string {
-	return fmt.Sprintf("Tested %d dependencies for known issues, found %d.",
-		len(resources.Tested),
-		len(resources.Vulnerabilities),
-	)
+func SprintSummary(resources snykclient.Resources, org, filepath string, sum snykclient.SBOMTestRunSummary) string {
+	var out string
+
+	theIssues := fmt.Sprintf("%d [ ", sum.TotalIssues)
+	if sum.VulnerabilitiesBySeverity.Critical > 0 {
+		theIssues += criticalStyle.Render(fmt.Sprintf("%d %s", sum.VulnerabilitiesBySeverity.Critical, snykclient.CriticalSeverity))
+	}
+	if sum.VulnerabilitiesBySeverity.High > 0 {
+		theIssues += highStyle.Render(fmt.Sprintf("  %d %s", sum.VulnerabilitiesBySeverity.High, snykclient.HighSeverity))
+	}
+	if sum.VulnerabilitiesBySeverity.Medium > 0 {
+		theIssues += mediumStyle.Render(fmt.Sprintf("  %d %s", sum.VulnerabilitiesBySeverity.Medium, snykclient.MediumSeverity))
+	}
+	if sum.VulnerabilitiesBySeverity.Low > 0 {
+		theIssues += lowStyle.Render(fmt.Sprintf("  %d %s", sum.VulnerabilitiesBySeverity.Low, snykclient.LowSeverity))
+	}
+
+	theIssues += " ]"
+
+	out += SectionStyle.Render("Test summary")
+	out += "\n\n"
+	out += fmt.Sprintf("  %-15s %s\n", "Organization:", org)
+	out += fmt.Sprintf("  %-15s %s\n", "Test type:", "Software Bill of Materials")
+	out += fmt.Sprintf("  %-15s %s\n", "Path:", filepath)
+	out += "\n"
+	out += fmt.Sprintf("  %-15s %s\n", "Open issues:", theIssues)
+
+	return out
 }
 
 func SprintDependencies(resources snykclient.Resources) string {

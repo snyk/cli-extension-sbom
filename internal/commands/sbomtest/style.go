@@ -17,8 +17,8 @@ var (
 
 	noColor = lipgloss.NoColor{} // Usually white or black
 
-	// Severity styles renders severities in bold combined with it's color.
-	severityStyle = lipgloss.NewStyle().Bold(true)
+	// Severity styles renders severities combined with its color.
+	severityStyle = lipgloss.NewStyle()
 
 	lowStyle      = severityStyle.Copy().Foreground(noColor)
 	mediumStyle   = severityStyle.Copy().Foreground(yellow)
@@ -27,7 +27,7 @@ var (
 )
 
 func RenderUntestedComponent(ref, reason string) string {
-	title := lowStyle.Render(fmt.Sprintf(`× %s`, ref))
+	title := fmt.Sprintf(`× %s`, SectionStyle.Render(ref))
 	return fmt.Sprintf("%s\n  Info: %s", title, reason)
 }
 

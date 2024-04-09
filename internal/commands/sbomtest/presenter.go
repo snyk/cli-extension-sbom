@@ -21,6 +21,7 @@ func Render(
 	body *snykclient.GetSBOMTestResultResponseBody,
 	format presenterFormat,
 	printDeps bool,
+	org string,
 ) (data []byte, contentType string, err error) {
 	switch format {
 	default:
@@ -28,6 +29,6 @@ func Render(
 	case FormatJSON:
 		return asJSON(body)
 	case FormatPretty:
-		return renderPrettyResult(path, body, printDeps)
+		return renderPrettyResult(path, body, printDeps, org)
 	}
 }

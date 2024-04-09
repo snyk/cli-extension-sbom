@@ -90,7 +90,7 @@ func TestWorkflow(
 		format = FormatJSON
 	}
 
-	data, contentType, err := Render(filename, results, format, false)
+	data, contentType, err := Render(filename, results, format, false, orgID)
 
 	return []workflow.Data{workflowData(data, contentType)}, err
 }

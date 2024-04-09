@@ -26,7 +26,7 @@ func TestPresenter_Pretty(t *testing.T) {
 	err = json.NewDecoder(fd).Decode(&body)
 	require.NoError(t, err)
 
-	data, contentType, err := sbomtest.Render("sbom.json", &body, sbomtest.FormatPretty, false)
+	data, contentType, err := sbomtest.Render("sbom.json", &body, sbomtest.FormatPretty, false, "CE818710-454E-49A5-8B6D-B7A8CBBED406")
 
 	require.NoError(t, err)
 	assert.Equal(t, "text/plain", contentType)
@@ -45,7 +45,7 @@ func TestPresenter_JSON(t *testing.T) {
 	err = json.NewDecoder(fd).Decode(&body)
 	require.NoError(t, err)
 
-	data, contentType, err := sbomtest.Render("sbom.json", &body, sbomtest.FormatJSON, false)
+	data, contentType, err := sbomtest.Render("sbom.json", &body, sbomtest.FormatJSON, false, "CE818710-454E-49A5-8B6D-B7A8CBBED406")
 
 	require.NoError(t, err)
 	assert.Equal(t, "application/json", contentType)
