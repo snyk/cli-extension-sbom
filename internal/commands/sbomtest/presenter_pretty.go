@@ -43,7 +43,6 @@ func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool
 	}
 
 	issuesSection := SprintIssues(resources)
-
 	return fmt.Sprintf("%s%s%s%s\n%s\n", intro, depsSection, untestedSection, issuesSection, summary)
 }
 
@@ -58,7 +57,8 @@ func SprintUntestedComponents(resources snykclient.Resources) string {
 		result += fmt.Sprintf("\n%s\n", RenderUntestedComponent(resources.Untested[i].BOMRef, resources.Untested[i].Reason))
 	}
 
-	return result
+	return fmt.Sprintf(`%s
+-------------------------------------------------------`, result)
 }
 
 func SprintSummary(resources snykclient.Resources) string {

@@ -27,12 +27,12 @@ var (
 )
 
 func RenderUntestedComponent(ref, reason string) string {
-	title := mediumStyle.Render(fmt.Sprintf(`✗ %s`, ref))
-	return fmt.Sprintf("%s\n    %s", title, reason)
+	title := lowStyle.Render(fmt.Sprintf(`× %s`, ref))
+	return fmt.Sprintf("%s\n  Info: %s", title, reason)
 }
 
 func RenderTitle(severity snykclient.SeverityLevel, desc string) string {
-	title := fmt.Sprintf("✗ [%s] %s", severity, desc)
+	title := fmt.Sprintf("× [%s] %s", severity, desc)
 
 	switch severity {
 	case snykclient.LowSeverity:
