@@ -6,6 +6,9 @@ import (
 	"io"
 	"net/http"
 	"strings"
+
+	cli_errors "github.com/snyk/error-catalog-golang/cli"
+	"github.com/snyk/error-catalog-golang/snyk_errors"
 )
 
 func parseResponse(rsp *http.Response, expectedStatusCode int, expectedDocument interface{}) error {
@@ -22,9 +25,9 @@ func parseResponse(rsp *http.Response, expectedStatusCode int, expectedDocument 
 			// surface to the user than the actual content of the error. Notably, this
 			// can occur when cerberus bounces the request, as it returns plain text
 			// bodies.
-			return fmt.Errorf("response %d: %s", rsp.StatusCode, string(body))
+			return cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
 		}
-		return fmt.Errorf("%s", errorDocumentToString(errorDoc))
+		return cli_errors.NewInternalServerError(errorDocumentToString(errorDoc))
 	}
 	if expectedDocument != nil {
 		return json.Unmarshal(body, expectedDocument)

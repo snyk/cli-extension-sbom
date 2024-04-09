@@ -10,8 +10,11 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 
-	"github.com/snyk/cli-extension-sbom/internal/errors"
+	cli_errors "github.com/snyk/error-catalog-golang/cli"
+	openapi_errors "github.com/snyk/error-catalog-golang/openapi"
+	"github.com/snyk/error-catalog-golang/snyk_errors"
 )
 
 type (
@@ -31,7 +34,7 @@ const (
 	MimeTypeJSON = "application/json"
 )
 
-var sbomFormats = [...]string{
+var sbomFormats = []string{
 	"cyclonedx1.4+json",
 	"cyclonedx1.4+xml",
 	"cyclonedx1.5+json",
@@ -55,11 +58,10 @@ func DepGraphsToSBOM(
 	t *Tool,
 	format string,
 	logger *log.Logger,
-	errFactory *errors.ErrorFactory,
 ) (result *SBOMResult, err error) {
 	payload, err := preparePayload(depGraphs, subject, t)
 	if err != nil {
-		return nil, errFactory.NewInternalError(err)
+		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
 	}
 
 	req, err := http.NewRequestWithContext(
@@ -69,7 +71,7 @@ func DepGraphsToSBOM(
 		bytes.NewBuffer(payload),
 	)
 	if err != nil {
-		return nil, errFactory.NewInternalError(fmt.Errorf("error while creating request: %w", err))
+		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(fmt.Errorf("error while creating request: %w", err)))
 	}
 	req.Header.Add("Content-Type", MimeTypeJSON)
 
@@ -77,17 +79,17 @@ func DepGraphsToSBOM(
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, errFactory.NewInternalError(fmt.Errorf("error while making request: %w", err))
+		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(fmt.Errorf("error while making request: %w", err)))
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errorFromResponse(resp, errFactory, orgID)
+		return nil, errorFromResponse(resp, orgID)
 	}
 
 	defer resp.Body.Close()
 	doc, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, errFactory.NewInternalError(fmt.Errorf("could not read response body: %w", err))
+		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(fmt.Errorf("could not read response body: %w", err)))
 	}
 
 	logger.Println("Successfully converted depGraph to SBOM")
@@ -102,23 +104,26 @@ func buildURL(apiURL, orgID, format string) string {
 	)
 }
 
-func errorFromResponse(resp *http.Response, errFactory *errors.ErrorFactory, orgID string) error {
+func errorFromResponse(resp *http.Response, orgID string) error {
 	err := fmt.Errorf("could not convert to SBOM (status: %s)", resp.Status)
 	switch resp.StatusCode {
 	case http.StatusBadRequest:
-		return errFactory.NewBadRequestError(err)
+		return openapi_errors.NewBadRequestError("", snyk_errors.WithCause(err))
 	case http.StatusUnauthorized:
-		return errFactory.NewUnauthorizedError(err)
+		return openapi_errors.NewUnauthorizedError("", snyk_errors.WithCause(err))
 	case http.StatusForbidden:
-		return errFactory.NewForbiddenError(err, orgID)
+		return openapi_errors.NewForbiddenError(orgID, snyk_errors.WithCause(err))
 	default:
-		return errFactory.NewRemoteError(err)
+		return cli_errors.NewInternalServerError(
+			"An error occurred while generating the SBOM. Should this issue persist, please reach out to customer support.",
+			snyk_errors.WithCause(err),
+		)
 	}
 }
 
-func ValidateSBOMFormat(errFactory *errors.ErrorFactory, candidate string) error {
+func ValidateSBOMFormat(candidate string) error {
 	if candidate == "" {
-		return errFactory.NewEmptyFormatError(sbomFormats[:])
+		return cli_errors.NewMissingFormatFlagError("Flag `--format` is required to execute this command. Value should be a supported format.")
 	}
 
 	for _, f := range sbomFormats {
@@ -127,7 +132,7 @@ func ValidateSBOMFormat(errFactory *errors.ErrorFactory, candidate string) error
 		}
 	}
 
-	return errFactory.NewInvalidFormatError(candidate, sbomFormats[:])
+	return cli_errors.NewUnsupportedSBOMFormatError(fmt.Sprintf("Supported formats are: %s", strings.Join(sbomFormats, ",")))
 }
 
 func preparePayload(depGraphs []json.RawMessage, subject *Subject, t *Tool) ([]byte, error) {

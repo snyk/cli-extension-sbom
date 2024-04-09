@@ -6,9 +6,10 @@ import (
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
-	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/service"
+
+	cli_errors "github.com/snyk/error-catalog-golang/cli"
 )
 
 var WorkflowID = workflow.NewWorkflowIdentifier("sbom")
@@ -33,11 +34,10 @@ func SBOMWorkflow(
 	logger := ictx.GetLogger()
 	format := config.GetString(flags.FlagFormat)
 	version := config.GetString(flags.FlagVersion)
-	errFactory := errors.NewErrorFactory(logger)
 
 	logger.Println("SBOM workflow start")
 
-	if err := service.ValidateSBOMFormat(errFactory, format); err != nil {
+	if err := service.ValidateSBOMFormat(format); err != nil {
 		return nil, err
 	}
 
@@ -45,7 +45,10 @@ func SBOMWorkflow(
 
 	orgID := config.GetString(configuration.ORGANIZATION)
 	if orgID == "" {
-		return nil, errFactory.NewEmptyOrgError()
+		// TODO: verify this the right way to use the err description
+		return nil, cli_errors.NewIndeterminateOrgError(
+			"Snyk failed to infer an organization ID. Please make sure to authenticate using `snyk auth`." +
+				"Should the issue persist, explicitly set an organization ID via the `--org` flag.")
 	}
 
 	depGraphResult, err := GetDepGraph(ictx)
@@ -64,7 +67,6 @@ func SBOMWorkflow(
 		&service.Tool{Vendor: "Snyk", Name: ri.GetName(), Version: ri.GetVersion()},
 		format,
 		logger,
-		errFactory,
 	)
 	if err != nil {
 		return nil, err

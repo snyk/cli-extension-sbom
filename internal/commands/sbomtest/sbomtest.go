@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	cli_errors "github.com/snyk/error-catalog-golang/cli"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
-	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
@@ -33,20 +33,19 @@ func TestWorkflow(
 	logger := ictx.GetLogger()
 	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
-	errFactory := errors.NewErrorFactory(logger)
 	ctx := context.Background()
 	orgID := config.GetString(configuration.ORGANIZATION)
 	if orgID == "" {
-		return nil, errFactory.NewEmptyOrgError()
+		return nil, cli_errors.NewIndeterminateOrgError("")
 	}
 
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
 	if !experimental {
-		return nil, fmt.Errorf("experimental flag not set")
+		return nil, cli_errors.NewMissingExperimentalFlagError("")
 	}
 
 	if filename == "" {
-		return nil, fmt.Errorf("file flag not set")
+		return nil, cli_errors.NewMissingFilenameFlagError("")
 	}
 
 	bytes, err := ReadSBOMFile(filename)

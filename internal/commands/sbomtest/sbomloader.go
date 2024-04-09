@@ -2,9 +2,10 @@ package sbomtest
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"os"
+
+	cli_errors "github.com/snyk/error-catalog-golang/cli"
+	"github.com/snyk/error-catalog-golang/snyk_errors"
 )
 
 func IsSBOMJSON(b []byte) bool {
@@ -18,26 +19,26 @@ func ReadSBOMFile(filename string) ([]byte, error) {
 	info, err := os.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, errors.New("file does not exist")
+			return nil, cli_errors.NewMissingFileError("")
 		}
-		return nil, errors.New("failed to get file info")
+		return nil, cli_errors.NewFailedToReadFileError("", snyk_errors.WithCause(err))
 	}
 
 	// Check if it's a directory
 	if info.IsDir() {
-		return nil, errors.New("file is a directory")
+		return nil, cli_errors.NewFileIsDirError("")
 	}
 
 	// Open file and read it
 	b, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, errors.New("failed to open file: " + err.Error())
+		return nil, cli_errors.NewFailedToReadFileError("", snyk_errors.WithCause(err))
 	}
 
 	isValidSBOM := IsSBOMJSON(b)
 
 	if !isValidSBOM {
-		return nil, fmt.Errorf("file is not a supported SBOM format")
+		return nil, cli_errors.NewUnsupportedSBOMFormatError("")
 	}
 
 	return b, nil

@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/mocks"
 	. "github.com/snyk/cli-extension-sbom/internal/service"
 )
@@ -56,7 +55,6 @@ func TestDepGraphsToSBOM(t *testing.T) {
 				)
 			})
 			logger := log.New(&bytes.Buffer{}, "", 0)
-			errFactory := errors.NewErrorFactory(logger)
 
 			res, err := DepGraphsToSBOM(
 				http.DefaultClient,
@@ -67,7 +65,6 @@ func TestDepGraphsToSBOM(t *testing.T) {
 				nil,
 				tt.format,
 				logger,
-				errFactory,
 			)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.mockBody, res.Doc)
@@ -90,7 +87,6 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 			string(body))
 	})
 	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
 	depGraphs := []json.RawMessage{[]byte("{}"), []byte("{}")}
 	subject := NewSubject("goof", "0.0.0")
 	tool := &Tool{Vendor: "Snyk", Name: "snyk-cli", Version: "1.2.3"}
@@ -104,7 +100,6 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 		tool,
 		format,
 		logger,
-		errFactory,
 	)
 	assert.NoError(t, err)
 }
@@ -123,7 +118,6 @@ func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
 			string(body))
 	})
 	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
 	depGraphs := []json.RawMessage{[]byte("{}")}
 	subject := NewSubject("goof", "0.0.0")
 	tool := &Tool{Vendor: "Snyk", Name: "snyk-cli", Version: "1.2.3"}
@@ -137,14 +131,12 @@ func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
 		tool,
 		format,
 		logger,
-		errFactory,
 	)
 	assert.NoError(t, err)
 }
 
 func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
 	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
 
 	res, err := DepGraphsToSBOM(
 		http.DefaultClient,
@@ -155,7 +147,6 @@ func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
 		nil,
 		"cyclonedx1.4+json",
 		logger,
-		errFactory,
 	)
 
 	assert.Nil(t, res)
@@ -196,7 +187,6 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 			response := mocks.NewMockResponse("text/plain", []byte{}, tt.statusCode)
 			mockSBOMService := mocks.NewMockSBOMService(response)
 			logger := log.New(&bytes.Buffer{}, "", 0)
-			errFactory := errors.NewErrorFactory(logger)
 
 			_, err := DepGraphsToSBOM(
 				http.DefaultClient,
@@ -207,7 +197,6 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 				nil,
 				"cyclonedx1.4+json",
 				logger,
-				errFactory,
 			)
 			assert.Error(t, err)
 			assert.ErrorContains(t, err, tt.expectedErr)
@@ -216,25 +205,18 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 }
 
 func TestValidateSBOMFormat_EmptyFormat(t *testing.T) {
-	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
-	err := ValidateSBOMFormat(errFactory, "")
+	err := ValidateSBOMFormat("")
 	assert.ErrorContains(t, err, "Must set `--format` flag to specify an SBOM format. "+
 		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, cyclonedx1.5+json, cyclonedx1.5+xml, spdx2.3+json")
 }
 
 func TestValidateSBOMFormat_InvalidFormat(t *testing.T) {
-	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
-	err := ValidateSBOMFormat(errFactory, "not+a+format")
+	err := ValidateSBOMFormat("not+a+format")
 	assert.ErrorContains(t, err, "The format provided (not+a+format) is not one of the available formats. "+
 		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, cyclonedx1.5+json, cyclonedx1.5+xml, spdx2.3+json")
 }
 
 func TestValidateSBOMFormat_ValidFormats(t *testing.T) {
-	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
-
 	tc := []string{
 		"cyclonedx1.4+json",
 		"cyclonedx1.4+xml",
@@ -245,7 +227,7 @@ func TestValidateSBOMFormat_ValidFormats(t *testing.T) {
 
 	for _, tt := range tc {
 		t.Run(tt, func(t *testing.T) {
-			err := ValidateSBOMFormat(errFactory, tt)
+			err := ValidateSBOMFormat(tt)
 			assert.NoError(t, err)
 		})
 	}

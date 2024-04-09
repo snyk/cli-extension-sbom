@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	cli_errors "github.com/snyk/error-catalog-golang/cli"
+	"github.com/snyk/error-catalog-golang/snyk_errors"
 )
 
 const sbomTestAPIVersion = "2023-08-31~beta"
@@ -54,13 +57,13 @@ func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte) (*SBOM
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, jsonAPIReader)
 	if err != nil {
-		return nil, err
+		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
 	}
 	req.Header.Set("Content-Type", "application/vnd.api+json")
 
 	rsp, err := t.client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
 	}
 
 	var body CreateSBOMTestRunResponseBody
@@ -77,12 +80,12 @@ func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte) (*SBOM
 func (t *SBOMTest) GetResult(ctx context.Context) (*GetSBOMTestResultResponseBody, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, t.resultsURL(), http.NoBody)
 	if err != nil {
-		return nil, err
+		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
 	}
 
 	resp, err := t.SnykClient.client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
 	}
 
 	var body GetSBOMTestResultResponseBody
@@ -137,11 +140,11 @@ func (t *SBOMTest) WaitUntilCompleteWithBackoff(ctx context.Context, backoff bac
 	for {
 		status, err := t.GetStatus(ctx)
 		if err != nil {
-			return fmt.Errorf("failed to get test status: %w", err)
+			return cli_errors.NewInternalServerError("Failed to get test status", snyk_errors.WithCause(err))
 		}
 
 		if status == SBOMTestStatusError {
-			return fmt.Errorf("job failed")
+			return cli_errors.NewFailedToTestSBOMError("Job failed")
 		} else if status == SBOMTestStatusFinished {
 			break
 		}
