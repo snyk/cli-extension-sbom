@@ -39,21 +39,25 @@ func TestWorkflow(
 		return nil, cli_errors.NewIndeterminateOrgError("")
 	}
 
+	logger.Println("SBOM Test workflow start")
+
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
 	if !experimental {
 		return nil, cli_errors.NewMissingExperimentalFlagError("")
 	}
 
+	logger.Println("Getting preferred organization ID")
+
 	if filename == "" {
 		return nil, cli_errors.NewMissingFilenameFlagError("")
 	}
+
+	logger.Println("Target SBOM document:", filename)
 
 	bytes, err := ReadSBOMFile(filename)
 	if err != nil {
 		return nil, err
 	}
-
-	logger.Println("SBOM workflow test with file:", filename)
 
 	client := snykclient.NewSnykClient(
 		ictx.GetNetworkAccess().GetHttpClient(),
@@ -65,17 +69,21 @@ func TestWorkflow(
 		return nil, err
 	}
 
+	logger.Printf("Created SBOM test (ID %s), waiting for results...\n", sbomTest.ID)
+
 	err = sbomTest.WaitUntilComplete(ctx)
 	if err != nil {
 		return nil, err
 	}
+
+	logger.Print("Test complete, fetching results")
 
 	results, err := sbomTest.GetResult(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	data, contentType, err := newPresenter(ictx).Render(TestResult{
+	data, contentType, err := NewPresenter(ictx).Render(TestResult{
 		Summary: TestSummary{
 			TotalVulnerabilities: results.Data.Attributes.Summary.TotalVulnerabilities,
 		},
