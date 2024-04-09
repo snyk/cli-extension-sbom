@@ -22,6 +22,8 @@ func renderPrettyResult(path string, body *snykclient.GetSBOMTestResultResponseB
 }
 
 func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool) string {
+	intro := SprintIntro(path)
+
 	summary := SprintSummary(resources)
 
 	var untestedSection string
@@ -30,7 +32,7 @@ func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool
 	}
 
 	if len(resources.Tested) == 0 {
-		return fmt.Sprintf("Testing %s\n%s%s\n\n", path, untestedSection, summary)
+		return fmt.Sprintf("%s%s%s\n\n", intro, untestedSection, summary)
 	}
 
 	var depsSection string
@@ -41,9 +43,11 @@ func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool
 
 	issuesSection := SprintIssues(resources)
 
-	intro := SectionStyle.Render(fmt.Sprintf("\nTesting %s ...\n", path))
-
 	return fmt.Sprintf("%s%s%s%s\n%s\n", intro, depsSection, untestedSection, issuesSection, summary)
+}
+
+func SprintIntro(filepath string) string {
+	return SectionStyle.Render(fmt.Sprintf("\nTesting %s ...\n", filepath))
 }
 
 func SprintUntestedComponents(resources snykclient.Resources) string {
