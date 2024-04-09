@@ -1,3 +1,4 @@
+//nolint:tagliatelle // Keeping in line with JSON schema of other Snyk test output.
 package sbomtest
 
 import (
@@ -51,10 +52,7 @@ type (
 func asJSON(result *snykclient.GetSBOMTestResultResponseBody) (data []byte, contentType string, err error) {
 	contentType = MIMETypeJSON
 
-	jsonOutput, err := resultToJSONOutput(result)
-	if err != nil {
-		return nil, contentType, err
-	}
+	jsonOutput := resultToJSONOutput(result)
 
 	data, err = json.Marshal(jsonOutput)
 	if err != nil {
@@ -64,7 +62,7 @@ func asJSON(result *snykclient.GetSBOMTestResultResponseBody) (data []byte, cont
 	return data, contentType, nil
 }
 
-func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) (JSONOutput, error) {
+func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) JSONOutput {
 	resources := snykclient.ToResources(
 		body.Data.Attributes.Summary.Tested,
 		body.Data.Attributes.Summary.Untested,
@@ -134,5 +132,5 @@ func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) (JSONOut
 		UniqueCount:     133, // what is this??
 		Summary:         fmt.Sprintf("Found %d vulnerabilities", len(resources.Vulnerabilities)),
 		Vulnerabilities: vulns,
-	}, nil
+	}
 }

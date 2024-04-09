@@ -378,6 +378,8 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 				case "Snyk":
 					cvssScore = val.Attributes.Severities[i].Score
 					cvssV3 = val.Attributes.Severities[i].Vector
+				default:
+					break
 				}
 			}
 

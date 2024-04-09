@@ -5,9 +5,10 @@ import (
 	"os"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
-	"github.com/stretchr/testify/require"
 )
 
 func TestPresenter_asHumanReadable(t *testing.T) {
