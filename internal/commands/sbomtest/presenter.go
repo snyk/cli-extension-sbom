@@ -3,44 +3,31 @@ package sbomtest
 import (
 	"errors"
 
-	"github.com/snyk/go-application-framework/pkg/workflow"
-
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
 type presenterFormat int
 
 const (
-	PresenterFormatPretty presenterFormat = iota
-	PresenterFormatJSON
+	FormatPretty presenterFormat = iota
+	FormatJSON
 
 	MIMETypeJSON = "application/json"
 	MIMETypeText = "text/plain"
 )
 
-type Presenter struct {
-	format presenterFormat
-}
-
-func NewPresenter(ictx workflow.InvocationContext) *Presenter {
-	f := PresenterFormatPretty
-
-	if ictx.GetConfiguration().GetBool("json") {
-		f = PresenterFormatJSON
-	}
-
-	return &Presenter{
-		format: f,
-	}
-}
-
-func (p Presenter) Render(file string, body *snykclient.GetSBOMTestResultResponseBody, printDeps bool) (data []byte, contentType string, err error) {
-	switch p.format {
+func Render(
+	path string,
+	body *snykclient.GetSBOMTestResultResponseBody,
+	format presenterFormat,
+	printDeps bool,
+) (data []byte, contentType string, err error) {
+	switch format {
 	default:
 		return nil, "", errors.New("presenter has no format")
-	case PresenterFormatJSON:
+	case FormatJSON:
 		return asJSON(body)
-	case PresenterFormatPretty:
-		return renderPrettyResult(file, body, printDeps)
+	case FormatPretty:
+		return renderPrettyResult(path, body, printDeps)
 	}
 }

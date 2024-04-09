@@ -19,8 +19,6 @@ func TestPresenter_Pretty(t *testing.T) {
 	mockICTX := createMockICTX(t)
 	mockICTX.GetConfiguration().Set("json", false)
 
-	presenter := sbomtest.NewPresenter(mockICTX)
-
 	fd, err := os.Open("testdata/humanReadable.input")
 	require.NoError(t, err)
 
@@ -28,7 +26,7 @@ func TestPresenter_Pretty(t *testing.T) {
 	err = json.NewDecoder(fd).Decode(&body)
 	require.NoError(t, err)
 
-	data, contentType, err := presenter.Render("sbom.json", &body, true)
+	data, contentType, err := sbomtest.Render("sbom.json", &body, sbomtest.FormatPretty, false)
 
 	require.NoError(t, err)
 	assert.Equal(t, "text/plain", contentType)
@@ -40,8 +38,6 @@ func TestPresenter_JSON(t *testing.T) {
 	mockICTX := createMockICTX(t)
 	mockICTX.GetConfiguration().Set("json", true)
 
-	presenter := sbomtest.NewPresenter(mockICTX)
-
 	fd, err := os.Open("testdata/humanReadable.input")
 	require.NoError(t, err)
 
@@ -49,7 +45,7 @@ func TestPresenter_JSON(t *testing.T) {
 	err = json.NewDecoder(fd).Decode(&body)
 	require.NoError(t, err)
 
-	data, contentType, err := presenter.Render("sbom.json", &body, false)
+	data, contentType, err := sbomtest.Render("sbom.json", &body, sbomtest.FormatJSON, false)
 
 	require.NoError(t, err)
 	assert.Equal(t, "application/json", contentType)

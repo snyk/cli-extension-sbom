@@ -32,10 +32,10 @@ func TestWorkflow(
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
 	experimental := config.GetBool(flags.FlagExperimental)
-	printDeps := config.GetBool(flags.FlagPrintDeps)
 	filename := config.GetString(flags.FlagFile)
 	errFactory := errors.NewErrorFactory(logger)
 	ctx := context.Background()
+	format := FormatPretty
 
 	logger.Println("SBOM Test workflow start")
 
@@ -86,7 +86,11 @@ func TestWorkflow(
 		return nil, err
 	}
 
-	data, contentType, err := NewPresenter(ictx).Render(filename, results, printDeps)
+	if config.GetBool("json") {
+		format = FormatJSON
+	}
+
+	data, contentType, err := Render(filename, results, format, false)
 
 	return []workflow.Data{workflowData(data, contentType)}, err
 }
