@@ -3,8 +3,8 @@ package snykclient
 import (
 	"context"
 	"fmt"
-	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -47,10 +47,12 @@ func NewSnykClient(c *http.Client, apiBaseURL, orgID string) *SnykClient {
 	}
 }
 
-func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbom io.Reader) (*SBOMTest, error) {
+func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte) (*SBOMTest, error) {
 	url := fmt.Sprintf("%s/rest/orgs/%s/sbom_tests?version=%s", t.apiBaseURL, t.orgID, sbomTestAPIVersion)
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, sbom)
+	jsonAPIReader := strings.NewReader(fmt.Sprintf(`{"data":{"type":"sbom_test","attributes":{"sbom":%s}}}`, sbomJSON))
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, jsonAPIReader)
 	if err != nil {
 		return nil, err
 	}
@@ -112,6 +114,14 @@ func (t *SBOMTest) GetStatus(ctx context.Context) (SBOMTestStatus, error) {
 		return SBOMTestStatusIndeterminate, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
+	var body GetSBOMTestStatusResponseBody
+	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
+		return SBOMTestStatusIndeterminate, err
+	}
+	if body.Data.Attributes.Status == "error" {
+		return SBOMTestStatusError, nil
+	}
+
 	return SBOMTestStatusProcessing, nil
 }
 
@@ -130,7 +140,9 @@ func (t *SBOMTest) WaitUntilCompleteWithBackoff(ctx context.Context, backoff bac
 			return fmt.Errorf("failed to get test status: %w", err)
 		}
 
-		if status == SBOMTestStatusError || status == SBOMTestStatusFinished {
+		if status == SBOMTestStatusError {
+			return fmt.Errorf("job failed")
+		} else if status == SBOMTestStatusFinished {
 			break
 		}
 

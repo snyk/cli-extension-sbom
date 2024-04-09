@@ -1,12 +1,13 @@
 package sbomtest
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
-	"os"
 
+	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
@@ -33,27 +34,59 @@ func TestWorkflow(
 	experimental := config.GetBool(flags.FlagExperimental)
 	printDeps := config.GetBool(flags.FlagPrintDeps)
 	filename := config.GetString(flags.FlagFile)
+	errFactory := errors.NewErrorFactory(logger)
+	ctx := context.Background()
+
+	logger.Println("SBOM Test workflow start")
 
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
 	if !experimental {
 		return nil, fmt.Errorf("experimental flag not set")
 	}
 
-	logger.Println("SBOM workflow test with file:", filename)
+	logger.Println("Getting preferred organization ID")
 
-	fd, err := os.Open(filename)
-	if err != nil {
-		panic(err)
+	orgID := config.GetString(configuration.ORGANIZATION)
+	if orgID == "" {
+		return nil, errFactory.NewEmptyOrgError()
 	}
 
-	var body snykclient.GetSBOMTestResultResponseBody
-
-	err = json.NewDecoder(fd).Decode(&body)
-	if err != nil {
-		panic(err)
+	if filename == "" {
+		return nil, fmt.Errorf("file flag not set")
 	}
 
-	data, contentType, err := newPresenter(ictx).Render(filename, &body, printDeps)
+	logger.Println("Target SBOM document:", filename)
+
+	bytes, err := ReadSBOMFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	client := snykclient.NewSnykClient(
+		ictx.GetNetworkAccess().GetHttpClient(),
+		config.GetString(configuration.API_URL),
+		orgID,
+	)
+	sbomTest, err := client.CreateSBOMTest(ctx, bytes)
+	if err != nil {
+		return nil, err
+	}
+
+	logger.Printf("Created SBOM test (ID %s), waiting for results...\n", sbomTest.ID)
+
+	err = sbomTest.WaitUntilComplete(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	logger.Print("Test complete, fetching results")
+
+	results, err := sbomTest.GetResult(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	data, contentType, err := NewPresenter(ictx).Render(filename, results, printDeps)
 
 	return []workflow.Data{workflowData(data, contentType)}, err
 }

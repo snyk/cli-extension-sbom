@@ -6,7 +6,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -30,6 +29,8 @@ func TestSnykClient_CreateSBOMTest(t *testing.T) {
 		[]byte(`{"data": {"id": "test-id"}}`),
 		http.StatusCreated,
 	)
+	sbomContent := `{"foo":"bar"}`
+	expectedRequestBody := `{"data":{"type":"sbom_test","attributes":{"sbom":` + sbomContent + `}}}`
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
 		assert.Equal(t, "/rest/orgs/org1/sbom_tests?version=2023-08-31~beta", r.RequestURI)
@@ -37,13 +38,13 @@ func TestSnykClient_CreateSBOMTest(t *testing.T) {
 
 		body, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
-		assert.Equal(t, "test content", string(body))
+
+		assert.Equal(t, expectedRequestBody, string(body))
 	})
 
 	client := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
 
-	sbomContent := strings.NewReader("test content")
-	sbomTest, err := client.CreateSBOMTest(context.Background(), sbomContent)
+	sbomTest, err := client.CreateSBOMTest(context.Background(), []byte(sbomContent))
 
 	assert.NoError(t, err)
 	assert.Equal(t, "test-id", sbomTest.ID)
@@ -79,7 +80,7 @@ func TestSnykClient_GetStatus_RedirectToResults(t *testing.T) {
 func TestSnykClient_GetStatus_Processing(t *testing.T) {
 	response := mocks.NewMockResponse(
 		"application/vnd.api+json",
-		[]byte{},
+		[]byte(`{"data":{"id":"123","type":"sbom_tests","attributes":{"status":"processing"}},"jsonapi":{"version":"1.0"}}`),
 		http.StatusOK,
 	)
 
@@ -97,6 +98,29 @@ func TestSnykClient_GetStatus_Processing(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, SBOMTestStatusProcessing, status)
+}
+
+func TestSnykClient_GetStatus_Error(t *testing.T) {
+	response := mocks.NewMockResponse(
+		"application/vnd.api+json",
+		[]byte(`{"data":{"id":"123","type":"sbom_tests","attributes":{"status":"error"}},"jsonapi":{"version":"1.0"}}`),
+		http.StatusOK,
+	)
+
+	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
+		assert.Equal(t, "/rest/orgs/org1/sbom_tests/test-id?version=2023-08-31~beta", r.RequestURI)
+	})
+
+	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
+	sbomTest := &SBOMTest{
+		SnykClient: snykClient,
+		ID:         "test-id",
+	}
+
+	status, err := sbomTest.GetStatus(context.Background())
+
+	assert.NoError(t, err)
+	assert.Equal(t, SBOMTestStatusError, status)
 }
 
 func TestSnykClient_ServerError(t *testing.T) {
@@ -150,7 +174,8 @@ func TestSBOMTest_WaitUntilComplete(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() { numRequests++ }()
 		if numRequests < 5 {
-			w.WriteHeader(http.StatusOK)
+			//nolint:errcheck // No need to test the mock server write err
+			w.Write([]byte(`{"data":{"id":"123","type":"sbom_tests","attributes":{"status":"processing"}},"jsonapi":{"version":"1.0"}}`))
 			return
 		}
 		w.Header().Add("Location", "https://:")
@@ -173,7 +198,8 @@ func TestSBOMTest_WaitUntilCompleteErrors(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() { numRequests++ }()
 		if numRequests < 5 {
-			w.WriteHeader(http.StatusOK)
+			//nolint:errcheck // No need to test the mock server write err
+			w.Write([]byte(`{"data":{"id":"123","type":"sbom_tests","attributes":{"status":"processing"}},"jsonapi":{"version":"1.0"}}`))
 			return
 		}
 		w.WriteHeader(http.StatusBadGateway)

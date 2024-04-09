@@ -22,7 +22,7 @@ type Presenter struct {
 	format presenterFormat
 }
 
-func newPresenter(ictx workflow.InvocationContext) *Presenter {
+func NewPresenter(ictx workflow.InvocationContext) *Presenter {
 	f := PresenterFormatPretty
 
 	if ictx.GetConfiguration().GetBool("json") {
