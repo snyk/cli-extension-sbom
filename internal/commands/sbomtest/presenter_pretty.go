@@ -75,22 +75,28 @@ func SprintDependencies(resources snykclient.Resources) string {
 
 	slices.Sort(packages)
 
-	for _, k := range packages {
-		tmp := strings.SplitN(k, ":", 2)
-		slices.Reverse(tmp)
-		id := strings.SplitN(tmp[0], "?", 2)[0]
-
-		result += SprintDependency(id, k)
+	for _, purl := range packages {
+		result += SprintDependency(purl)
 	}
 
 	return result
 }
 
-func SprintDependency(id, purl string) string {
+func SprintDependency(purl string) string {
+	tmp := strings.SplitN(purl, ":", 2)
+	slices.Reverse(tmp)
+	id := strings.SplitN(tmp[0], "?", 2)[0]
+	tmp = strings.SplitN(id, "@", 2)
+	fullname := strings.Split(tmp[0], "/")
+	fullname[len(fullname)-1] = SectionStyle.Render(fullname[len(fullname)-1])
+	tmp[0] = strings.Join(fullname, "/")
+
+	pkgName := strings.Join(tmp, "@")
+
 	return fmt.Sprintf(`
   %s
   purl: %s
-`, id, purl)
+`, pkgName, purl)
 }
 
 func SprintIssues(resources snykclient.Resources) string {

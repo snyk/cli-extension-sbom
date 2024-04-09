@@ -76,6 +76,7 @@ func GetSBOMTestFlagSet() *pflag.FlagSet {
 
 	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom test command.")
 	flagSet.String(FlagFile, "", "Specify a SBOM file.")
+	flagSet.Bool(FlagPrintDeps, false, "Print a list of all tested dependencies.")
 
 	return flagSet
 }
