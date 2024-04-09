@@ -35,26 +35,31 @@ func TestWorkflow(
 	filename := config.GetString(flags.FlagFile)
 	errFactory := errors.NewErrorFactory(logger)
 	ctx := context.Background()
-	orgID := config.GetString(configuration.ORGANIZATION)
-	if orgID == "" {
-		return nil, errFactory.NewEmptyOrgError()
-	}
+
+	logger.Println("SBOM Test workflow start")
 
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
 	if !experimental {
 		return nil, fmt.Errorf("experimental flag not set")
 	}
 
+	logger.Println("Getting preferred organization ID")
+
+	orgID := config.GetString(configuration.ORGANIZATION)
+	if orgID == "" {
+		return nil, errFactory.NewEmptyOrgError()
+	}
+
 	if filename == "" {
 		return nil, fmt.Errorf("file flag not set")
 	}
+
+	logger.Println("Target SBOM document:", filename)
 
 	bytes, err := ReadSBOMFile(filename)
 	if err != nil {
 		return nil, err
 	}
-
-	logger.Println("SBOM workflow test with file:", filename)
 
 	client := snykclient.NewSnykClient(
 		ictx.GetNetworkAccess().GetHttpClient(),
@@ -66,10 +71,14 @@ func TestWorkflow(
 		return nil, err
 	}
 
+	logger.Printf("Created SBOM test (ID %s), waiting for results...\n", sbomTest.ID)
+
 	err = sbomTest.WaitUntilComplete(ctx)
 	if err != nil {
 		return nil, err
 	}
+
+	logger.Print("Test complete, fetching results")
 
 	results, err := sbomTest.GetResult(ctx)
 	if err != nil {
