@@ -32,18 +32,23 @@ func RenderUntestedComponent(ref, reason string) string {
 }
 
 func RenderTitle(severity snykclient.SeverityLevel, desc string) string {
-	title := fmt.Sprintf("× [%s] %s", severity, desc)
+	severityText := fmt.Sprintf("× [%s]", severity)
+
+	style := lowStyle
 
 	switch severity {
 	case snykclient.LowSeverity:
-		return lowStyle.Render(title)
+		style = lowStyle
+
 	case snykclient.MediumSeverity:
-		return mediumStyle.Render(title)
+		style = mediumStyle
+
 	case snykclient.HighSeverity:
-		return highStyle.Render(title)
+		style = highStyle
+
 	case snykclient.CriticalSeverity:
-		return criticalStyle.Render(title)
+		style = criticalStyle
 	}
 
-	return title
+	return fmt.Sprintf("%s %s", style.Render(severityText), SectionStyle.Render(desc))
 }

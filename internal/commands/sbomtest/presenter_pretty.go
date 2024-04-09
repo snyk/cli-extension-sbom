@@ -107,7 +107,7 @@ func SprintDependency(purl string) string {
 }
 
 func SprintIssues(resources snykclient.Resources) string {
-	result := fmt.Sprintf("\n" + SectionStyle.Render("Issues:") + "\n\n")
+	result := fmt.Sprintf("\n" + SectionStyle.Render("Open issues:") + "\n\n")
 
 	vulns := SortVulns(resources.Vulnerabilities)
 
@@ -135,8 +135,8 @@ func SprintIssues(resources snykclient.Resources) string {
 
 func SprintIssue(title, id string, introducedBy []string, severity snykclient.SeverityLevel) string {
 	return fmt.Sprintf(`%s
-    Introduced through: %s
-    URL: https://security.snyk.io/vuln/%s
+  Introduced through: %s
+  URL: https://security.snyk.io/vuln/%s
 
 `, RenderTitle(severity, title), strings.Join(introducedBy, ","), id)
 }
