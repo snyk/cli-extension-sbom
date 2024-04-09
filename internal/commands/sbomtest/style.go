@@ -11,9 +11,9 @@ import (
 var (
 	SectionStyle = lipgloss.NewStyle().Bold(true)
 
-	red     = lipgloss.Color("1")
-	yellow  = lipgloss.Color("3")
-	magenta = lipgloss.Color("5")
+	red     = lipgloss.AdaptiveColor{Light: "9", Dark: "1"}
+	yellow  = lipgloss.AdaptiveColor{Light: "11", Dark: "3"}
+	magenta = lipgloss.AdaptiveColor{Light: "13", Dark: "5"}
 
 	noColor = lipgloss.NoColor{} // Usually white or black
 
