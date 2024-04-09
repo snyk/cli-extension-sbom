@@ -5,7 +5,6 @@ go 1.19
 require (
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/golang/mock v1.6.0
-	github.com/snyk/error-catalog-golang v0.0.0-20240408111112-03a8a99c7bfe
 	github.com/snyk/go-application-framework v0.0.0-20231116141714-376c41e7746c
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.4

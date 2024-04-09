@@ -7,8 +7,7 @@ import (
 	"strings"
 	"time"
 
-	cli_errors "github.com/snyk/error-catalog-golang/cli"
-	"github.com/snyk/error-catalog-golang/snyk_errors"
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
 
 const sbomTestAPIVersion = "2023-08-31~beta"
@@ -50,24 +49,24 @@ func NewSnykClient(c *http.Client, apiBaseURL, orgID string) *SnykClient {
 	}
 }
 
-func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte) (*SBOMTest, error) {
+func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte, errFactory *errors.ErrorFactory) (*SBOMTest, error) {
 	url := fmt.Sprintf("%s/rest/orgs/%s/sbom_tests?version=%s", t.apiBaseURL, t.orgID, sbomTestAPIVersion)
 
 	jsonAPIReader := strings.NewReader(fmt.Sprintf(`{"data":{"type":"sbom_test","attributes":{"sbom":%s}}}`, sbomJSON))
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, jsonAPIReader)
 	if err != nil {
-		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
+		return nil, errFactory.NewInternalError(err)
 	}
 	req.Header.Set("Content-Type", "application/vnd.api+json")
 
 	rsp, err := t.client.Do(req)
 	if err != nil {
-		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
+		return nil, errFactory.NewInternalError(err)
 	}
 
 	var body CreateSBOMTestRunResponseBody
-	if err := parseResponse(rsp, http.StatusCreated, &body); err != nil {
+	if err := parseResponse(rsp, http.StatusCreated, &body, errFactory); err != nil {
 		return nil, err
 	}
 
@@ -77,26 +76,26 @@ func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte) (*SBOM
 	}, nil
 }
 
-func (t *SBOMTest) GetResult(ctx context.Context) (*GetSBOMTestResultResponseBody, error) {
+func (t *SBOMTest) GetResult(ctx context.Context, errFactory *errors.ErrorFactory) (*GetSBOMTestResultResponseBody, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, t.resultsURL(), http.NoBody)
 	if err != nil {
-		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
+		return nil, errFactory.NewInternalError(err)
 	}
 
 	resp, err := t.SnykClient.client.Do(req)
 	if err != nil {
-		return nil, cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
+		return nil, errFactory.NewInternalError(err)
 	}
 
 	var body GetSBOMTestResultResponseBody
-	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
+	if err := parseResponse(resp, http.StatusOK, &body, errFactory); err != nil {
 		return nil, err
 	}
 
 	return &body, nil
 }
 
-func (t *SBOMTest) GetStatus(ctx context.Context) (SBOMTestStatus, error) {
+func (t *SBOMTest) GetStatus(ctx context.Context, errFactory *errors.ErrorFactory) (SBOMTestStatus, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, t.statusURL(), http.NoBody)
 	if err != nil {
 		return SBOMTestStatusIndeterminate, err
@@ -118,7 +117,7 @@ func (t *SBOMTest) GetStatus(ctx context.Context) (SBOMTestStatus, error) {
 	}
 
 	var body GetSBOMTestStatusResponseBody
-	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
+	if err := parseResponse(resp, http.StatusOK, &body, errFactory); err != nil {
 		return SBOMTestStatusIndeterminate, err
 	}
 	if body.Data.Attributes.Status == "error" {
@@ -128,23 +127,23 @@ func (t *SBOMTest) GetStatus(ctx context.Context) (SBOMTestStatus, error) {
 	return SBOMTestStatusProcessing, nil
 }
 
-func (t *SBOMTest) WaitUntilComplete(ctx context.Context) error {
-	return t.WaitUntilCompleteWithBackoff(ctx, DefaultBackoff)
+func (t *SBOMTest) WaitUntilComplete(ctx context.Context, errFactory *errors.ErrorFactory) error {
+	return t.WaitUntilCompleteWithBackoff(ctx, DefaultBackoff, errFactory)
 }
 
-func (t *SBOMTest) WaitUntilCompleteWithBackoff(ctx context.Context, backoff backoffFn) error {
+func (t *SBOMTest) WaitUntilCompleteWithBackoff(ctx context.Context, backoff backoffFn, errFactory *errors.ErrorFactory) error {
 	// TODO: fine tune timeout
 	ctx, cancel := context.WithTimeout(ctx, time.Minute*5)
 	defer cancel()
 
 	for {
-		status, err := t.GetStatus(ctx)
+		status, err := t.GetStatus(ctx, errFactory)
 		if err != nil {
-			return cli_errors.NewInternalServerError("Failed to get test status", snyk_errors.WithCause(err))
+			return errFactory.NewInternalError(err)
 		}
 
 		if status == SBOMTestStatusError {
-			return cli_errors.NewFailedToTestSBOMError("Job failed")
+			return errFactory.NewFailedToTestSBOMError()
 		} else if status == SBOMTestStatusFinished {
 			break
 		}

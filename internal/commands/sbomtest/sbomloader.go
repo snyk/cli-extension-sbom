@@ -4,8 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	cli_errors "github.com/snyk/error-catalog-golang/cli"
-	"github.com/snyk/error-catalog-golang/snyk_errors"
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
 
 func IsSBOMJSON(b []byte) bool {
@@ -14,31 +13,31 @@ func IsSBOMJSON(b []byte) bool {
 	return err == nil
 }
 
-func ReadSBOMFile(filename string) ([]byte, error) {
+func ReadSBOMFile(filename string, errFactory *errors.ErrorFactory) ([]byte, error) {
 	// Check if file exists
 	info, err := os.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, cli_errors.NewMissingFileError("")
+			return nil, errFactory.NewMissingFilenameFlagError()
 		}
-		return nil, cli_errors.NewFailedToReadFileError("", snyk_errors.WithCause(err))
+		return nil, errFactory.NewFailedToReadFileError(err)
 	}
 
 	// Check if it's a directory
 	if info.IsDir() {
-		return nil, cli_errors.NewFileIsDirError("")
+		return nil, errFactory.NewFileIsDirectoryError()
 	}
 
 	// Open file and read it
 	b, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, cli_errors.NewFailedToReadFileError("", snyk_errors.WithCause(err))
+		return nil, errFactory.NewFailedToReadFileError(err)
 	}
 
 	isValidSBOM := IsSBOMJSON(b)
 
 	if !isValidSBOM {
-		return nil, cli_errors.NewUnsupportedSBOMFormatError("")
+		return nil, errFactory.NewInvalidJSONError()
 	}
 
 	return b, nil

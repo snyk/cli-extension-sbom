@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	cli_errors "github.com/snyk/error-catalog-golang/cli"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
@@ -33,28 +33,29 @@ func TestWorkflow(
 	logger := ictx.GetLogger()
 	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
+	errFactory := errors.NewErrorFactory(logger)
 	ctx := context.Background()
 	orgID := config.GetString(configuration.ORGANIZATION)
 	if orgID == "" {
-		return nil, cli_errors.NewIndeterminateOrgError("")
+		return nil, errFactory.NewEmptyOrgError()
 	}
 
 	logger.Println("SBOM Test workflow start")
 
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
 	if !experimental {
-		return nil, cli_errors.NewMissingExperimentalFlagError("")
+		return nil, errFactory.NewMissingExperimentalFlagError()
 	}
 
 	logger.Println("Getting preferred organization ID")
 
 	if filename == "" {
-		return nil, cli_errors.NewMissingFilenameFlagError("")
+		return nil, errFactory.NewMissingFilenameFlagError()
 	}
 
 	logger.Println("Target SBOM document:", filename)
 
-	bytes, err := ReadSBOMFile(filename)
+	bytes, err := ReadSBOMFile(filename, errFactory)
 	if err != nil {
 		return nil, err
 	}
@@ -64,21 +65,21 @@ func TestWorkflow(
 		config.GetString(configuration.API_URL),
 		orgID,
 	)
-	sbomTest, err := client.CreateSBOMTest(ctx, bytes)
+	sbomTest, err := client.CreateSBOMTest(ctx, bytes, errFactory)
 	if err != nil {
 		return nil, err
 	}
 
 	logger.Printf("Created SBOM test (ID %s), waiting for results...\n", sbomTest.ID)
 
-	err = sbomTest.WaitUntilComplete(ctx)
+	err = sbomTest.WaitUntilComplete(ctx, errFactory)
 	if err != nil {
 		return nil, err
 	}
 
 	logger.Print("Test complete, fetching results")
 
-	results, err := sbomTest.GetResult(ctx)
+	results, err := sbomTest.GetResult(ctx, errFactory)
 	if err != nil {
 		return nil, err
 	}

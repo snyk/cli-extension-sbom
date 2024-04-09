@@ -6,10 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 
-	cli_errors "github.com/snyk/error-catalog-golang/cli"
-	"github.com/snyk/error-catalog-golang/snyk_errors"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 )
 
@@ -24,6 +23,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	engine := ictx.GetEngine()
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
+	errFactory := errors.NewErrorFactory(logger)
 	name := config.GetString(flags.FlagName)
 	version := config.GetString(flags.FlagVersion)
 
@@ -35,7 +35,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	}
 	depGraphs, err := engine.InvokeWithConfig(DepGraphWorkflowID, depGraphConfig)
 	if err != nil {
-		return nil, cli_errors.NewDepgraphWorkflowError("", snyk_errors.WithCause(err))
+		return nil, errFactory.NewDepGraphWorkflowError(err)
 	}
 
 	numGraphs := len(depGraphs)
@@ -44,7 +44,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	for i, depGraph := range depGraphs {
 		depGraphBytes, err := getPayloadBytes(depGraph)
 		if err != nil {
-			return nil, cli_errors.NewDepgraphWorkflowError("", snyk_errors.WithCause(err))
+			return nil, errFactory.NewDepGraphWorkflowError(err)
 		}
 		depGraphsBytes[i] = depGraphBytes
 	}
@@ -53,7 +53,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 			// Fall back to current working directory
 			wd, err := os.Getwd()
 			if err != nil {
-				return nil, cli_errors.NewIndeterminateWorkingDirectoryError("", snyk_errors.WithCause(err))
+				return nil, errFactory.IndeterminateWorkingDirectory(err)
 			}
 			name = filepath.Base(wd)
 		}

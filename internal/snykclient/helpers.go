@@ -2,16 +2,13 @@ package snykclient
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
-	"strings"
 
-	cli_errors "github.com/snyk/error-catalog-golang/cli"
-	"github.com/snyk/error-catalog-golang/snyk_errors"
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
 
-func parseResponse(rsp *http.Response, expectedStatusCode int, expectedDocument interface{}) error {
+func parseResponse(rsp *http.Response, expectedStatusCode int, expectedDocument interface{}, errFactory *errors.ErrorFactory) error {
 	body, err := io.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
@@ -20,33 +17,17 @@ func parseResponse(rsp *http.Response, expectedStatusCode int, expectedDocument 
 
 	if rsp.StatusCode != expectedStatusCode {
 		var errorDoc errorDocument
-		if err := json.Unmarshal(body, &errorDoc); err != nil {
+		if err = json.Unmarshal(body, &errorDoc); err != nil {
 			// If the error is not encoded as JSON, that is less important a detail to
 			// surface to the user than the actual content of the error. Notably, this
 			// can occur when cerberus bounces the request, as it returns plain text
 			// bodies.
-			return cli_errors.NewInternalServerError("", snyk_errors.WithCause(err))
+			return errFactory.NewInternalError(err)
 		}
-		return cli_errors.NewInternalServerError(errorDocumentToString(errorDoc))
+		return errFactory.NewInternalError(err)
 	}
 	if expectedDocument != nil {
 		return json.Unmarshal(body, expectedDocument)
 	}
 	return nil
-}
-
-func errorDocumentToString(err errorDocument) string {
-	msgs := []string{}
-	if len(err.Errors) == 0 {
-		msgs = append(msgs, "unknown error")
-	} else {
-		for i := range err.Errors {
-			msgs = append(msgs, errorObjectToString(&err.Errors[i]))
-		}
-	}
-	return strings.Join(msgs, "\n")
-}
-
-func errorObjectToString(err *errorObject) string {
-	return fmt.Sprintf("%s %s: %s", err.Status, err.Title, err.Detail)
 }
