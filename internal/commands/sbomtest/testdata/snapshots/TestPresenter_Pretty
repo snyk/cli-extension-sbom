@@ -1,7 +1,7 @@
-                     
-Testing sbom.json ...
-                     
-Packages:
+[1m[0m                     
+[1mTesting sbom.json ...[0m
+[1m[0m                     
+[1mPackages:[0m
 
   generic/java@1.8.0_362-b08
   purl: pkg:generic/java@1.8.0_362-b08?package-id=6814b9a5c86fd071
@@ -583,902 +583,902 @@ Packages:
   purl: pkg:rpm/amzn/zlib@1.2.7-19.amzn2.0.2?arch=x86_64&upstream=zlib-1.2.7-19.amzn2.0.2.src.rpm&distro=amzn-2&package-id=dedf86687c0a67f5
 
 
-Untested:
+[1mUntested:[0m
 
-✗ fa08b68d9188550d
+[1;33m✗ fa08b68d9188550d[0m
     component must have a PackageURL
 
-✗ amzn
+[1;33m✗ amzn[0m
     component must have a PackageURL
 
 
-Issues:
+[1mIssues:[0m
 
-✗ [LOW] ALAS2-2024-2490
+[1m✗ [LOW] ALAS2-2024-2490[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-6371161
 
-✗ [LOW] Resource Exhaustion
+[1m✗ [LOW] Resource Exhaustion[0m
     Introduced through: elfutils-libelf@0.176-2.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-ELFUTILSLIBELF-5825947
 
-✗ [LOW] Out-of-bounds Read
+[1m✗ [LOW] Out-of-bounds Read[0m
     Introduced through: gawk@4.0.2-4.amzn2.1.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-GAWK-6098490
 
-✗ [LOW] Link Following
+[1m✗ [LOW] Link Following[0m
     Introduced through: glib2@2.56.1-9.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-GLIB2-6371137
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: gmp@6.0.0-15.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-GMP-6098749
 
-✗ [LOW] Memory Leak
+[1m✗ [LOW] Memory Leak[0m
     Introduced through: libcap@2.54-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCAP-5789427
 
-✗ [LOW] ALAS2-2024-2490
+[1m✗ [LOW] ALAS2-2024-2490[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-6371155
 
-✗ [LOW] NULL Pointer Dereference
+[1m✗ [LOW] NULL Pointer Dereference[0m
     Introduced through: openssl11-libs@1.1.1g-12.amzn2.0.13
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSL11LIBS-6371044
 
-✗ [LOW] NULL Pointer Dereference
+[1m✗ [LOW] NULL Pointer Dereference[0m
     Introduced through: openssl-libs@1.0.2k-24.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSLLIBS-6371174
 
-✗ [LOW] NULL Pointer Dereference
+[1m✗ [LOW] NULL Pointer Dereference[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6043076
 
-✗ [LOW] Use After Free
+[1m✗ [LOW] Use After Free[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6043122
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6098481
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6098546
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6098550
 
-✗ [LOW] Use After Free
+[1m✗ [LOW] Use After Free[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6098692
 
-✗ [LOW] Improper Handling of Exceptional Conditions
+[1m✗ [LOW] Improper Handling of Exceptional Conditions[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6098714
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6098812
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6098985
 
-✗ [LOW] Use After Free
+[1m✗ [LOW] Use After Free[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6149008
 
-✗ [LOW] NULL Pointer Dereference
+[1m✗ [LOW] NULL Pointer Dereference[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6042988
 
-✗ [LOW] Use After Free
+[1m✗ [LOW] Use After Free[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6043039
 
-✗ [LOW] Improper Handling of Exceptional Conditions
+[1m✗ [LOW] Improper Handling of Exceptional Conditions[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6098447
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6098452
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6098453
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6098465
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6098466
 
-✗ [LOW] Use After Free
+[1m✗ [LOW] Use After Free[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6098539
 
-✗ [LOW] Integer Overflow or Wraparound
+[1m✗ [LOW] Integer Overflow or Wraparound[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6098557
 
-✗ [LOW] Use After Free
+[1m✗ [LOW] Use After Free[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6149030
 
-✗ [LOW] Access Restriction Bypass
+[1m✗ [LOW] Access Restriction Bypass[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317726
 
-✗ [MEDIUM] Double Free
+[1;33m✗ [MEDIUM] Double Free[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5671916
 
-✗ [MEDIUM] Directory Traversal
+[1;33m✗ [MEDIUM] Directory Traversal[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5671986
 
-✗ [MEDIUM] Authentication Bypass by Primary Weakness
+[1;33m✗ [MEDIUM] Authentication Bypass by Primary Weakness[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5671999
 
-✗ [MEDIUM] Special Element Injection
+[1;33m✗ [MEDIUM] Special Element Injection[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5672000
 
-✗ [MEDIUM] Authentication Bypass by Primary Weakness
+[1;33m✗ [MEDIUM] Authentication Bypass by Primary Weakness[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5672016
 
-✗ [MEDIUM] Authentication Bypass by Primary Weakness
+[1;33m✗ [MEDIUM] Authentication Bypass by Primary Weakness[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5672031
 
-✗ [MEDIUM] Improper Certificate Validation
+[1;33m✗ [MEDIUM] Improper Certificate Validation[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5881684
 
-✗ [MEDIUM] Integer Overflow or Wraparound
+[1;33m✗ [MEDIUM] Integer Overflow or Wraparound[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5881687
 
-✗ [MEDIUM] Expected Behavior Violation
+[1;33m✗ [MEDIUM] Expected Behavior Violation[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5881979
 
-✗ [MEDIUM] Use After Free
+[1;33m✗ [MEDIUM] Use After Free[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5882130
 
-✗ [MEDIUM] Missing Encryption of Sensitive Data
+[1;33m✗ [MEDIUM] Missing Encryption of Sensitive Data[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-6148945
 
-✗ [MEDIUM] Information Exposure
+[1;33m✗ [MEDIUM] Information Exposure[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-6149009
 
-✗ [MEDIUM] Out-of-bounds Write
+[1;33m✗ [MEDIUM] Out-of-bounds Write[0m
     Introduced through: elfutils-libelf@0.176-2.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-ELFUTILSLIBELF-5912533
 
-✗ [MEDIUM] Integer Overflow or Wraparound
+[1;33m✗ [MEDIUM] Integer Overflow or Wraparound[0m
     Introduced through: expat@2.1.0-15.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-EXPAT-5935944
 
-✗ [MEDIUM] Resource Exhaustion
+[1;33m✗ [MEDIUM] Resource Exhaustion[0m
     Introduced through: expat@2.1.0-15.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-EXPAT-5936124
 
-✗ [MEDIUM] Information Exposure
+[1;33m✗ [MEDIUM] Information Exposure[0m
     Introduced through: glib2@2.56.1-9.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-GLIB2-5663289
 
-✗ [MEDIUM] Use of Uninitialized Resource
+[1;33m✗ [MEDIUM] Use of Uninitialized Resource[0m
     Introduced through: glib2@2.56.1-9.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-GLIB2-5740463
 
-✗ [MEDIUM] Integer Overflow or Wraparound
+[1;33m✗ [MEDIUM] Integer Overflow or Wraparound[0m
     Introduced through: glib2@2.56.1-9.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-GLIB2-5740561
 
-✗ [MEDIUM] Access of Uninitialized Pointer
+[1;33m✗ [MEDIUM] Access of Uninitialized Pointer[0m
     Introduced through: krb5-libs@1.15.1-55.amzn2.2.5
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-KRB5LIBS-5881666
 
-✗ [MEDIUM] Directory Traversal
+[1;33m✗ [MEDIUM] Directory Traversal[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5671913
 
-✗ [MEDIUM] Authentication Bypass by Primary Weakness
+[1;33m✗ [MEDIUM] Authentication Bypass by Primary Weakness[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5671914
 
-✗ [MEDIUM] Special Element Injection
+[1;33m✗ [MEDIUM] Special Element Injection[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5671987
 
-✗ [MEDIUM] Double Free
+[1;33m✗ [MEDIUM] Double Free[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5671989
 
-✗ [MEDIUM] Authentication Bypass by Primary Weakness
+[1;33m✗ [MEDIUM] Authentication Bypass by Primary Weakness[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5671990
 
-✗ [MEDIUM] Authentication Bypass by Primary Weakness
+[1;33m✗ [MEDIUM] Authentication Bypass by Primary Weakness[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5671995
 
-✗ [MEDIUM] Integer Overflow or Wraparound
+[1;33m✗ [MEDIUM] Integer Overflow or Wraparound[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5881681
 
-✗ [MEDIUM] Improper Certificate Validation
+[1;33m✗ [MEDIUM] Improper Certificate Validation[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5881689
 
-✗ [MEDIUM] Use After Free
+[1;33m✗ [MEDIUM] Use After Free[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5882203
 
-✗ [MEDIUM] Expected Behavior Violation
+[1;33m✗ [MEDIUM] Expected Behavior Violation[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5882223
 
-✗ [MEDIUM] Missing Encryption of Sensitive Data
+[1;33m✗ [MEDIUM] Missing Encryption of Sensitive Data[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-6148946
 
-✗ [MEDIUM] Information Exposure
+[1;33m✗ [MEDIUM] Information Exposure[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-6148999
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: libgcc@7.3.1-15.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBGCC-5893981
 
-✗ [MEDIUM] Use After Free
+[1;33m✗ [MEDIUM] Use After Free[0m
     Introduced through: libsepol@2.5-8.1.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBSEPOL-6016205
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: libsepol@2.5-8.1.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBSEPOL-6016208
 
-✗ [MEDIUM] Use After Free
+[1;33m✗ [MEDIUM] Use After Free[0m
     Introduced through: libsepol@2.5-8.1.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBSEPOL-6016266
 
-✗ [MEDIUM] Use After Free
+[1;33m✗ [MEDIUM] Use After Free[0m
     Introduced through: libsepol@2.5-8.1.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBSEPOL-6016390
 
-✗ [MEDIUM] Out-of-bounds Read
+[1;33m✗ [MEDIUM] Out-of-bounds Read[0m
     Introduced through: libssh2@1.4.3-12.amzn2.2.3
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBSSH2-5538577
 
-✗ [MEDIUM] Out-of-bounds Read
+[1;33m✗ [MEDIUM] Out-of-bounds Read[0m
     Introduced through: libssh2@1.4.3-12.amzn2.2.3
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBSSH2-5538618
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: libstdc++@7.3.1-15.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBSTDC-5893993
 
-✗ [MEDIUM] Improper Input Validation
+[1;33m✗ [MEDIUM] Improper Input Validation[0m
     Introduced through: libxml2@2.9.1-6.amzn2.5.7
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBXML2-5496478
 
-✗ [MEDIUM] Improper Input Validation
+[1;33m✗ [MEDIUM] Improper Input Validation[0m
     Introduced through: libxml2@2.9.1-6.amzn2.5.7
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBXML2-5496563
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: libxml2@2.9.1-6.amzn2.5.7
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBXML2-5912558
 
-✗ [MEDIUM] Resource Exhaustion
+[1;33m✗ [MEDIUM] Resource Exhaustion[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-6148960
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-6149208
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-6149255
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-6149287
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-6149291
 
-✗ [MEDIUM] Out-of-bounds Read
+[1;33m✗ [MEDIUM] Out-of-bounds Read[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-6149294
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-6149301
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-6149308
 
-✗ [MEDIUM] Stack-based Buffer Overflow
+[1;33m✗ [MEDIUM] Stack-based Buffer Overflow[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-6149404
 
-✗ [MEDIUM] CVE-2023-45918
+[1;33m✗ [MEDIUM] CVE-2023-45918[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-6371235
 
-✗ [MEDIUM] Resource Exhaustion
+[1;33m✗ [MEDIUM] Resource Exhaustion[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-6148932
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-6149244
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-6149270
 
-✗ [MEDIUM] Out-of-bounds Read
+[1;33m✗ [MEDIUM] Out-of-bounds Read[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-6149302
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-6149365
 
-✗ [MEDIUM] Stack-based Buffer Overflow
+[1;33m✗ [MEDIUM] Stack-based Buffer Overflow[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-6149374
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-6149401
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-6149406
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-6149422
 
-✗ [MEDIUM] CVE-2023-45918
+[1;33m✗ [MEDIUM] CVE-2023-45918[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-6371263
 
-✗ [MEDIUM] Resource Exhaustion
+[1;33m✗ [MEDIUM] Resource Exhaustion[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-6148987
 
-✗ [MEDIUM] Stack-based Buffer Overflow
+[1;33m✗ [MEDIUM] Stack-based Buffer Overflow[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-6149194
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-6149196
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-6149217
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-6149225
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-6149289
 
-✗ [MEDIUM] Out-of-bounds Read
+[1;33m✗ [MEDIUM] Out-of-bounds Read[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-6149298
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-6149299
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-6149315
 
-✗ [MEDIUM] CVE-2023-45918
+[1;33m✗ [MEDIUM] CVE-2023-45918[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-6371106
 
-✗ [MEDIUM] Information Exposure
+[1;33m✗ [MEDIUM] Information Exposure[0m
     Introduced through: nss-softokn@3.79.0-4.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NSSSOFTOKN-6184417
 
-✗ [MEDIUM] Information Exposure
+[1;33m✗ [MEDIUM] Information Exposure[0m
     Introduced through: nss-softokn@3.79.0-4.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NSSSOFTOKN-6253788
 
-✗ [MEDIUM] Information Exposure
+[1;33m✗ [MEDIUM] Information Exposure[0m
     Introduced through: nss-softokn-freebl@3.79.0-4.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NSSSOFTOKNFREEBL-6184552
 
-✗ [MEDIUM] Information Exposure
+[1;33m✗ [MEDIUM] Information Exposure[0m
     Introduced through: nss-softokn-freebl@3.79.0-4.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NSSSOFTOKNFREEBL-6253909
 
-✗ [MEDIUM] NULL Pointer Dereference
+[1;33m✗ [MEDIUM] NULL Pointer Dereference[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5740490
 
-✗ [MEDIUM] Resource Exhaustion
+[1;33m✗ [MEDIUM] Resource Exhaustion[0m
     Introduced through: openssl11-libs@1.1.1g-12.amzn2.0.13
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSL11LIBS-5538430
 
-✗ [MEDIUM] Improper Certificate Validation
+[1;33m✗ [MEDIUM] Improper Certificate Validation[0m
     Introduced through: openssl11-libs@1.1.1g-12.amzn2.0.13
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSL11LIBS-5538450
 
-✗ [MEDIUM] Improper Certificate Validation
+[1;33m✗ [MEDIUM] Improper Certificate Validation[0m
     Introduced through: openssl11-libs@1.1.1g-12.amzn2.0.13
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSL11LIBS-5538536
 
-✗ [MEDIUM] Resource Exhaustion
+[1;33m✗ [MEDIUM] Resource Exhaustion[0m
     Introduced through: openssl11-libs@1.1.1g-12.amzn2.0.13
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSL11LIBS-5740470
 
-✗ [MEDIUM] Resource Exhaustion
+[1;33m✗ [MEDIUM] Resource Exhaustion[0m
     Introduced through: openssl11-libs@1.1.1g-12.amzn2.0.13
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSL11LIBS-5881665
 
-✗ [MEDIUM] Excessive Iteration
+[1;33m✗ [MEDIUM] Excessive Iteration[0m
     Introduced through: openssl11-libs@1.1.1g-12.amzn2.0.13
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSL11LIBS-5881668
 
-✗ [MEDIUM] Missing Required Cryptographic Step
+[1;33m✗ [MEDIUM] Missing Required Cryptographic Step[0m
     Introduced through: openssl11-libs@1.1.1g-12.amzn2.0.13
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSL11LIBS-6098432
 
-✗ [MEDIUM] Resource Exhaustion
+[1;33m✗ [MEDIUM] Resource Exhaustion[0m
     Introduced through: openssl-libs@1.0.2k-24.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSLLIBS-5671928
 
-✗ [MEDIUM] Improper Certificate Validation
+[1;33m✗ [MEDIUM] Improper Certificate Validation[0m
     Introduced through: openssl-libs@1.0.2k-24.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSLLIBS-5671932
 
-✗ [MEDIUM] Improper Certificate Validation
+[1;33m✗ [MEDIUM] Improper Certificate Validation[0m
     Introduced through: openssl-libs@1.0.2k-24.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSLLIBS-5671938
 
-✗ [MEDIUM] Resource Exhaustion
+[1;33m✗ [MEDIUM] Resource Exhaustion[0m
     Introduced through: openssl-libs@1.0.2k-24.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSLLIBS-5672043
 
-✗ [MEDIUM] Resource Exhaustion
+[1;33m✗ [MEDIUM] Resource Exhaustion[0m
     Introduced through: openssl-libs@1.0.2k-24.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSLLIBS-5894003
 
-✗ [MEDIUM] Excessive Iteration
+[1;33m✗ [MEDIUM] Excessive Iteration[0m
     Introduced through: openssl-libs@1.0.2k-24.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSLLIBS-5894028
 
-✗ [MEDIUM] Missing Required Cryptographic Step
+[1;33m✗ [MEDIUM] Missing Required Cryptographic Step[0m
     Introduced through: openssl-libs@1.0.2k-24.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENSSLLIBS-6098464
 
-✗ [MEDIUM] Use of Uninitialized Resource
+[1;33m✗ [MEDIUM] Use of Uninitialized Resource[0m
     Introduced through: pcre@8.32-17.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-PCRE-5671968
 
-✗ [MEDIUM] Integer Overflow or Wraparound
+[1;33m✗ [MEDIUM] Integer Overflow or Wraparound[0m
     Introduced through: pcre@8.32-17.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-PCRE-5671971
 
-✗ [MEDIUM] Race Condition
+[1;33m✗ [MEDIUM] Race Condition[0m
     Introduced through: python@2.7.18-1.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-PYTHON-6149206
 
-✗ [MEDIUM] Race Condition
+[1;33m✗ [MEDIUM] Race Condition[0m
     Introduced through: python-libs@2.7.18-1.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-PYTHONLIBS-6149132
 
-✗ [MEDIUM] NULL Pointer Dereference
+[1;33m✗ [MEDIUM] NULL Pointer Dereference[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5411304
 
-✗ [MEDIUM] Incorrect Calculation of Buffer Size
+[1;33m✗ [MEDIUM] Incorrect Calculation of Buffer Size[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5411307
 
-✗ [MEDIUM] NULL Pointer Dereference
+[1;33m✗ [MEDIUM] NULL Pointer Dereference[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5411335
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5411340
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6016142
 
-✗ [MEDIUM] Integer Overflow or Wraparound
+[1;33m✗ [MEDIUM] Integer Overflow or Wraparound[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6062292
 
-✗ [MEDIUM] Stack-based Buffer Overflow
+[1;33m✗ [MEDIUM] Stack-based Buffer Overflow[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6253988
 
-✗ [MEDIUM] Use After Free
+[1;33m✗ [MEDIUM] Use After Free[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-6371016
 
-✗ [MEDIUM] NULL Pointer Dereference
+[1;33m✗ [MEDIUM] NULL Pointer Dereference[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5411270
 
-✗ [MEDIUM] NULL Pointer Dereference
+[1;33m✗ [MEDIUM] NULL Pointer Dereference[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5411279
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5411301
 
-✗ [MEDIUM] Incorrect Calculation of Buffer Size
+[1;33m✗ [MEDIUM] Incorrect Calculation of Buffer Size[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5411306
 
-✗ [MEDIUM] Heap-based Buffer Overflow
+[1;33m✗ [MEDIUM] Heap-based Buffer Overflow[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6016144
 
-✗ [MEDIUM] Integer Overflow or Wraparound
+[1;33m✗ [MEDIUM] Integer Overflow or Wraparound[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6062273
 
-✗ [MEDIUM] Stack-based Buffer Overflow
+[1;33m✗ [MEDIUM] Stack-based Buffer Overflow[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6253901
 
-✗ [MEDIUM] Use After Free
+[1;33m✗ [MEDIUM] Use After Free[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6371014
 
-✗ [MEDIUM] Integer Overflow or Wraparound
+[1;33m✗ [MEDIUM] Integer Overflow or Wraparound[0m
     Introduced through: zlib@1.2.7-19.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-ZLIB-6043077
 
-✗ [MEDIUM] Improper Input Validation
+[1;33m✗ [MEDIUM] Improper Input Validation[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317641
 
-✗ [MEDIUM] Cryptographic Issues
+[1;33m✗ [MEDIUM] Cryptographic Issues[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317649
 
-✗ [MEDIUM] Information Exposure
+[1;33m✗ [MEDIUM] Information Exposure[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317660
 
-✗ [MEDIUM] Divide By Zero
+[1;33m✗ [MEDIUM] Divide By Zero[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317673
 
-✗ [MEDIUM] HTTP Request Smuggling
+[1;33m✗ [MEDIUM] HTTP Request Smuggling[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317687
 
-✗ [MEDIUM] Out-of-Bounds
+[1;33m✗ [MEDIUM] Out-of-Bounds[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317710
 
-✗ [MEDIUM] Improper Input Validation
+[1;33m✗ [MEDIUM] Improper Input Validation[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317715
 
-✗ [MEDIUM] Denial of Service (DoS)
+[1;33m✗ [MEDIUM] Denial of Service (DoS)[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2419093
 
-✗ [MEDIUM] Open Redirect
+[1;33m✗ [MEDIUM] Open Redirect[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2933532
 
-✗ [MEDIUM] Arbitrary File Write via Archive Extraction (Zip Slip)
+[1;33m✗ [MEDIUM] Arbitrary File Write via Archive Extraction (Zip Slip)[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-3031734
 
-✗ [MEDIUM] Improper Validation of Syntactic Correctness of Input
+[1;33m✗ [MEDIUM] Improper Validation of Syntactic Correctness of Input[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-5457943
 
-✗ [HIGH] CVE-2023-32803
+[1;31m✗ [HIGH] CVE-2023-32803[0m
     Introduced through: ca-certificates@2021.2.50-72.amzn2.0.5
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CACERTIFICATES-5825893
 
-✗ [HIGH] Insufficient Verification of Data Authenticity
+[1;31m✗ [HIGH] Insufficient Verification of Data Authenticity[0m
     Introduced through: ca-certificates@2021.2.50-72.amzn2.0.5
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CACERTIFICATES-5881973
 
-✗ [HIGH] Link Following
+[1;31m✗ [HIGH] Link Following[0m
     Introduced through: cpio@2.12-11.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CPIO-6371135
 
-✗ [HIGH] Allocation of Resources Without Limits or Throttling
+[1;31m✗ [HIGH] Allocation of Resources Without Limits or Throttling[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5936232
 
-✗ [HIGH] Out-of-Bounds
+[1;31m✗ [HIGH] Out-of-Bounds[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5961079
 
-✗ [HIGH] External Control of File Name or Path
+[1;31m✗ [HIGH] External Control of File Name or Path[0m
     Introduced through: curl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-5961085
 
-✗ [HIGH] Out-of-Bounds
+[1;31m✗ [HIGH] Out-of-Bounds[0m
     Introduced through: glib2@2.56.1-9.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-GLIB2-5538591
 
-✗ [HIGH] Out-of-bounds Read
+[1;31m✗ [HIGH] Out-of-bounds Read[0m
     Introduced through: glib2@2.56.1-9.amzn2.0.2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-GLIB2-5538605
 
-✗ [HIGH] Allocation of Resources Without Limits or Throttling
+[1;31m✗ [HIGH] Allocation of Resources Without Limits or Throttling[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5936187
 
-✗ [HIGH] Out-of-Bounds
+[1;31m✗ [HIGH] Out-of-Bounds[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5961081
 
-✗ [HIGH] External Control of File Name or Path
+[1;31m✗ [HIGH] External Control of File Name or Path[0m
     Introduced through: libcurl@7.88.1-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBCURL-5961084
 
-✗ [HIGH] Resource Exhaustion
+[1;31m✗ [HIGH] Resource Exhaustion[0m
     Introduced through: libnghttp2@1.41.0-1.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBNGHTTP2-5825865
 
-✗ [HIGH] Resource Exhaustion
+[1;31m✗ [HIGH] Resource Exhaustion[0m
     Introduced through: libnghttp2@1.41.0-1.amzn2
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBNGHTTP2-5971120
 
-✗ [HIGH] Out-of-bounds Read
+[1;31m✗ [HIGH] Out-of-bounds Read[0m
     Introduced through: libssh2@1.4.3-12.amzn2.2.3
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBSSH2-5912463
 
-✗ [HIGH] Use After Free
+[1;31m✗ [HIGH] Use After Free[0m
     Introduced through: libxml2@2.9.1-6.amzn2.5.7
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-LIBXML2-6043103
 
-✗ [HIGH] Out-of-bounds Write
+[1;31m✗ [HIGH] Out-of-bounds Write[0m
     Introduced through: ncurses@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSES-5740506
 
-✗ [HIGH] Out-of-bounds Write
+[1;31m✗ [HIGH] Out-of-bounds Write[0m
     Introduced through: ncurses-base@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESBASE-5740484
 
-✗ [HIGH] Out-of-bounds Write
+[1;31m✗ [HIGH] Out-of-bounds Write[0m
     Introduced through: ncurses-libs@6.0-8.20170212.amzn2.1.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NCURSESLIBS-5740510
 
-✗ [HIGH] Heap-based Buffer Overflow
+[1;31m✗ [HIGH] Heap-based Buffer Overflow[0m
     Introduced through: nss@3.79.0-4.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NSS-6229002
 
-✗ [HIGH] Heap-based Buffer Overflow
+[1;31m✗ [HIGH] Heap-based Buffer Overflow[0m
     Introduced through: nss-sysinit@3.79.0-4.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NSSSYSINIT-6229117
 
-✗ [HIGH] Heap-based Buffer Overflow
+[1;31m✗ [HIGH] Heap-based Buffer Overflow[0m
     Introduced through: nss-tools@3.79.0-4.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-NSSTOOLS-6229107
 
-✗ [HIGH] Integer Overflow or Wraparound
+[1;31m✗ [HIGH] Integer Overflow or Wraparound[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496456
 
-✗ [HIGH] Out-of-bounds Read
+[1;31m✗ [HIGH] Out-of-bounds Read[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496469
 
-✗ [HIGH] Improper Handling of Length Parameter Inconsistency
+[1;31m✗ [HIGH] Improper Handling of Length Parameter Inconsistency[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496534
 
-✗ [HIGH] Access of Resource Using Incompatible Type ('Type Confusion')
+[1;31m✗ [HIGH] Access of Resource Using Incompatible Type ('Type Confusion')[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496539
 
-✗ [HIGH] Improper Access Control
+[1;31m✗ [HIGH] Improper Access Control[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496575
 
-✗ [HIGH] Integer Underflow
+[1;31m✗ [HIGH] Integer Underflow[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496594
 
-✗ [HIGH] Resource Exhaustion
+[1;31m✗ [HIGH] Resource Exhaustion[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496601
 
-✗ [HIGH] Reachable Assertion
+[1;31m✗ [HIGH] Reachable Assertion[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496611
 
-✗ [HIGH] Release of Invalid Pointer or Reference
+[1;31m✗ [HIGH] Release of Invalid Pointer or Reference[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496618
 
-✗ [HIGH] Loop with Unreachable Exit Condition ('Infinite Loop')
+[1;31m✗ [HIGH] Loop with Unreachable Exit Condition ('Infinite Loop')[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496632
 
-✗ [HIGH] Reachable Assertion
+[1;31m✗ [HIGH] Reachable Assertion[0m
     Introduced through: openldap@2.4.44-23.amzn2.0.4
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-OPENLDAP-5496634
 
-✗ [HIGH] XML External Entity (XXE) Injection
+[1;31m✗ [HIGH] XML External Entity (XXE) Injection[0m
     Introduced through: python@2.7.18-1.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-PYTHON-6043096
 
-✗ [HIGH] XML External Entity (XXE) Injection
+[1;31m✗ [HIGH] XML External Entity (XXE) Injection[0m
     Introduced through: python-libs@2.7.18-1.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-PYTHONLIBS-6043062
 
-✗ [HIGH] NULL Pointer Dereference
+[1;31m✗ [HIGH] NULL Pointer Dereference[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5702426
 
-✗ [HIGH] Integer Overflow or Wraparound
+[1;31m✗ [HIGH] Integer Overflow or Wraparound[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5702433
 
-✗ [HIGH] NULL Pointer Dereference
+[1;31m✗ [HIGH] NULL Pointer Dereference[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5935804
 
-✗ [HIGH] Integer Overflow or Wraparound
+[1;31m✗ [HIGH] Integer Overflow or Wraparound[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5935813
 
-✗ [HIGH] Heap-based Buffer Overflow
+[1;31m✗ [HIGH] Heap-based Buffer Overflow[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5935823
 
-✗ [HIGH] Heap-based Buffer Overflow
+[1;31m✗ [HIGH] Heap-based Buffer Overflow[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5935831
 
-✗ [HIGH] Heap-based Buffer Overflow
+[1;31m✗ [HIGH] Heap-based Buffer Overflow[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5936007
 
-✗ [HIGH] Use After Free
+[1;31m✗ [HIGH] Use After Free[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5936155
 
-✗ [HIGH] Out-of-bounds Write
+[1;31m✗ [HIGH] Out-of-bounds Write[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5936165
 
-✗ [HIGH] Use After Free
+[1;31m✗ [HIGH] Use After Free[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5936176
 
-✗ [HIGH] Use After Free
+[1;31m✗ [HIGH] Use After Free[0m
     Introduced through: vim-data@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMDATA-5936192
 
-✗ [HIGH] NULL Pointer Dereference
+[1;31m✗ [HIGH] NULL Pointer Dereference[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5702421
 
-✗ [HIGH] Integer Overflow or Wraparound
+[1;31m✗ [HIGH] Integer Overflow or Wraparound[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5702597
 
-✗ [HIGH] NULL Pointer Dereference
+[1;31m✗ [HIGH] NULL Pointer Dereference[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5935807
 
-✗ [HIGH] Use After Free
+[1;31m✗ [HIGH] Use After Free[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5935818
 
-✗ [HIGH] Heap-based Buffer Overflow
+[1;31m✗ [HIGH] Heap-based Buffer Overflow[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5935834
 
-✗ [HIGH] Heap-based Buffer Overflow
+[1;31m✗ [HIGH] Heap-based Buffer Overflow[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5935982
 
-✗ [HIGH] Out-of-bounds Write
+[1;31m✗ [HIGH] Out-of-bounds Write[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5935990
 
-✗ [HIGH] Integer Overflow or Wraparound
+[1;31m✗ [HIGH] Integer Overflow or Wraparound[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5935998
 
-✗ [HIGH] Heap-based Buffer Overflow
+[1;31m✗ [HIGH] Heap-based Buffer Overflow[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5936080
 
-✗ [HIGH] Use After Free
+[1;31m✗ [HIGH] Use After Free[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5936082
 
-✗ [HIGH] Use After Free
+[1;31m✗ [HIGH] Use After Free[0m
     Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-5936157
 
-✗ [HIGH] ALAS2-2023-2316
+[1;31m✗ [HIGH] ALAS2-2023-2316[0m
     Introduced through: yum@3.4.3-158.amzn2.0.6
     URL: https://security.snyk.io/vuln/SNYK-AMZN2-YUM-6016244
 
-✗ [HIGH] Incorrect Calculation
+[1;31m✗ [HIGH] Incorrect Calculation[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317646
 
-✗ [HIGH] CVE-2015-5652
+[1;31m✗ [HIGH] CVE-2015-5652[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317663
 
-✗ [HIGH] Denial of Service (DoS)
+[1;31m✗ [HIGH] Denial of Service (DoS)[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317683
 
-✗ [HIGH] Directory Traversal
+[1;31m✗ [HIGH] Directory Traversal[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-3013181
 
-✗ [HIGH] Denial of Service (DoS)
+[1;31m✗ [HIGH] Denial of Service (DoS)[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-3110694
 
-✗ [HIGH] Improper Input Validation
+[1;31m✗ [HIGH] Improper Input Validation[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-3325575
 
-✗ [HIGH] Use After Free
+[1;31m✗ [HIGH] Use After Free[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-5876623
 
-✗ [HIGH] Timing Attack
+[1;31m✗ [HIGH] Timing Attack[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-5876625
 
-✗ [HIGH] Denial of Service (DoS)
+[1;31m✗ [HIGH] Denial of Service (DoS)[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-5876626
 
-✗ [CRITICAL] Integer Overflow or Wraparound
+[1;35m✗ [CRITICAL] Integer Overflow or Wraparound[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317677
 
-✗ [CRITICAL] Insufficiently Protected Credentials
+[1;35m✗ [CRITICAL] Insufficiently Protected Credentials[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317686
 
-✗ [CRITICAL] XML External Entity (XXE) Injection
+[1;35m✗ [CRITICAL] XML External Entity (XXE) Injection[0m
     Introduced through: https://python.org|python@2.7.18
     URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-5876624
 

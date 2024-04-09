@@ -10,6 +10,8 @@ jobs:
     executor:
       name: go/default
       tag: '1.19'
+    environment:
+      CLICOLOR_FORCE: 1
     steps:
       - checkout
       - go/load-cache
