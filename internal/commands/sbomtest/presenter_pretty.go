@@ -2,6 +2,7 @@ package sbomtest
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -82,21 +83,27 @@ func SprintDependencies(resources snykclient.Resources) string {
 	return result
 }
 
-func SprintDependency(purl string) string {
-	tmp := strings.SplitN(purl, ":", 2)
-	slices.Reverse(tmp)
-	id := strings.SplitN(tmp[0], "?", 2)[0]
-	tmp = strings.SplitN(id, "@", 2)
-	fullname := strings.Split(tmp[0], "/")
-	fullname[len(fullname)-1] = SectionStyle.Render(fullname[len(fullname)-1])
-	tmp[0] = strings.Join(fullname, "/")
+var regexPurl = regexp.MustCompile(`^pkg:([^@?#]+)(@([^\?#]+))?(\?.+)?$`)
 
-	pkgName := strings.Join(tmp, "@")
+func SprintDependency(purl string) string {
+	pkgId := purl
+
+	if m := regexPurl.FindStringSubmatch(purl); len(m) > 1 {
+		fullname := m[1]
+		version := ""
+		if len(m) > 2 {
+			version = m[2]
+		}
+		parts := strings.Split(fullname, "/")
+		parts[len(parts)-1] = SectionStyle.Render(parts[len(parts)-1])
+
+		pkgId = strings.Join(parts, "/") + version
+	}
 
 	return fmt.Sprintf(`
   %s
   purl: %s
-`, pkgName, purl)
+`, pkgId, purl)
 }
 
 func SprintIssues(resources snykclient.Resources) string {
