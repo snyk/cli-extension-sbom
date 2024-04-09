@@ -73,8 +73,10 @@ func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) (JSONOut
 
 	vulns := make([]Vulnerability, 0, len(resources.Tested)+len(resources.Untested))
 
-	for id, vuln := range resources.Vulnerabilities {
-		severityWithoutCritical := vuln.SeverityLevel
+	sortedVulns := SortVulns(resources.Vulnerabilities)
+
+	for i := range sortedVulns {
+		severityWithoutCritical := sortedVulns[i].SeverityLevel
 
 		if severityWithoutCritical == snykclient.CriticalSeverity {
 			severityWithoutCritical = snykclient.HighSeverity
@@ -82,29 +84,31 @@ func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) (JSONOut
 
 		var cve, cwe []string
 
-		if vuln.CVE != "" {
-			cve = append(cve, vuln.CVE)
+		if sortedVulns[i].CVE != "" {
+			cve = append(cve, sortedVulns[i].CVE)
 		}
 
-		if vuln.CWE != "" {
-			cve = append(cve, vuln.CWE)
+		if sortedVulns[i].CWE != "" {
+			cve = append(cve, sortedVulns[i].CWE)
 		}
 
-		for pid := range resources.Packages {
+		for pid := range sortedVulns[i].Packages {
+			packages := sortedVulns[i].Packages
+
 			vulns = append(vulns, Vulnerability{
-				ID:          id,
-				PackageName: pid,
-				Name:        resources.Packages[pid].Name,
-				Version:     resources.Packages[pid].Version,
+				ID:          sortedVulns[i].ID,
+				PackageName: packages[pid].Name,
+				Name:        packages[pid].Name,
+				Version:     packages[pid].Version,
 
-				Title: resources.Vulnerabilities[id].Title,
+				Title: sortedVulns[i].Title,
 
-				CreationTime:     vuln.CreatedAt,
-				PublicationTime:  vuln.PublishedAt,
-				DisclosureTime:   vuln.DisclosedAt,
-				ModificationTime: vuln.ModifiedAt,
+				CreationTime:     sortedVulns[i].CreatedAt,
+				PublicationTime:  sortedVulns[i].PublishedAt,
+				DisclosureTime:   sortedVulns[i].DisclosedAt,
+				ModificationTime: sortedVulns[i].ModifiedAt,
 
-				Exploit: vuln.Exploit,
+				Exploit: sortedVulns[i].Exploit,
 
 				Identifiers: Identifier{
 					CVE: cve,
@@ -112,14 +116,14 @@ func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) (JSONOut
 				},
 
 				SemVer: SemVer{
-					Vulnerable: vuln.SemVer,
+					Vulnerable: sortedVulns[i].SemVer,
 				},
 
-				CVSSv3:    vuln.CVSSv3,
-				CVSSScore: vuln.CVSSscore,
+				CVSSv3:    sortedVulns[i].CVSSv3,
+				CVSSScore: sortedVulns[i].CVSSscore,
 
 				Severity:             severityWithoutCritical.String(),
-				SeverityWithCritical: vuln.SeverityLevel.String(),
+				SeverityWithCritical: sortedVulns[i].SeverityLevel.String(),
 			})
 		}
 	}

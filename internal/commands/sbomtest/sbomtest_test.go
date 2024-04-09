@@ -20,7 +20,7 @@ import (
 	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
 )
 
-//go:embed testdata/sbom-test-result.response.json
+//go:embed testdata/humanReadable.input
 var testResultMockResponse []byte
 
 func TestSBOMTestWorkflow_NoExperimentalFlag(t *testing.T) {
@@ -34,7 +34,6 @@ func TestSBOMTestWorkflow_NoExperimentalFlag(t *testing.T) {
 func TestSBOMTestWorkflow_NoFileFlag(t *testing.T) {
 	mockICTX := createMockICTX(t)
 	mockICTX.GetConfiguration().Set("experimental", true)
-	mockICTX.GetConfiguration().Set("file", "testdata/humanReadable.input")
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
@@ -73,9 +72,7 @@ func TestSBOMTestWorkflow_SuccessPretty(t *testing.T) {
 	data := result[0]
 	assert.Equal(t, data.GetContentType(), "text/plain")
 
-	payloadBytes, ok := data.GetPayload().([]byte)
-	assert.True(t, ok)
-	assert.Contains(t, string(payloadBytes), "52 vulnerabilities")
+	snapshotter.SnapshotT(t, data.GetPayload())
 }
 
 func TestSBOMTestWorkflow_SuccessJSON(t *testing.T) {
@@ -87,23 +84,22 @@ func TestSBOMTestWorkflow_SuccessJSON(t *testing.T) {
 
 	mockSBOMService := svcmocks.NewMockSBOMServiceMultiResponse(responses, func(r *http.Request) {})
 	defer mockSBOMService.Close()
+
 	mockICTX := createMockICTXWithURL(t, mockSBOMService.URL)
 	mockICTX.GetConfiguration().Set("experimental", true)
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set("json", true)
 
 	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
-
 	require.NoError(t, err)
 
 	require.NotNil(t, result)
 	assert.Equal(t, len(result), 1)
+
 	data := result[0]
 	assert.Equal(t, data.GetContentType(), "application/json")
 
-	payloadBytes, ok := data.GetPayload().([]byte)
-	assert.True(t, ok)
-	assert.Contains(t, string(payloadBytes), `"total_vulnerabilities":52`)
+	snapshotter.SnapshotT(t, data.GetPayload())
 }
 
 // Helpers

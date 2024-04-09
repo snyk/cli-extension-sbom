@@ -1,5 +1,6 @@
-Testing ./fake/dir
-
+                      
+Testing ./fake/dir ...
+                      
 Packages:
 
   generic/java@1.8.0_362-b08

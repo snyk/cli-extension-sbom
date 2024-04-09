@@ -144,6 +144,14 @@ func SortVulns(vulns map[string]snykclient.VulnerabilityResource) []snykclient.V
 			return +1
 		}
 
+		if a.Packages[0].ID < b.Packages[0].ID {
+			return -1
+		}
+
+		if a.Packages[0].ID > b.Packages[0].ID {
+			return +1
+		}
+
 		return 0
 	})
 
