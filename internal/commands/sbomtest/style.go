@@ -2,6 +2,7 @@ package sbomtest
 
 import (
 	"fmt"
+	"html/template"
 
 	"github.com/charmbracelet/lipgloss"
 
@@ -24,6 +25,12 @@ var (
 	mediumStyle   = severityStyle.Copy().Foreground(yellow)
 	highStyle     = severityStyle.Copy().Foreground(red)
 	criticalStyle = severityStyle.Copy().Foreground(magenta)
+
+	BoxStyle = lipgloss.NewStyle().
+			PaddingLeft(2).
+			PaddingRight(4).
+			BorderStyle(lipgloss.RoundedBorder()).
+			BorderForeground(noColor)
 )
 
 func RenderUntestedComponent(ref, reason string) string {
@@ -52,3 +59,10 @@ func RenderTitle(severity snykclient.SeverityLevel, desc string) string {
 
 	return fmt.Sprintf("%s %s", style.Render(severityText), SectionStyle.Render(desc))
 }
+
+var SummaryTemplate *template.Template = template.Must(template.New("summary").Parse(`{{.Title}}
+  Organization:    {{.Org}}
+  Test type:       {{.Type}}
+  Path:            {{.Path}}
+
+  Open issues:     {{.OpenIssues}}`))

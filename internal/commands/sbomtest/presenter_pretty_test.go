@@ -26,7 +26,7 @@ func TestPresenter_asHumanReadable(t *testing.T) {
 		body.Included,
 	)
 
-	result := sbomtest.AsHumanReadable("./fake/dir", resources, true, "CE818710-454E-49A5-8B6D-B7A8CBBED406", body.Data.Attributes.Summary)
+	result, _ := sbomtest.AsHumanReadable("./fake/dir", resources, true, "CE818710-454E-49A5-8B6D-B7A8CBBED406", body.Data.Attributes.Summary)
 
 	snapshotter.SnapshotT(t, result)
 }

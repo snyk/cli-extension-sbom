@@ -1,8 +1,11 @@
 package sbomtest
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -17,15 +20,18 @@ func renderPrettyResult(path string, body *snykclient.GetSBOMTestResultResponseB
 		body.Included,
 	)
 
-	output := AsHumanReadable(path, resources, printDeps, org, body.Data.Attributes.Summary)
+	output, err := AsHumanReadable(path, resources, printDeps, org, body.Data.Attributes.Summary)
 
-	return []byte(output), MIMETypeText, nil
+	return []byte(output), MIMETypeText, err
 }
 
-func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool, org string, sum snykclient.SBOMTestRunSummary) string {
+func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool, org string, sum snykclient.SBOMTestRunSummary) (string, error) {
 	intro := SprintIntro(path)
 
-	summary := SprintSummary(resources, org, path, sum)
+	summary, err := SprintSummary(resources, org, path, sum)
+	if err != nil {
+		return "", err
+	}
 
 	var untestedSection string
 	if len(resources.Untested) > 0 {
@@ -33,7 +39,7 @@ func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool
 	}
 
 	if len(resources.Tested) == 0 {
-		return fmt.Sprintf("%s%s%s\n\n", intro, untestedSection, summary)
+		return fmt.Sprintf("%s%s%s\n\n", intro, untestedSection, summary), nil
 	}
 
 	var depsSection string
@@ -43,7 +49,9 @@ func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool
 	}
 
 	issuesSection := SprintIssues(resources)
-	return fmt.Sprintf("%s%s%s%s\n%s\n", intro, depsSection, untestedSection, issuesSection, summary)
+
+	result := fmt.Sprintf("%s%s%s%s\n%s\n", intro, depsSection, untestedSection, issuesSection, summary)
+	return result, nil
 }
 
 func SprintIntro(filepath string) string {
@@ -61,34 +69,55 @@ func SprintUntestedComponents(resources snykclient.Resources) string {
 -------------------------------------------------------`, result)
 }
 
-func SprintSummary(resources snykclient.Resources, org, filepath string, sum snykclient.SBOMTestRunSummary) string {
-	var out string
+func SprintSummary(resources snykclient.Resources, org, filepath string, sum snykclient.SBOMTestRunSummary) (string, error) {
+	var buff bytes.Buffer
 
-	theIssues := fmt.Sprintf("%d [ ", sum.TotalIssues)
+	err := SummaryTemplate.Execute(&buff, struct {
+		Title string
+
+		Org  string
+		Type string
+		Path string
+
+		OpenIssues string
+	}{
+		Title: SectionStyle.Render("Test summary"),
+		Org:   org,
+		Type:  "Software Bill of Materials",
+		Path:  filepath,
+
+		OpenIssues: SprintIssueCounter(sum),
+	})
+	if err != nil {
+		return "", err
+	}
+
+	details, err := io.ReadAll(&buff)
+	if err != nil {
+		return "", err
+	}
+
+	return BoxStyle.Render(string(details)), nil
+}
+
+func SprintIssueCounter(sum snykclient.SBOMTestRunSummary) string {
+	result := fmt.Sprintf("%s [ ", SectionStyle.Render(strconv.Itoa(sum.TotalIssues)))
 	if sum.VulnerabilitiesBySeverity.Critical > 0 {
-		theIssues += criticalStyle.Render(fmt.Sprintf("%d %s", sum.VulnerabilitiesBySeverity.Critical, snykclient.CriticalSeverity))
+		result += criticalStyle.Render(fmt.Sprintf("%d %s", sum.VulnerabilitiesBySeverity.Critical, snykclient.CriticalSeverity))
 	}
 	if sum.VulnerabilitiesBySeverity.High > 0 {
-		theIssues += highStyle.Render(fmt.Sprintf("  %d %s", sum.VulnerabilitiesBySeverity.High, snykclient.HighSeverity))
+		result += highStyle.Render(fmt.Sprintf("  %d %s", sum.VulnerabilitiesBySeverity.High, snykclient.HighSeverity))
 	}
 	if sum.VulnerabilitiesBySeverity.Medium > 0 {
-		theIssues += mediumStyle.Render(fmt.Sprintf("  %d %s", sum.VulnerabilitiesBySeverity.Medium, snykclient.MediumSeverity))
+		result += mediumStyle.Render(fmt.Sprintf("  %d %s", sum.VulnerabilitiesBySeverity.Medium, snykclient.MediumSeverity))
 	}
 	if sum.VulnerabilitiesBySeverity.Low > 0 {
-		theIssues += lowStyle.Render(fmt.Sprintf("  %d %s", sum.VulnerabilitiesBySeverity.Low, snykclient.LowSeverity))
+		result += lowStyle.Render(fmt.Sprintf("  %d %s", sum.VulnerabilitiesBySeverity.Low, snykclient.LowSeverity))
 	}
 
-	theIssues += " ]"
+	result += " ]"
 
-	out += SectionStyle.Render("Test summary")
-	out += "\n\n"
-	out += fmt.Sprintf("  %-15s %s\n", "Organization:", org)
-	out += fmt.Sprintf("  %-15s %s\n", "Test type:", "Software Bill of Materials")
-	out += fmt.Sprintf("  %-15s %s\n", "Path:", filepath)
-	out += "\n"
-	out += fmt.Sprintf("  %-15s %s\n", "Open issues:", theIssues)
-
-	return out
+	return result
 }
 
 func SprintDependencies(resources snykclient.Resources) string {
