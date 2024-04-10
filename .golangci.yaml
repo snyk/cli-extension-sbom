@@ -119,3 +119,6 @@ issues:
         - bodyclose
         - goconst
         - ireturn
+    - path: internal/view/(.+)_test\.go
+      linters:
+        - testpackage
