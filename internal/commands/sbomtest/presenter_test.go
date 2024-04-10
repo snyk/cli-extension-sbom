@@ -22,7 +22,7 @@ func TestPresenter_Pretty(t *testing.T) {
 	fd, err := os.Open("testdata/humanReadable.input")
 	require.NoError(t, err)
 
-	var body snykclient.GetSBOMTestResultResponseBody
+	var body snykclient.SBOMTestResultResourceDocument
 	err = json.NewDecoder(fd).Decode(&body)
 	require.NoError(t, err)
 
@@ -41,7 +41,7 @@ func TestPresenter_JSON(t *testing.T) {
 	fd, err := os.Open("testdata/humanReadable.input")
 	require.NoError(t, err)
 
-	var body snykclient.GetSBOMTestResultResponseBody
+	var body snykclient.SBOMTestResultResourceDocument
 	err = json.NewDecoder(fd).Decode(&body)
 	require.NoError(t, err)
 

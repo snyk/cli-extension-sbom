@@ -2,57 +2,45 @@
 package snykclient
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 )
 
-type CreateSBOMTestRunResponseBody struct {
-	JSONAPI *JSONAPI                       `json:"jsonapi,omitempty"`
-	Data    *CreateSBOMTestRunResponseData `json:"data,omitempty"`
+type SBOMTestResourceDocument struct {
+	JSONAPI *JSONAPI `json:"jsonapi"`
+	Data    struct {
+		ID   string `json:"id"`
+		Type string `json:"type"`
+	} `json:"data,omitempty"`
 }
 
-type CreateSBOMTestRunResponseData struct {
-	ID   string `json:"id"`
-	Type string `json:"type"`
+type SBOMTestSummary struct {
+	Tested                    []string            `json:"tested"`
+	Untested                  []UntestedComponent `json:"untested"`
+	TotalIssues               int                 `json:"total_issues"`
+	TotalLicenseIssues        int                 `json:"total_license_issues"`
+	TotalVulnerabilities      int                 `json:"total_vulnerabilities"`
+	VulnerabilitiesBySeverity struct {
+		Critical int `json:"critical"`
+		High     int `json:"high"`
+		Medium   int `json:"medium"`
+		Low      int `json:"low"`
+	} `json:"vulnerabilities_by_severity"`
 }
 
-type SBOMTestRunSummary struct {
-	Tested                    []string                  `json:"tested"`
-	Untested                  []UnsupportedComponent    `json:"untested"`
-	TotalIssues               int                       `json:"total_issues"`
-	TotalLicenseIssues        int                       `json:"total_license_issues"`
-	TotalVulnerabilities      int                       `json:"total_vulnerabilities"`
-	VulnerabilitiesBySeverity VulnerabilitiesBySeverity `json:"vulnerabilities_by_severity"`
+type SBOMTestAttributes struct {
+	SBOM struct {
+		SBOMFormat string `json:"format"`
+	} `json:"sbom"`
+	Summary *SBOMTestSummary `json:"test_summary"`
 }
 
-type UnsupportedComponent struct {
-	BOMRef string `json:"bom_ref,omitempty"`
-	Reason string `json:"reason,omitempty"`
+type SBOMTestStatusResourceDocument struct {
+	JSONAPI *JSONAPI                `json:"jsonapi,omitempty"`
+	Data    *SBOMTestStatusResource `json:"data,omitempty"`
 }
 
-type VulnerabilitiesBySeverity struct {
-	Critical int `json:"critical"`
-	High     int `json:"high"`
-	Medium   int `json:"medium"`
-	Low      int `json:"low"`
-}
-
-type SBOMMetaData struct {
-	SBOMFormat string `json:"format"`
-}
-
-type SBOMTestRunAttributes struct {
-	SBOM    SBOMMetaData       `json:"sbom"`
-	Summary SBOMTestRunSummary `json:"test_summary"`
-}
-
-type GetSBOMTestStatusResponseBody struct {
-	JSONAPI *JSONAPI                       `json:"jsonapi,omitempty"`
-	Data    *GetSBOMTestStatusResponseData `json:"data,omitempty"`
-}
-
-type GetSBOMTestStatusResponseData struct {
+type SBOMTestStatusResource struct {
 	ID         string                   `json:"id"`
 	Type       string                   `json:"type"`
 	Attributes SBOMTestStatusAttributes `json:"attributes"`
@@ -62,70 +50,125 @@ type SBOMTestStatusAttributes struct {
 	Status string `json:"status"`
 }
 
-type GetSBOMTestResultResponseBody struct {
-	JSONAPI  *JSONAPI                       `json:"jsonapi,omitempty"`
-	Data     *GetSBOMTestResultResponseData `json:"data,omitempty"`
-	Included []*Includes                    `json:"included,omitempty"`
-}
-
-type SeverityLevel int
-
-func (l SeverityLevel) String() string {
-	switch l {
-	default:
-		return ""
-	case LowSeverity:
-		return "LOW"
-	case MediumSeverity:
-		return "MEDIUM"
-	case HighSeverity:
-		return "HIGH"
-	case CriticalSeverity:
-		return "CRITICAL"
-	}
-}
-
-func (l *SeverityLevel) UnmarshalJSON(b []byte) error {
-	var sev string
-	if err := json.Unmarshal(b, &sev); err != nil {
-		return err
-	}
-
-	switch sev {
-	default:
-		return fmt.Errorf("invalid severity level: %s", sev)
-	case "low":
-		*l = LowSeverity
-	case "medium":
-		*l = MediumSeverity
-	case "high":
-		*l = HighSeverity
-	case "critical":
-		*l = CriticalSeverity
-	}
-
-	return nil
+type SBOMTestResultResourceDocument struct {
+	JSONAPI  *JSONAPI                 `json:"jsonapi,omitempty"`
+	Data     *SBOMTestResultsResource `json:"data,omitempty"`
+	Included []*IncludedResource      `json:"included,omitempty"`
 }
 
 const (
-	LowSeverity SeverityLevel = iota
-	MediumSeverity
-	HighSeverity
-	CriticalSeverity
+	ResourceTypePackages        = "packages"
+	ResourceTypeRemedies        = "remedies"
+	ResourceTypeVulnerabilities = "vulnerabilities"
 )
 
-type SortedView struct {
-	Packages, Remedies, Vulnerabilities []*Includes
-	Relationship                        map[string]string
+func (doc *SBOMTestResultResourceDocument) AsUsable() *TheActualUsableThing {
+	resources := TheActualUsableThing{
+		Summary:         doc.Data.Attributes.Summary,
+		Packages:        make(map[string]Package),
+		Vulnerabilities: make(map[string]Vulnerability),
+	}
+
+	remedies := map[string][]string{}
+
+	// extract all included resources
+	for _, res := range doc.Included {
+		switch res.Type {
+		case ResourceTypePackages:
+			resources.Packages[res.ID] = Package{
+				ID:      res.ID,
+				Name:    res.Attributes.Name,
+				Version: res.Attributes.Version,
+				PURL:    res.Attributes.Purl,
+			}
+
+		case ResourceTypeVulnerabilities:
+			// doing something with a vuln here
+			var slots Slots
+			switch {
+			case len(res.Attributes.Slots) == 1:
+				slots = res.Attributes.Slots[0]
+
+			case len(res.Attributes.Slots) > 1:
+				// TODO(dekelund): handle this scenario
+				panic(fmt.Sprintf("unexpected number of slots for %s", res.ID))
+			}
+
+			var cve, cwe string
+			for i := range res.Attributes.Problems {
+				switch res.Attributes.Problems[i].Source {
+				case "CWE":
+					cwe = res.Attributes.Problems[i].ID
+
+				case "cve":
+					cve = res.Attributes.Problems[i].ID
+				}
+			}
+
+			var cvssScore float64
+			var cvssV3 string
+
+			for i := range res.Attributes.Severities {
+				switch res.Attributes.Severities[i].Source {
+				case "Snyk":
+					cvssScore = res.Attributes.Severities[i].Score
+					cvssV3 = res.Attributes.Severities[i].Vector
+				default:
+					break
+				}
+			}
+
+			resources.Vulnerabilities[res.ID] = Vulnerability{
+				ID: res.ID,
+
+				Name:    res.Attributes.Name,
+				Version: res.Attributes.Version,
+				PURL:    res.Attributes.Purl,
+				Title:   res.Attributes.Title,
+
+				CreatedAt:  res.Attributes.CreatedAt,
+				ModifiedAt: res.Attributes.UpdatedAt,
+
+				DisclosedAt: time.Time(slots.DisclosureTime),
+				PublishedAt: time.Time(slots.PublicationTime),
+
+				Exploit: slots.Exploit,
+
+				CVE: cve,
+				CWE: cwe,
+
+				CVSSv3:    cvssV3,
+				CVSSscore: cvssScore,
+
+				SeverityLevel: res.Attributes.EffectiveSeverityLevel,
+			}
+
+		case ResourceTypeRemedies:
+			pkgs := remedies[res.Relationships.Vulnerability.Data.ID]
+			pkgs = append(pkgs, res.Relationships.AffectedPackage.Data.ID)
+			remedies[res.Relationships.Vulnerability.Data.ID] = pkgs
+		}
+	}
+
+	for vulnID, pkgs := range remedies {
+		vuln := resources.Vulnerabilities[vulnID]
+		for _, pkgID := range pkgs {
+			pkg := resources.Packages[pkgID]
+
+			pkg.Vulnerabilities = append(pkg.Vulnerabilities, &vuln)
+			vuln.Packages = append(vuln.Packages, &pkg)
+
+			vuln.SemVer = append(vuln.SemVer, pkg.Version)
+
+			resources.Packages[pkgID] = pkg
+			resources.Vulnerabilities[vulnID] = vuln
+		}
+	}
+
+	return &resources
 }
 
-const (
-	Packages        = "packages"
-	Remedies        = "remedies"
-	Vulnerabilities = "vulnerabilities"
-)
-
-type Includes struct {
+type IncludedResource struct {
 	Type string `json:"type"`
 	ID   string `json:"id"`
 
@@ -200,50 +243,10 @@ type Slots struct {
 	} `json:"references"`
 }
 
-type Vulnerability struct {
-	ID         string                  `json:"id"`
-	Type       string                  `json:"type"`
-	Attributes VulnerabilityAttributes `json:"attributes"`
-}
-
-type VulnerabilityAttributes struct {
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-	Problems    []struct {
-		ID     string `json:"id"`
-		Source string `json:"source"`
-	} `json:"problems"`
-	Coordinates []struct {
-		Remedies []struct {
-			Description string `json:"description"`
-			Details     struct {
-				UpgradePackage string `json:"upgrade_package"`
-			} `json:"details"`
-			Type string `json:"type"`
-		} `json:"remedies"`
-		Representation []struct {
-			ResourcePath string `json:"resource_path"`
-		} `json:"representation"`
-	} `json:"coordinates"`
-	Severities []struct {
-		Source string        `json:"source"`
-		Level  SeverityLevel `json:"level"`
-		Score  float32       `json:"score"`
-		Vector string        `json:"vector"`
-	} `json:"severities"`
-	EffectiveSeverityLevel SeverityLevel `json:"effective_severity_level"`
-	Slots                  []struct {
-		DisclosureTime  time.Time `json:"disclosure_time"`
-		PublicationTime time.Time `json:"publication_time"`
-	} `json:"slots"`
-}
-
-type GetSBOMTestResultResponseData struct {
+type SBOMTestResultsResource struct {
 	ID            string                      `json:"id"`
 	Type          string                      `json:"type"`
-	Attributes    SBOMTestRunAttributes       `json:"attributes"`
+	Attributes    SBOMTestAttributes          `json:"attributes"`
 	Relationships SBOMTestResultRelationships `json:"relationships"`
 }
 
@@ -279,11 +282,11 @@ func (t *SBOMTime) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-type VulnerabilityResource struct {
+type Vulnerability struct {
 	ID, Name, Version, PURL string
 
 	Title    string
-	Packages []*PackageResource
+	Packages []*Package
 
 	CreatedAt   time.Time
 	DisclosedAt time.Time
@@ -303,35 +306,47 @@ type VulnerabilityResource struct {
 	SeverityLevel SeverityLevel
 }
 
-type PackageResource struct {
-	ID, Name, Version, PURL string
-	Vulnerabilities         []*VulnerabilityResource
+type Package struct {
+	ID              string
+	Name            string
+	Version         string
+	PURL            string
+	Vulnerabilities []*Vulnerability
 }
 
-type UnsupportedComponentResource struct {
+type UntestedComponent struct {
 	BOMRef string
 	Reason string
 }
 
 type Resources struct {
 	Tested          []string
-	Untested        []UnsupportedComponentResource
-	Packages        map[string]PackageResource
-	Vulnerabilities map[string]VulnerabilityResource
+	Untested        []UntestedComponent
+	Packages        map[string]Package
+	Vulnerabilities map[string]Vulnerability
 }
 
-func ToResources(tested []string, untested []UnsupportedComponent, includes []*Includes) Resources {
+type TheActualUsableThing struct {
+	Summary         *SBOMTestSummary
+	Packages        map[string]Package
+	Vulnerabilities map[string]Vulnerability
+}
+
+// ToResources maps the JSON:API data to more usable data structures.
+//
+// Deprecated: Use SBOMTestResultResource.ToUsable() instead.
+func ToResources(tested []string, untested []UntestedComponent, includes []*IncludedResource) Resources {
 	resources := Resources{
 		Tested:          make([]string, len(tested)),
-		Untested:        make([]UnsupportedComponentResource, len(untested)),
-		Packages:        make(map[string]PackageResource),
-		Vulnerabilities: make(map[string]VulnerabilityResource),
+		Untested:        make([]UntestedComponent, len(untested)),
+		Packages:        make(map[string]Package),
+		Vulnerabilities: make(map[string]Vulnerability),
 	}
 
 	_ = copy(resources.Tested, tested)
 
 	for i, uc := range untested {
-		resources.Untested[i] = UnsupportedComponentResource(uc)
+		resources.Untested[i] = UntestedComponent(uc)
 	}
 
 	remedies := map[string][]string{}
@@ -349,15 +364,15 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 		}
 
 		switch val.Type {
-		case Packages:
-			resources.Packages[val.ID] = PackageResource{
+		case ResourceTypePackages:
+			resources.Packages[val.ID] = Package{
 				ID:      val.ID,
 				Name:    val.Attributes.Name,
 				Version: val.Attributes.Version,
 				PURL:    val.Attributes.Purl,
 			}
 
-		case Vulnerabilities:
+		case ResourceTypeVulnerabilities:
 			var cve, cwe string
 
 			for i := range val.Attributes.Problems {
@@ -383,7 +398,7 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 				}
 			}
 
-			resources.Vulnerabilities[val.ID] = VulnerabilityResource{
+			resources.Vulnerabilities[val.ID] = Vulnerability{
 				ID: val.ID,
 
 				Name:    val.Attributes.Name,
@@ -408,7 +423,7 @@ func ToResources(tested []string, untested []UnsupportedComponent, includes []*I
 				SeverityLevel: val.Attributes.EffectiveSeverityLevel,
 			}
 
-		case Remedies:
+		case ResourceTypeRemedies:
 			pkgs := remedies[val.Relationships.Vulnerability.Data.ID]
 			pkgs = append(pkgs, val.Relationships.AffectedPackage.Data.ID)
 			remedies[val.Relationships.Vulnerability.Data.ID] = pkgs

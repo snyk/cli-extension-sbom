@@ -13,7 +13,7 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
-func renderPrettyResult(path string, body *snykclient.GetSBOMTestResultResponseBody, printDeps bool, org string) (data []byte, contentType string, err error) {
+func renderPrettyResult(path string, body *snykclient.SBOMTestResultResourceDocument, printDeps bool, org string) (data []byte, contentType string, err error) {
 	resources := snykclient.ToResources(
 		body.Data.Attributes.Summary.Tested,
 		body.Data.Attributes.Summary.Untested,
@@ -25,7 +25,7 @@ func renderPrettyResult(path string, body *snykclient.GetSBOMTestResultResponseB
 	return []byte(output), MIMETypeText, err
 }
 
-func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool, org string, sum snykclient.SBOMTestRunSummary) (string, error) {
+func AsHumanReadable(path string, resources snykclient.Resources, printDeps bool, org string, sum *snykclient.SBOMTestSummary) (string, error) {
 	intro := SprintIntro(path)
 
 	summary, err := SprintSummary(resources, org, path, sum)
@@ -69,7 +69,7 @@ func SprintUntestedComponents(resources snykclient.Resources) string {
 -------------------------------------------------------`, result)
 }
 
-func SprintSummary(resources snykclient.Resources, org, filepath string, sum snykclient.SBOMTestRunSummary) (string, error) {
+func SprintSummary(resources snykclient.Resources, org, filepath string, sum *snykclient.SBOMTestSummary) (string, error) {
 	var buff bytes.Buffer
 
 	err := SummaryTemplate.Execute(&buff, struct {
@@ -100,7 +100,7 @@ func SprintSummary(resources snykclient.Resources, org, filepath string, sum sny
 	return BoxStyle.Render(string(details)), nil
 }
 
-func SprintIssueCounter(sum snykclient.SBOMTestRunSummary) string {
+func SprintIssueCounter(sum *snykclient.SBOMTestSummary) string {
 	result := fmt.Sprintf("%s [ ", SectionStyle.Render(strconv.Itoa(sum.TotalIssues)))
 	if sum.VulnerabilitiesBySeverity.Critical > 0 {
 		result += criticalStyle.Render(fmt.Sprintf("%d %s", sum.VulnerabilitiesBySeverity.Critical, snykclient.CriticalSeverity))
@@ -193,14 +193,14 @@ func SprintIssue(title, id string, introducedBy []string, severity snykclient.Se
 `, RenderTitle(severity, title), strings.Join(introducedBy, ","), id)
 }
 
-func SortVulns(vulns map[string]snykclient.VulnerabilityResource) []snykclient.VulnerabilityResource {
-	result := make([]snykclient.VulnerabilityResource, 0, len(vulns))
+func SortVulns(vulns map[string]snykclient.Vulnerability) []snykclient.Vulnerability {
+	result := make([]snykclient.Vulnerability, 0, len(vulns))
 
 	for id := range vulns {
 		result = append(result, vulns[id])
 	}
 
-	slices.SortFunc(result, func(a, b snykclient.VulnerabilityResource) int {
+	slices.SortFunc(result, func(a, b snykclient.Vulnerability) int {
 		if a.SeverityLevel != b.SeverityLevel {
 			return int(a.SeverityLevel - b.SeverityLevel)
 		}

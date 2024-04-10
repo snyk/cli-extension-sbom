@@ -63,7 +63,7 @@ func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte) (*SBOM
 		return nil, err
 	}
 
-	var body CreateSBOMTestRunResponseBody
+	var body SBOMTestResourceDocument
 	if err := parseResponse(rsp, http.StatusCreated, &body); err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte) (*SBOM
 	}, nil
 }
 
-func (t *SBOMTest) GetResult(ctx context.Context) (*GetSBOMTestResultResponseBody, error) {
+func (t *SBOMTest) GetResult(ctx context.Context) (*SBOMTestResultResourceDocument, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, t.resultsURL(), http.NoBody)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func (t *SBOMTest) GetResult(ctx context.Context) (*GetSBOMTestResultResponseBod
 		return nil, err
 	}
 
-	var body GetSBOMTestResultResponseBody
+	var body SBOMTestResultResourceDocument
 	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
 		return nil, err
 	}
@@ -114,7 +114,7 @@ func (t *SBOMTest) GetStatus(ctx context.Context) (SBOMTestStatus, error) {
 		return SBOMTestStatusIndeterminate, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	var body GetSBOMTestStatusResponseBody
+	var body SBOMTestStatusResourceDocument
 	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
 		return SBOMTestStatusIndeterminate, err
 	}

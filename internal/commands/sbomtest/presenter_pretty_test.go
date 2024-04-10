@@ -15,7 +15,7 @@ func TestPresenter_asHumanReadable(t *testing.T) {
 	fd, err := os.Open("testdata/humanReadable.input")
 	require.Nil(t, err)
 
-	var body snykclient.GetSBOMTestResultResponseBody
+	var body snykclient.SBOMTestResultResourceDocument
 
 	err = json.NewDecoder(fd).Decode(&body)
 	require.Nil(t, err)
@@ -26,13 +26,14 @@ func TestPresenter_asHumanReadable(t *testing.T) {
 		body.Included,
 	)
 
-	result, _ := sbomtest.AsHumanReadable("./fake/dir", resources, true, "CE818710-454E-49A5-8B6D-B7A8CBBED406", body.Data.Attributes.Summary)
+	result, err := sbomtest.AsHumanReadable("./fake/dir", resources, true, "CE818710-454E-49A5-8B6D-B7A8CBBED406", body.Data.Attributes.Summary)
+	require.NoError(t, err)
 
 	snapshotter.SnapshotT(t, result)
 }
 
 func TestSortVulns(t *testing.T) {
-	vulns := map[string]snykclient.VulnerabilityResource{
+	vulns := map[string]snykclient.Vulnerability{
 		"0": {
 			ID:            "0",
 			SeverityLevel: snykclient.MediumSeverity,

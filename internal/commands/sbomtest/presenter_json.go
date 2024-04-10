@@ -49,7 +49,7 @@ type (
 	}
 )
 
-func asJSON(result *snykclient.GetSBOMTestResultResponseBody) (data []byte, contentType string, err error) {
+func asJSON(result *snykclient.SBOMTestResultResourceDocument) (data []byte, contentType string, err error) {
 	contentType = MIMETypeJSON
 
 	jsonOutput := resultToJSONOutput(result)
@@ -62,7 +62,7 @@ func asJSON(result *snykclient.GetSBOMTestResultResponseBody) (data []byte, cont
 	return data, contentType, nil
 }
 
-func resultToJSONOutput(body *snykclient.GetSBOMTestResultResponseBody) JSONOutput {
+func resultToJSONOutput(body *snykclient.SBOMTestResultResourceDocument) JSONOutput {
 	resources := snykclient.ToResources(
 		body.Data.Attributes.Summary.Tested,
 		body.Data.Attributes.Summary.Untested,

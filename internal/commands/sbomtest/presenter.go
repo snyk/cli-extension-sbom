@@ -18,7 +18,7 @@ const (
 
 func Render(
 	path string,
-	body *snykclient.GetSBOMTestResultResponseBody,
+	body *snykclient.SBOMTestResultResourceDocument,
 	format presenterFormat,
 	printDeps bool,
 	org string,
