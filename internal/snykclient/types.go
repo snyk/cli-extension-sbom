@@ -62,20 +62,20 @@ const (
 	ResourceTypeVulnerabilities = "vulnerabilities"
 )
 
-func (doc *SBOMTestResultResourceDocument) AsUsable() *TheActualUsableThing {
-	resources := TheActualUsableThing{
+func (doc *SBOMTestResultResourceDocument) AsResult() *SBOMTestResult {
+	r := SBOMTestResult{
 		Summary:         doc.Data.Attributes.Summary,
 		Packages:        make(map[string]Package),
 		Vulnerabilities: make(map[string]Vulnerability),
 	}
 
-	remedies := map[string][]string{}
+	remedies := make([]*IncludedResource, 0)
 
 	// extract all included resources
-	for _, res := range doc.Included {
+	for i, res := range doc.Included {
 		switch res.Type {
 		case ResourceTypePackages:
-			resources.Packages[res.ID] = Package{
+			r.Packages[res.ID] = Package{
 				ID:      res.ID,
 				Name:    res.Attributes.Name,
 				Version: res.Attributes.Version,
@@ -118,7 +118,7 @@ func (doc *SBOMTestResultResourceDocument) AsUsable() *TheActualUsableThing {
 				}
 			}
 
-			resources.Vulnerabilities[res.ID] = Vulnerability{
+			r.Vulnerabilities[res.ID] = Vulnerability{
 				ID: res.ID,
 
 				Name:    res.Attributes.Name,
@@ -144,28 +144,29 @@ func (doc *SBOMTestResultResourceDocument) AsUsable() *TheActualUsableThing {
 			}
 
 		case ResourceTypeRemedies:
-			pkgs := remedies[res.Relationships.Vulnerability.Data.ID]
-			pkgs = append(pkgs, res.Relationships.AffectedPackage.Data.ID)
-			remedies[res.Relationships.Vulnerability.Data.ID] = pkgs
+			// pkgs := remedies[res.Relationships.Vulnerability.Data.ID]
+			// pkgs = append(pkgs, res.Relationships.AffectedPackage.Data.ID)
+			// remedies[res.Relationships.Vulnerability.Data.ID] = pkgs
+			remedies = append(remedies, doc.Included[i])
 		}
 	}
 
-	for vulnID, pkgs := range remedies {
-		vuln := resources.Vulnerabilities[vulnID]
-		for _, pkgID := range pkgs {
-			pkg := resources.Packages[pkgID]
+	// connect packages and vulnerabilities
+	for _, rem := range remedies {
+		vuln, vok := r.Vulnerabilities[rem.Relationships.Vulnerability.Data.ID]
+		pkg, pok := r.Packages[rem.Relationships.AffectedPackage.Data.ID]
 
-			pkg.Vulnerabilities = append(pkg.Vulnerabilities, &vuln)
-			vuln.Packages = append(vuln.Packages, &pkg)
-
-			vuln.SemVer = append(vuln.SemVer, pkg.Version)
-
-			resources.Packages[pkgID] = pkg
-			resources.Vulnerabilities[vulnID] = vuln
+		if !vok || !pok {
+			continue
 		}
+
+		pkg.Vulnerabilities = append(pkg.Vulnerabilities, &vuln)
+
+		vuln.Packages = append(vuln.Packages, &pkg)
+		vuln.SemVer = append(vuln.SemVer, pkg.Version)
 	}
 
-	return &resources
+	return &r
 }
 
 type IncludedResource struct {
@@ -283,10 +284,11 @@ func (t *SBOMTime) UnmarshalJSON(b []byte) error {
 }
 
 type Vulnerability struct {
-	ID, Name, Version, PURL string
-
-	Title    string
-	Packages []*Package
+	ID      string
+	Name    string
+	Version string
+	PURL    string
+	Title   string
 
 	CreatedAt   time.Time
 	DisclosedAt time.Time
@@ -304,6 +306,7 @@ type Vulnerability struct {
 	UpgradePath []any
 
 	SeverityLevel SeverityLevel
+	Packages      []*Package
 }
 
 type Package struct {
@@ -326,7 +329,7 @@ type Resources struct {
 	Vulnerabilities map[string]Vulnerability
 }
 
-type TheActualUsableThing struct {
+type SBOMTestResult struct {
 	Summary         *SBOMTestSummary
 	Packages        map[string]Package
 	Vulnerabilities map[string]Vulnerability
