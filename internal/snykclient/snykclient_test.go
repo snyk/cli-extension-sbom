@@ -1,9 +1,11 @@
 package snykclient_test
 
 import (
+	"bytes"
 	"context"
 	_ "embed"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,12 +13,16 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/mocks"
 	. "github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
 //go:embed testdata/sbom-test-result.response.json
 var testResultMockResponse []byte
+
+var logger = log.New(&bytes.Buffer{}, "", 0)
+var errFactory = errors.NewErrorFactory(logger)
 
 func TestNewSnykClient(t *testing.T) {
 	client := NewSnykClient(http.DefaultClient, "http://example.com", "org1")
@@ -44,7 +50,7 @@ func TestSnykClient_CreateSBOMTest(t *testing.T) {
 
 	client := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
 
-	sbomTest, err := client.CreateSBOMTest(context.Background(), []byte(sbomContent))
+	sbomTest, err := client.CreateSBOMTest(context.Background(), []byte(sbomContent), errFactory)
 
 	assert.NoError(t, err)
 	assert.Equal(t, "test-id", sbomTest.ID)
@@ -71,7 +77,7 @@ func TestSnykClient_GetStatus_RedirectToResults(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	status, err := sbomTest.GetStatus(context.Background())
+	status, err := sbomTest.GetStatus(context.Background(), errFactory)
 
 	assert.NoError(t, err)
 	assert.Equal(t, SBOMTestStatusFinished, status)
@@ -94,7 +100,7 @@ func TestSnykClient_GetStatus_Processing(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	status, err := sbomTest.GetStatus(context.Background())
+	status, err := sbomTest.GetStatus(context.Background(), errFactory)
 
 	assert.NoError(t, err)
 	assert.Equal(t, SBOMTestStatusProcessing, status)
@@ -117,7 +123,7 @@ func TestSnykClient_GetStatus_Error(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	status, err := sbomTest.GetStatus(context.Background())
+	status, err := sbomTest.GetStatus(context.Background(), errFactory)
 
 	assert.NoError(t, err)
 	assert.Equal(t, SBOMTestStatusError, status)
@@ -138,7 +144,7 @@ func TestSnykClient_ServerError(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	status, err := sbomTest.GetStatus(context.Background())
+	status, err := sbomTest.GetStatus(context.Background(), errFactory)
 
 	assert.ErrorContains(t, err, "unexpected status code")
 	assert.Equal(t, SBOMTestStatusIndeterminate, status)
@@ -161,7 +167,7 @@ func TestSnykClient_GetResults(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	result, err := sbomTest.GetResult(context.Background())
+	result, err := sbomTest.GetResult(context.Background(), errFactory)
 
 	assert.NoError(t, err)
 	assert.Equal(t, 133, result.Summary.TotalIssues)
@@ -187,7 +193,7 @@ func TestSBOMTest_WaitUntilComplete(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	err := sbomTest.WaitUntilCompleteWithBackoff(context.Background(), backoff)
+	err := sbomTest.WaitUntilCompleteWithBackoff(context.Background(), backoff, errFactory)
 
 	assert.NoError(t, err)
 	assert.Equal(t, numRequests, 6)
@@ -210,8 +216,9 @@ func TestSBOMTest_WaitUntilCompleteErrors(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	err := sbomTest.WaitUntilCompleteWithBackoff(context.Background(), backoff)
+	err := sbomTest.WaitUntilCompleteWithBackoff(context.Background(), backoff, errFactory)
 
-	assert.ErrorContains(t, err, "unexpected status code")
+	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis which is required to generate the SBOM. "+
+		"Should this issue persist, please reach out to customer support.")
 	assert.Equal(t, numRequests, 6)
 }

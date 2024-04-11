@@ -44,7 +44,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	for i, depGraph := range depGraphs {
 		depGraphBytes, err := getPayloadBytes(depGraph)
 		if err != nil {
-			return nil, errFactory.NewInternalError(err)
+			return nil, errFactory.NewDepGraphWorkflowError(err)
 		}
 		depGraphsBytes[i] = depGraphBytes
 	}
@@ -53,7 +53,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 			// Fall back to current working directory
 			wd, err := os.Getwd()
 			if err != nil {
-				return nil, errFactory.NewDepGraphWorkflowError(err)
+				return nil, errFactory.IndeterminateWorkingDirectory(err)
 			}
 			name = filepath.Base(wd)
 		}

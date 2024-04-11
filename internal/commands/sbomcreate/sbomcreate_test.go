@@ -110,8 +110,7 @@ func TestSBOMWorkflow_InvalidPayload(t *testing.T) {
 
 	_, err := sbomcreate.SBOMWorkflow(mockICTX, nil)
 
-	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis which is required to generate the SBOM. "+
-		"Should this issue persist, please reach out to customer support.")
+	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis needed to generate the SBOM.")
 }
 
 func TestSBOMWorkflow_DepGraphError(t *testing.T) {
