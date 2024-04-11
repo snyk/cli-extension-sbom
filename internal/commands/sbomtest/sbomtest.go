@@ -87,7 +87,7 @@ func TestWorkflow(
 
 	data, contentType, err := NewPresenter(ictx).Render(TestResult{
 		Summary: TestSummary{
-			TotalVulnerabilities: results.Data.Attributes.Summary.TotalVulnerabilities,
+			TotalVulnerabilities: results.Summary.TotalVulnerabilities,
 		},
 	})
 
