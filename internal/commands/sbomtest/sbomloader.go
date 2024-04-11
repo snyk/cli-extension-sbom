@@ -2,9 +2,9 @@ package sbomtest
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"os"
+
+	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
 
 func IsSBOMJSON(b []byte) bool {
@@ -13,31 +13,31 @@ func IsSBOMJSON(b []byte) bool {
 	return err == nil
 }
 
-func ReadSBOMFile(filename string) ([]byte, error) {
+func ReadSBOMFile(filename string, errFactory *errors.ErrorFactory) ([]byte, error) {
 	// Check if file exists
 	info, err := os.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, errors.New("file does not exist")
+			return nil, errFactory.NewMissingFilenameFlagError()
 		}
-		return nil, errors.New("failed to get file info")
+		return nil, errFactory.NewFailedToReadFileError(err)
 	}
 
 	// Check if it's a directory
 	if info.IsDir() {
-		return nil, errors.New("file is a directory")
+		return nil, errFactory.NewFileIsDirectoryError()
 	}
 
 	// Open file and read it
 	b, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, errors.New("failed to open file: " + err.Error())
+		return nil, errFactory.NewFailedToReadFileError(err)
 	}
 
 	isValidSBOM := IsSBOMJSON(b)
 
 	if !isValidSBOM {
-		return nil, fmt.Errorf("file is not a supported SBOM format")
+		return nil, errFactory.NewInvalidJSONError()
 	}
 
 	return b, nil
