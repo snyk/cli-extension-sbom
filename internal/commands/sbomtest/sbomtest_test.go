@@ -28,7 +28,7 @@ func TestSBOMTestWorkflow_NoExperimentalFlag(t *testing.T) {
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
-	assert.ErrorContains(t, err, "experimental flag not set")
+	assert.ErrorContains(t, err, "Flag `--experimental` is required to execute this command.")
 }
 
 func TestSBOMTestWorkflow_NoFileFlag(t *testing.T) {
@@ -37,7 +37,7 @@ func TestSBOMTestWorkflow_NoFileFlag(t *testing.T) {
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
-	assert.ErrorContains(t, err, "file flag not set")
+	assert.ErrorContains(t, err, "Flag `--file` is required to execute this command. Value should point to a valid SBOM document.")
 }
 
 func TestSBOMTestWorkflow_SupplyMissingFile(t *testing.T) {
@@ -47,7 +47,7 @@ func TestSBOMTestWorkflow_SupplyMissingFile(t *testing.T) {
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
-	assert.ErrorContains(t, err, "file does not exist")
+	assert.ErrorContains(t, err, "Flag `--file` is required to execute this command. Value should point to a valid SBOM document.")
 }
 
 func TestSBOMTestWorkflow_SuccessPretty(t *testing.T) {

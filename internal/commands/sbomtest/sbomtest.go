@@ -40,7 +40,7 @@ func TestWorkflow(
 
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
 	if !experimental {
-		return nil, fmt.Errorf("experimental flag not set")
+		return nil, errFactory.NewMissingExperimentalFlagError()
 	}
 
 	logger.Println("Getting preferred organization ID")
@@ -51,12 +51,12 @@ func TestWorkflow(
 	}
 
 	if filename == "" {
-		return nil, fmt.Errorf("file flag not set")
+		return nil, errFactory.NewMissingFilenameFlagError()
 	}
 
 	logger.Println("Target SBOM document:", filename)
 
-	bytes, err := ReadSBOMFile(filename)
+	bytes, err := ReadSBOMFile(filename, errFactory)
 	if err != nil {
 		return nil, err
 	}
@@ -66,21 +66,21 @@ func TestWorkflow(
 		config.GetString(configuration.API_URL),
 		orgID,
 	)
-	sbomTest, err := client.CreateSBOMTest(ctx, bytes)
+	sbomTest, err := client.CreateSBOMTest(ctx, bytes, errFactory)
 	if err != nil {
 		return nil, err
 	}
 
 	logger.Printf("Created SBOM test (ID %s), waiting for results...\n", sbomTest.ID)
 
-	err = sbomTest.WaitUntilComplete(ctx)
+	err = sbomTest.WaitUntilComplete(ctx, errFactory)
 	if err != nil {
 		return nil, err
 	}
 
 	logger.Print("Test complete, fetching results")
 
-	results, err := sbomTest.GetResult(ctx)
+	results, err := sbomTest.GetResult(ctx, errFactory)
 	if err != nil {
 		return nil, err
 	}
