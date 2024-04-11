@@ -1,6 +1,7 @@
 package severities
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -31,6 +32,22 @@ func (l Level) String() string {
 	case CriticalSeverity:
 		return "CRITICAL"
 	}
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface.
+func (l *Level) UnmarshalJSON(b []byte) error {
+	var sev string
+	err := json.Unmarshal(b, &sev)
+	if err != nil {
+		return err
+	}
+
+	*l, err = Parse(sev)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Parse returns corresponding SeverityLevel constant, or an error if

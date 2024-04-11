@@ -164,7 +164,7 @@ func TestSnykClient_GetResults(t *testing.T) {
 	result, err := sbomTest.GetResult(context.Background())
 
 	assert.NoError(t, err)
-	assert.Equal(t, 42, result.Data.Attributes.Summary.TotalIssues)
+	assert.Equal(t, 133, result.Summary.TotalIssues)
 }
 
 var backoff = func() {}

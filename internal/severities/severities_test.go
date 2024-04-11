@@ -1,9 +1,11 @@
 package severities_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/snyk/cli-extension-sbom/internal/severities"
 )
@@ -41,5 +43,27 @@ func TestParse_InvalidInput(t *testing.T) {
 	for _, input := range cases {
 		_, err := severities.Parse(input)
 		assert.Error(t, err)
+	}
+}
+
+func TestLevel_UnmarshalJSON(t *testing.T) {
+	tc := []struct {
+		marshaled string
+		expected  severities.Level
+	}{
+		{`"low"`, severities.LowSeverity},
+		{`"medium"`, severities.MediumSeverity},
+		{`"high"`, severities.HighSeverity},
+		{`"critical"`, severities.CriticalSeverity},
+	}
+
+	for _, tt := range tc {
+		t.Run(tt.marshaled, func(t *testing.T) {
+			var l severities.Level
+			err := json.Unmarshal([]byte(tt.marshaled), &l)
+			require.NoError(t, err)
+
+			assert.Equal(t, tt.expected, l)
+		})
 	}
 }
