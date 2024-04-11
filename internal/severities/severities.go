@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	LowSeverity Level = iota
+	LowSeverity Level = iota + 1
 	MediumSeverity
 	HighSeverity
 	CriticalSeverity
@@ -48,6 +48,10 @@ func (l *Level) UnmarshalJSON(b []byte) error {
 	}
 
 	return nil
+}
+
+func (l Level) MarshalJSON() ([]byte, error) {
+	return json.Marshal(strings.ToLower(l.String()))
 }
 
 // Parse returns corresponding SeverityLevel constant, or an error if

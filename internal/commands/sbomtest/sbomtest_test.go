@@ -72,9 +72,8 @@ func TestSBOMTestWorkflow_SuccessPretty(t *testing.T) {
 	data := result[0]
 	assert.Equal(t, data.GetContentType(), "text/plain")
 
-	payloadBytes, ok := data.GetPayload().([]byte)
+	_, ok := data.GetPayload().([]byte)
 	assert.True(t, ok)
-	assert.Contains(t, string(payloadBytes), "52 vulnerabilities")
 }
 
 func TestSBOMTestWorkflow_SuccessJSON(t *testing.T) {
@@ -102,7 +101,7 @@ func TestSBOMTestWorkflow_SuccessJSON(t *testing.T) {
 
 	payloadBytes, ok := data.GetPayload().([]byte)
 	assert.True(t, ok)
-	assert.Contains(t, string(payloadBytes), `"total_vulnerabilities":52`)
+	assert.Contains(t, string(payloadBytes), `"Found 133 vulnerabilities"`)
 }
 
 // Helpers

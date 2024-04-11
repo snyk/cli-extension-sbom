@@ -67,3 +67,10 @@ func TestLevel_UnmarshalJSON(t *testing.T) {
 		})
 	}
 }
+
+func TestLevel_MarshalJSON(t *testing.T) {
+	res, err := json.Marshal(severities.LowSeverity)
+	require.NoError(t, err)
+
+	assert.Equal(t, []byte(`"low"`), res)
+}

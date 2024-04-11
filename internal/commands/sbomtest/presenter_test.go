@@ -1,41 +1,48 @@
 package sbomtest_test
 
 import (
+	"bytes"
+	_ "embed"
+	"encoding/json"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
-	"github.com/stretchr/testify/assert"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/muesli/termenv"
 	"github.com/stretchr/testify/require"
 
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
+	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
+
+//go:embed testdata/sbom-test-result.response.json
+var response []byte
 
 var snapshotter = cupaloy.New(cupaloy.SnapshotSubdirectory("testdata/snapshots"))
 
-var mockResult = sbomtest.TestResult{ // TODO: assign the actual test result
-	Summary: sbomtest.TestSummary{TotalVulnerabilities: 42},
+var res snykclient.SBOMTestResultResourceDocument
+
+func init() {
+	if err := json.Unmarshal(response, &res); err != nil {
+		panic(err)
+	}
+	lipgloss.SetColorProfile(termenv.TrueColor)
 }
 
-func TestPresenter_Pretty(t *testing.T) {
-	mockICTX := createMockICTX(t)
-	mockICTX.GetConfiguration().Set("json", false)
-	presenter := sbomtest.NewPresenter(mockICTX)
+func Test_RenderPrettyResult(t *testing.T) {
+	var buf bytes.Buffer
 
-	data, contentType, err := presenter.Render(mockResult)
+	err := sbomtest.RenderPrettyResult(&buf, "e3ea3eb7-0e03-4373-ab7c-042e78182b79", "./path/to/sbom.cdx.json", res.AsResult())
 
 	require.NoError(t, err)
-	assert.Equal(t, "text/plain", contentType)
-	snapshotter.SnapshotT(t, data)
+	snapshotter.SnapshotT(t, buf.Bytes())
 }
 
-func TestPresenter_JSON(t *testing.T) {
-	mockICTX := createMockICTX(t)
-	mockICTX.GetConfiguration().Set("json", true)
-	presenter := sbomtest.NewPresenter(mockICTX)
+func Test_RenderJSONResult(t *testing.T) {
+	var buf bytes.Buffer
 
-	data, contentType, err := presenter.Render(mockResult)
+	err := sbomtest.RenderJSONResult(&buf, res.AsResult())
 
 	require.NoError(t, err)
-	assert.Equal(t, "application/json", contentType)
-	snapshotter.SnapshotT(t, data)
+	snapshotter.SnapshotT(t, buf.Bytes())
 }
