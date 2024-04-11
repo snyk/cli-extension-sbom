@@ -165,8 +165,12 @@ func (ef *ErrorFactory) NewInvalidJSONError() *SBOMExtensionError {
 }
 
 func (ef *ErrorFactory) NewFailedToTestSBOMError() *SBOMExtensionError {
+	return ef.NewFatalSBOMTestError(fmt.Errorf("failed to test SBOM"))
+}
+
+func (ef *ErrorFactory) NewFatalSBOMTestError(err error) *SBOMExtensionError {
 	return ef.newErr(
-		fmt.Errorf("failed to test SBOM"),
+		err,
 		"Failed to test SBOM. There was an error when trying to test your SBOM,"+
 			"retrying may resolve the issue. If the error still occurs, contact support.",
 	)

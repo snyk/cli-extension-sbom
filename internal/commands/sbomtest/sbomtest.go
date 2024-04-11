@@ -1,6 +1,7 @@
 package sbomtest
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 
@@ -56,7 +57,7 @@ func TestWorkflow(
 
 	logger.Println("Target SBOM document:", filename)
 
-	bytes, err := ReadSBOMFile(filename, errFactory)
+	bts, err := ReadSBOMFile(filename, errFactory)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +67,7 @@ func TestWorkflow(
 		config.GetString(configuration.API_URL),
 		orgID,
 	)
-	sbomTest, err := client.CreateSBOMTest(ctx, bytes, errFactory)
+	sbomTest, err := client.CreateSBOMTest(ctx, bts, errFactory)
 	if err != nil {
 		return nil, err
 	}
@@ -85,13 +86,22 @@ func TestWorkflow(
 		return nil, err
 	}
 
-	data, contentType, err := NewPresenter(ictx).Render(TestResult{
-		Summary: TestSummary{
-			TotalVulnerabilities: results.Summary.TotalVulnerabilities,
-		},
-	})
+	var ct string
+	var buf bytes.Buffer
 
-	return []workflow.Data{workflowData(data, contentType)}, err
+	if ictx.GetConfiguration().GetBool("json") {
+		if err := RenderJSONResult(&buf, results); err != nil { //nolint:govet // Shadowing err symbol not an issue.
+			return nil, errFactory.NewFatalSBOMTestError(err)
+		}
+		ct = MIMETypeJSON
+	} else {
+		if err := RenderPrettyResult(&buf, orgID, filename, results); err != nil { //nolint:govet // Shadowing err symbol not an issue.
+			return nil, errFactory.NewFatalSBOMTestError(err)
+		}
+		ct = MIMETypeText
+	}
+
+	return []workflow.Data{workflowData(buf.Bytes(), ct)}, err
 }
 
 func workflowData(data []byte, contentType string) workflow.Data {
