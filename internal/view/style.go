@@ -10,11 +10,10 @@ var (
 	magenta = lipgloss.AdaptiveColor{Light: "13", Dark: "5"}
 
 	// Severity styles renders severities combined with its color.
-	severityStyle = lipgloss.NewStyle()
-	lowStyle      = severityStyle.Copy().Foreground(defaultColor)
-	mediumStyle   = severityStyle.Copy().Foreground(yellow)
-	highStyle     = severityStyle.Copy().Foreground(red)
-	criticalStyle = severityStyle.Copy().Foreground(magenta)
+	lowStyle      = lipgloss.NewStyle().Foreground(defaultColor)
+	mediumStyle   = lipgloss.NewStyle().Foreground(yellow)
+	highStyle     = lipgloss.NewStyle().Foreground(red)
+	criticalStyle = lipgloss.NewStyle().Foreground(magenta)
 
 	sectionStyle = lipgloss.NewStyle().Bold(true)
 

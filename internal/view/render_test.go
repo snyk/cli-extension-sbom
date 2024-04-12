@@ -52,11 +52,12 @@ func TestRender(t *testing.T) {
 	path := "./sbom.dx"
 
 	summary := Summary{
-		Low:         1,
-		Medium:      1,
-		High:        1,
-		Critical:    1,
-		TotalIssues: 4,
+		Low:          1,
+		Medium:       1,
+		High:         1,
+		Critical:     1,
+		TotalIssues:  4,
+		UntestedPkgs: 2,
 	}
 
 	p := Presentation{
@@ -65,6 +66,56 @@ func TestRender(t *testing.T) {
 		Untested: untested,
 		Issues:   issues,
 		Summary:  summary,
+	}
+
+	_, err := Render(&buff, &p)
+	assert.NoError(t, err)
+
+	snapshotter.SnapshotT(t, buff.String())
+}
+
+func TestRender_nothingToTest(t *testing.T) {
+	var buff bytes.Buffer
+
+	org := "871BE73B-8763-4EEF-9C31-45B388FB05DA"
+	path := "./sbom.dx"
+
+	p := Presentation{
+		Org:      org,
+		Path:     path,
+		Untested: nil,
+		Issues:   nil,
+		Summary:  Summary{},
+	}
+
+	_, err := Render(&buff, &p)
+	assert.NoError(t, err)
+
+	snapshotter.SnapshotT(t, buff.String())
+}
+
+func TestRender_onlyUntestedPackages(t *testing.T) {
+	var buff bytes.Buffer
+
+	org := "871BE73B-8763-4EEF-9C31-45B388FB05DA"
+	path := "./sbom.dx"
+
+	untested := []Component{{
+		Reference: "fa08b68d9188550d",
+		Info:      "component must have a PackageUR",
+	}, {
+		Reference: "amzn",
+		Info:      "component must have a PackageURL",
+	}}
+
+	p := Presentation{
+		Org:      org,
+		Path:     path,
+		Untested: untested,
+		Issues:   nil,
+		Summary: Summary{
+			UntestedPkgs: 2,
+		},
 	}
 
 	_, err := Render(&buff, &p)

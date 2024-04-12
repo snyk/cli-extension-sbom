@@ -6,6 +6,8 @@ import (
 	"html/template"
 	"strings"
 
+	"github.com/charmbracelet/lipgloss"
+
 	"github.com/snyk/cli-extension-sbom/internal/severities"
 )
 
@@ -30,11 +32,23 @@ type issuesComponent struct {
 	str string
 }
 
+func renderSeverity(style lipgloss.Style, severity string) string {
+	return style.Render(
+		fmt.Sprintf("× [%s]", severity),
+	)
+}
+
 // generateIssues constructs a list of issues and severities and generates it's
 // string representation intended for human readable output.
 //
 // Function returns an error if generation of string representation fails.
 func generateIssues(issues ...OpenIssue) (*issuesComponent, error) {
+	if len(issues) == 0 {
+		return &issuesComponent{
+			str: "🎉 No issues found. Awesome!",
+		}, nil
+	}
+
 	result := issuesComponent{
 		title:  sectionStyle.Render("Open issues:"),
 		issues: make([]openIssue, len(issues)),
@@ -58,9 +72,7 @@ func generateIssues(issues ...OpenIssue) (*issuesComponent, error) {
 		}
 
 		result.issues[i] = openIssue{
-			Severity: style.Render(
-				fmt.Sprintf("× [%s]", issues[i].Severity.String()),
-			),
+			Severity:    renderSeverity(style, issues[i].Severity.String()),
 			Description: sectionStyle.Render(issues[i].Description),
 			SnykRef:     issues[i].SnykRef,
 		}
