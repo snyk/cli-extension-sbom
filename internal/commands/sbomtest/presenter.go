@@ -57,12 +57,6 @@ func resultToJSONOutput(res *snykclient.SBOMTestResult) JSONOutput {
 	vulns := make([]Vulnerability, 0, len(res.Vulnerabilities))
 
 	for _, vuln := range res.Vulnerabilities {
-		severityWithoutCritical := vuln.SeverityLevel
-
-		if severityWithoutCritical == severities.CriticalSeverity {
-			severityWithoutCritical = severities.HighSeverity
-		}
-
 		var cve, cwe []string
 
 		if vuln.CVE != "" {
@@ -103,7 +97,7 @@ func resultToJSONOutput(res *snykclient.SBOMTestResult) JSONOutput {
 				CVSSv3:    vuln.CVSSv3,
 				CVSSScore: vuln.CVSSscore,
 
-				Severity:             severityWithoutCritical,
+				Severity:             vuln.SeverityLevel,
 				SeverityWithCritical: vuln.SeverityLevel,
 			})
 		}
