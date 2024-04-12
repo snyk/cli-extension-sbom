@@ -6,7 +6,6 @@ var (
 	defaultColor = lipgloss.NoColor{}
 
 	red     = lipgloss.AdaptiveColor{Light: "9", Dark: "1"}
-	green   = lipgloss.AdaptiveColor{Light: "10", Dark: "2"}
 	yellow  = lipgloss.AdaptiveColor{Light: "11", Dark: "3"}
 	magenta = lipgloss.AdaptiveColor{Light: "13", Dark: "5"}
 
@@ -15,7 +14,6 @@ var (
 	mediumStyle   = lipgloss.NewStyle().Foreground(yellow)
 	highStyle     = lipgloss.NewStyle().Foreground(red)
 	criticalStyle = lipgloss.NewStyle().Foreground(magenta)
-	successStyle  = lipgloss.NewStyle().Foreground(green)
 
 	sectionStyle = lipgloss.NewStyle().Bold(true)
 

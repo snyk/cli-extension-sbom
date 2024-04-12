@@ -45,10 +45,7 @@ func renderSeverity(style lipgloss.Style, severity string) string {
 func generateIssues(issues ...OpenIssue) (*issuesComponent, error) {
 	if len(issues) == 0 {
 		return &issuesComponent{
-			str: fmt.Sprintf(
-				"%s No issues found.",
-				renderSeverity(successStyle, "SUCCESS"),
-			),
+			str: "🎉 No issues found. Awesome!",
 		}, nil
 	}
 
