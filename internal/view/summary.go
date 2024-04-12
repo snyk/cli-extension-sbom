@@ -94,25 +94,29 @@ var summaryTemplate *template.Template = template.Must(template.New("summary").P
   Open issues:     {{.OpenIssues}}`))
 
 func (s *summary) issuesCounter() string {
-	result := fmt.Sprintf("%s [ ", sectionStyle.Render(strconv.Itoa(s.totalIssues)))
+	total := sectionStyle.Render(strconv.Itoa(s.totalIssues))
+
+	if s.totalIssues == 0 {
+		return total
+	}
+
+	var levels string
 
 	if s.critical > 0 {
-		result += criticalStyle.Render(fmt.Sprintf("%d CRITICAL", s.critical))
+		levels += criticalStyle.Render(fmt.Sprintf("%d CRITICAL", s.critical))
 	}
 
 	if s.high > 0 {
-		result += highStyle.Render(fmt.Sprintf("  %d HIGH", s.high))
+		levels += highStyle.Render(fmt.Sprintf("  %d HIGH", s.high))
 	}
 
 	if s.medium > 0 {
-		result += mediumStyle.Render(fmt.Sprintf("  %d MEDIUM", s.medium))
+		levels += mediumStyle.Render(fmt.Sprintf("  %d MEDIUM", s.medium))
 	}
 
 	if s.low > 0 {
-		result += lowStyle.Render(fmt.Sprintf("  %d LOW", s.low))
+		levels += lowStyle.Render(fmt.Sprintf("  %d LOW", s.low))
 	}
 
-	result += " ]"
-
-	return result
+	return fmt.Sprintf("%s [ %s ]", total, levels)
 }
