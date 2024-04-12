@@ -1,7 +1,6 @@
 
 [1mTesting ./sbom.dx[0m
 
-
 [1mUntested packages:[0m                                                  
                                                                     
 × [1mmy reference 1[0m                                                    
@@ -35,7 +34,6 @@
 [33m× [MEDIUM][0m [1mInteger Overflow or Wraparound[0m
   Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1, vim-minimal@9.0.2527-1.amzn2.0.1
   URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6062273
-
 
 ╭──────────────────────────────────────────────────────────────────╮
 │  [1mTest summary[0m                                                    │

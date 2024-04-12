@@ -1,7 +1,6 @@
 
 [1mTesting ./sbom.dx[0m
 
-
 [1mUntested packages:[0m                                                  
                                                                     
 × [1mfa08b68d9188550d[0m                                                  
@@ -29,7 +28,6 @@
 [35m× [CRITICAL][0m [1mInteger Overflow or Wraparound[0m
   Introduced through: https://python.org|python@2.7.18, https://python.org|python@2.7.20
   URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317677
-
 
 ╭──────────────────────────────────────────────────────────────────╮
 │  [1mTest summary[0m                                                    │

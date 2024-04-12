@@ -66,10 +66,8 @@ func (r *testResult) String() string {
 var testResultTemplate *template.Template = template.Must(template.New("testResult").Parse(`
 {{.Title}}
 
-{{if not (.Untested | len | eq 0) }}
-{{.Untested}}
+{{if not (.Untested | len | eq 0) }}{{.Untested}}
 {{end}}
 {{.Issues}}
-
 
 {{.Summary}}`))
