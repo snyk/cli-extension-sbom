@@ -72,3 +72,51 @@ func TestRender(t *testing.T) {
 
 	snapshotter.SnapshotT(t, buff.String())
 }
+
+func TestRender_nothingToTest(t *testing.T) {
+	var buff bytes.Buffer
+
+	org := "871BE73B-8763-4EEF-9C31-45B388FB05DA"
+	path := "./sbom.dx"
+
+	p := Presentation{
+		Org:      org,
+		Path:     path,
+		Untested: nil,
+		Issues:   nil,
+		Summary:  Summary{},
+	}
+
+	_, err := Render(&buff, &p)
+	assert.NoError(t, err)
+
+	snapshotter.SnapshotT(t, buff.String())
+}
+
+func TestRender_onlyUntestedPackages(t *testing.T) {
+	var buff bytes.Buffer
+
+	org := "871BE73B-8763-4EEF-9C31-45B388FB05DA"
+	path := "./sbom.dx"
+
+	untested := []Component{{
+		Reference: "fa08b68d9188550d",
+		Info:      "component must have a PackageUR",
+	}, {
+		Reference: "amzn",
+		Info:      "component must have a PackageURL",
+	}}
+
+	p := Presentation{
+		Org:      org,
+		Path:     path,
+		Untested: untested,
+		Issues:   nil,
+		Summary:  Summary{},
+	}
+
+	_, err := Render(&buff, &p)
+	assert.NoError(t, err)
+
+	snapshotter.SnapshotT(t, buff.String())
+}

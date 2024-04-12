@@ -46,3 +46,10 @@ func Test_generateIssues(t *testing.T) {
 
 	snapshotter.SnapshotT(t, sum.String())
 }
+
+func Test_generateIssues_noIssues(t *testing.T) {
+	sum, err := generateIssues()
+	assert.NoError(t, err)
+
+	snapshotter.SnapshotT(t, sum.String())
+}
