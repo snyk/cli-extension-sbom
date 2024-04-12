@@ -13,7 +13,8 @@ type Summary struct {
 	Medium   int
 	Low      int
 
-	TotalIssues int
+	TotalIssues  int
+	UntestedPkgs int
 }
 
 type summary struct {
@@ -25,7 +26,8 @@ type summary struct {
 	medium   int
 	low      int
 
-	totalIssues int
+	totalIssues  int
+	untestedPkgs int
 
 	str string
 }
@@ -44,7 +46,8 @@ func generateSummary(org, path string, sum Summary) (*summary, error) {
 		medium:   sum.Medium,
 		low:      sum.Low,
 
-		totalIssues: sum.TotalIssues,
+		totalIssues:  sum.TotalIssues,
+		untestedPkgs: sum.UntestedPkgs,
 	}
 
 	if err := s.computeString(); err != nil {
@@ -57,21 +60,28 @@ func generateSummary(org, path string, sum Summary) (*summary, error) {
 func (s *summary) computeString() error {
 	var buff bytes.Buffer
 
-	err := summaryTemplate.Execute(&buff, struct {
+	t := summaryTemplate
+	if s.untestedPkgs > 0 {
+		t = summaryWithUntestedTemplate
+	}
+
+	err := t.Execute(&buff, struct {
 		Title string
 
 		Org  string
 		Type string
 		Path string
 
-		OpenIssues string
+		OpenIssues   string
+		UntestedPkgs int
 	}{
 		Title: sectionStyle.Render("Test summary"),
 		Org:   s.org,
 		Type:  "Software Bill of Materials",
 		Path:  s.path,
 
-		OpenIssues: s.issuesCounter(),
+		UntestedPkgs: s.untestedPkgs,
+		OpenIssues:   s.issuesCounter(),
 	})
 
 	if err != nil {
@@ -92,6 +102,14 @@ var summaryTemplate *template.Template = template.Must(template.New("summary").P
   Path:            {{.Path}}
 
   Open issues:     {{.OpenIssues}}`))
+
+var summaryWithUntestedTemplate *template.Template = template.Must(template.New("summary").Parse(`{{.Title}}
+  Organization:      {{.Org}}
+  Test type:         {{.Type}}
+  Path:              {{.Path}}
+
+  Untested packages: {{.UntestedPkgs}}
+  Open issues:       {{.OpenIssues}}`))
 
 func (s *summary) issuesCounter() string {
 	total := sectionStyle.Render(strconv.Itoa(s.totalIssues))

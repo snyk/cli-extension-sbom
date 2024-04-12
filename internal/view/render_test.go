@@ -52,11 +52,12 @@ func TestRender(t *testing.T) {
 	path := "./sbom.dx"
 
 	summary := Summary{
-		Low:         1,
-		Medium:      1,
-		High:        1,
-		Critical:    1,
-		TotalIssues: 4,
+		Low:          1,
+		Medium:       1,
+		High:         1,
+		Critical:     1,
+		TotalIssues:  4,
+		UntestedPkgs: 2,
 	}
 
 	p := Presentation{
@@ -112,7 +113,9 @@ func TestRender_onlyUntestedPackages(t *testing.T) {
 		Path:     path,
 		Untested: untested,
 		Issues:   nil,
-		Summary:  Summary{},
+		Summary: Summary{
+			UntestedPkgs: 2,
+		},
 	}
 
 	_, err := Render(&buff, &p)
