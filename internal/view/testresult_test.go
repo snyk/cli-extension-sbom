@@ -65,11 +65,12 @@ func TestGenerateTestResult(t *testing.T) {
 		"871BE73B-8763-4EEF-9C31-45B388FB05DA",
 		"./sbom.dx",
 		Summary{
-			Low:         1,
-			Medium:      1,
-			High:        1,
-			Critical:    1,
-			TotalIssues: 4,
+			Low:          1,
+			Medium:       1,
+			High:         1,
+			Critical:     1,
+			TotalIssues:  4,
+			UntestedPkgs: 4,
 		},
 	)
 
@@ -129,11 +130,13 @@ func TestGenerateTestResult_allComponentsTested(t *testing.T) {
 		"871BE73B-8763-4EEF-9C31-45B388FB05DA",
 		"./sbom.dx",
 		Summary{
-			Low:         1,
-			Medium:      1,
-			High:        1,
-			Critical:    1,
-			TotalIssues: 4,
+			Low:      1,
+			Medium:   1,
+			High:     1,
+			Critical: 1,
+
+			TotalIssues:  4,
+			UntestedPkgs: 0,
 		},
 	)
 
