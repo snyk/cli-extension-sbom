@@ -101,7 +101,12 @@ func TestWorkflow(
 		ct = MIMETypeText
 	}
 
-	return []workflow.Data{workflowData(buf.Bytes(), ct)}, err
+	summaryData, summaryContentType, err := BuildTestSummary(results.Summary)
+	if err != nil {
+		return nil, errFactory.NewInternalError(err)
+	}
+
+	return []workflow.Data{workflowData(buf.Bytes(), ct), workflowData(summaryData, summaryContentType)}, err
 }
 
 func workflowData(data []byte, contentType string) workflow.Data {
