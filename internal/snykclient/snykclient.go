@@ -66,8 +66,8 @@ func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte, errFac
 	}
 
 	var body SBOMTestResourceDocument
-	if err := parseResponse(rsp, http.StatusCreated, &body, errFactory); err != nil {
-		return nil, err
+	if err := parseResponse(rsp, http.StatusCreated, &body); err != nil {
+		return nil, errFactory.NewInternalError(err)
 	}
 
 	return &SBOMTest{
@@ -88,8 +88,8 @@ func (t *SBOMTest) GetResult(ctx context.Context, errFactory *errors.ErrorFactor
 	}
 
 	var body SBOMTestResultResourceDocument
-	if err := parseResponse(resp, http.StatusOK, &body, errFactory); err != nil {
-		return nil, err
+	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
+		return nil, errFactory.NewInternalError(err)
 	}
 
 	return body.AsResult(), nil
@@ -117,8 +117,8 @@ func (t *SBOMTest) GetStatus(ctx context.Context, errFactory *errors.ErrorFactor
 	}
 
 	var body SBOMTestStatusResourceDocument
-	if err := parseResponse(resp, http.StatusOK, &body, errFactory); err != nil {
-		return SBOMTestStatusIndeterminate, err
+	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
+		return SBOMTestStatusIndeterminate, errFactory.NewInternalError(err)
 	}
 	if body.Data.Attributes.Status == "error" {
 		return SBOMTestStatusError, nil
