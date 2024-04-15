@@ -9,6 +9,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/snyk/go-application-framework/pkg/configuration"
+	"github.com/snyk/go-application-framework/pkg/local_workflows/content_type"
 	"github.com/snyk/go-application-framework/pkg/mocks"
 	"github.com/snyk/go-application-framework/pkg/networking"
 	"github.com/snyk/go-application-framework/pkg/runtimeinfo"
@@ -68,12 +69,19 @@ func TestSBOMTestWorkflow_SuccessPretty(t *testing.T) {
 	require.NoError(t, err)
 
 	require.NotNil(t, result)
-	assert.Equal(t, len(result), 1)
+	assert.Equal(t, len(result), 2)
 	data := result[0]
 	assert.Equal(t, data.GetContentType(), "text/plain")
 
 	_, ok := data.GetPayload().([]byte)
 	assert.True(t, ok)
+
+	summaryData := result[1]
+	assert.Equal(t, summaryData.GetContentType(), content_type.TEST_SUMMARY)
+
+	payloadBytes, ok := summaryData.GetPayload().([]byte)
+	assert.True(t, ok)
+	snapshotter.SnapshotT(t, payloadBytes)
 }
 
 func TestSBOMTestWorkflow_SuccessJSON(t *testing.T) {
@@ -95,13 +103,19 @@ func TestSBOMTestWorkflow_SuccessJSON(t *testing.T) {
 	require.NoError(t, err)
 
 	require.NotNil(t, result)
-	assert.Equal(t, len(result), 1)
+	assert.Equal(t, len(result), 2)
 	data := result[0]
 	assert.Equal(t, data.GetContentType(), "application/json")
 
 	payloadBytes, ok := data.GetPayload().([]byte)
 	assert.True(t, ok)
 	assert.Contains(t, string(payloadBytes), `"Found 133 vulnerabilities"`)
+	summaryData := result[1]
+	assert.Equal(t, summaryData.GetContentType(), content_type.TEST_SUMMARY)
+
+	payloadBytes, ok = summaryData.GetPayload().([]byte)
+	assert.True(t, ok)
+	snapshotter.SnapshotT(t, payloadBytes)
 }
 
 // Helpers

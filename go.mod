@@ -1,13 +1,13 @@
 module github.com/snyk/cli-extension-sbom
 
-go 1.19
+go 1.21
 
 require (
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/charmbracelet/lipgloss v0.10.0
 	github.com/golang/mock v1.6.0
 	github.com/muesli/termenv v0.15.2
-	github.com/snyk/go-application-framework v0.0.0-20231116141714-376c41e7746c
+	github.com/snyk/go-application-framework v0.0.0-20240412134724-124163becdd6
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/exp v0.0.0-20240409090435-93d18d7e34b8
@@ -43,7 +43,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rs/zerolog v1.29.1 // indirect
-	github.com/snyk/go-httpauth v0.0.0-20230512081507-800aedece3cb // indirect
+	github.com/snyk/go-httpauth v0.0.0-20231117135515-eb445fea7530 // indirect
 	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/cobra v1.7.0 // indirect
