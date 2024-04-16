@@ -39,7 +39,7 @@ func (ef *ErrorFactory) newErr(err error, userMsg string) *SBOMExtensionError {
 	}
 }
 
-func (ef *ErrorFactory) NewInternalError(err error) *SBOMExtensionError {
+func (ef *ErrorFactory) NewFatalSBOMGenerationError(err error) *SBOMExtensionError {
 	return ef.newErr(
 		err,
 		"An error occurred while running the underlying analysis which is required to generate the SBOM. "+
@@ -47,7 +47,7 @@ func (ef *ErrorFactory) NewInternalError(err error) *SBOMExtensionError {
 	)
 }
 
-func (ef *ErrorFactory) NewRemoteError(err error) *SBOMExtensionError {
+func (ef *ErrorFactory) NewRemoteGenerationError(err error) *SBOMExtensionError {
 	return ef.newErr(
 		err,
 		"An error occurred while generating the SBOM. "+
@@ -93,7 +93,7 @@ func (ef *ErrorFactory) NewInvalidFormatError(invalid string, available []string
 	)
 }
 
-func (ef *ErrorFactory) NewBadRequestError(err error) *SBOMExtensionError {
+func (ef *ErrorFactory) NewBadRequestGenerationError(err error) *SBOMExtensionError {
 	return ef.newErr(
 		err,
 		"SBOM generation failed due to bad input arguments. "+

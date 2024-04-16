@@ -59,7 +59,7 @@ func DepGraphsToSBOM(
 ) (result *SBOMResult, err error) {
 	payload, err := preparePayload(depGraphs, subject, t)
 	if err != nil {
-		return nil, errFactory.NewInternalError(err)
+		return nil, errFactory.NewFatalSBOMGenerationError(err)
 	}
 
 	req, err := http.NewRequestWithContext(
@@ -69,7 +69,7 @@ func DepGraphsToSBOM(
 		bytes.NewBuffer(payload),
 	)
 	if err != nil {
-		return nil, errFactory.NewInternalError(fmt.Errorf("error while creating request: %w", err))
+		return nil, errFactory.NewFatalSBOMGenerationError(fmt.Errorf("error while creating request: %w", err))
 	}
 	req.Header.Add("Content-Type", MimeTypeJSON)
 
@@ -77,7 +77,7 @@ func DepGraphsToSBOM(
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, errFactory.NewInternalError(fmt.Errorf("error while making request: %w", err))
+		return nil, errFactory.NewFatalSBOMGenerationError(fmt.Errorf("error while making request: %w", err))
 	}
 
 	if resp.StatusCode != http.StatusOK {
@@ -87,7 +87,7 @@ func DepGraphsToSBOM(
 	defer resp.Body.Close()
 	doc, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, errFactory.NewInternalError(fmt.Errorf("could not read response body: %w", err))
+		return nil, errFactory.NewFatalSBOMGenerationError(fmt.Errorf("could not read response body: %w", err))
 	}
 
 	logger.Println("Successfully converted depGraph to SBOM")
@@ -106,13 +106,13 @@ func errorFromResponse(resp *http.Response, errFactory *errors.ErrorFactory, org
 	err := fmt.Errorf("could not convert to SBOM (status: %s)", resp.Status)
 	switch resp.StatusCode {
 	case http.StatusBadRequest:
-		return errFactory.NewBadRequestError(err)
+		return errFactory.NewBadRequestGenerationError(err)
 	case http.StatusUnauthorized:
 		return errFactory.NewUnauthorizedError(err)
 	case http.StatusForbidden:
 		return errFactory.NewForbiddenError(err, orgID)
 	default:
-		return errFactory.NewRemoteError(err)
+		return errFactory.NewRemoteGenerationError(err)
 	}
 }
 
