@@ -103,7 +103,7 @@ func TestWorkflow(
 
 	summaryData, summaryContentType, err := BuildTestSummary(results.Summary)
 	if err != nil {
-		return nil, errFactory.NewInternalError(err)
+		return nil, errFactory.NewFatalSBOMTestError(err)
 	}
 
 	return []workflow.Data{workflowData(buf.Bytes(), ct), workflowData(summaryData, summaryContentType)}, err

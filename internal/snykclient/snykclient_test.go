@@ -218,7 +218,7 @@ func TestSBOMTest_WaitUntilCompleteErrors(t *testing.T) {
 
 	err := sbomTest.WaitUntilCompleteWithBackoff(context.Background(), backoff, errFactory)
 
-	assert.ErrorContains(t, err, "An error occurred while running the underlying analysis which is required to generate the SBOM. "+
-		"Should this issue persist, please reach out to customer support.")
+	assert.ErrorContains(t, err, "Failed to test SBOM. There was an error when trying to test your SBOM,retrying may resolve the issue. "+
+		"If the error still occurs, contact support.")
 	assert.Equal(t, numRequests, 6)
 }

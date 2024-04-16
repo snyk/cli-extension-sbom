@@ -56,18 +56,18 @@ func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte, errFac
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, jsonAPIReader)
 	if err != nil {
-		return nil, errFactory.NewInternalError(err)
+		return nil, errFactory.NewFatalSBOMTestError(err)
 	}
 	req.Header.Set("Content-Type", "application/vnd.api+json")
 
 	rsp, err := t.client.Do(req)
 	if err != nil {
-		return nil, errFactory.NewInternalError(err)
+		return nil, errFactory.NewFatalSBOMTestError(err)
 	}
 
 	var body SBOMTestResourceDocument
 	if err := parseResponse(rsp, http.StatusCreated, &body); err != nil {
-		return nil, errFactory.NewInternalError(err)
+		return nil, errFactory.NewFatalSBOMTestError(err)
 	}
 
 	return &SBOMTest{
@@ -79,17 +79,17 @@ func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte, errFac
 func (t *SBOMTest) GetResult(ctx context.Context, errFactory *errors.ErrorFactory) (*SBOMTestResult, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, t.resultsURL(), http.NoBody)
 	if err != nil {
-		return nil, errFactory.NewInternalError(err)
+		return nil, errFactory.NewFatalSBOMTestError(err)
 	}
 
 	resp, err := t.SnykClient.client.Do(req)
 	if err != nil {
-		return nil, errFactory.NewInternalError(err)
+		return nil, errFactory.NewFatalSBOMTestError(err)
 	}
 
 	var body SBOMTestResultResourceDocument
 	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
-		return nil, errFactory.NewInternalError(err)
+		return nil, errFactory.NewFatalSBOMTestError(err)
 	}
 
 	return body.AsResult(), nil
@@ -118,7 +118,7 @@ func (t *SBOMTest) GetStatus(ctx context.Context, errFactory *errors.ErrorFactor
 
 	var body SBOMTestStatusResourceDocument
 	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
-		return SBOMTestStatusIndeterminate, errFactory.NewInternalError(err)
+		return SBOMTestStatusIndeterminate, errFactory.NewFatalSBOMTestError(err)
 	}
 	if body.Data.Attributes.Status == "error" {
 		return SBOMTestStatusError, nil
@@ -139,7 +139,7 @@ func (t *SBOMTest) WaitUntilCompleteWithBackoff(ctx context.Context, backoff bac
 	for {
 		status, err := t.GetStatus(ctx, errFactory)
 		if err != nil {
-			return errFactory.NewInternalError(err)
+			return errFactory.NewFatalSBOMTestError(err)
 		}
 
 		if status == SBOMTestStatusError {
