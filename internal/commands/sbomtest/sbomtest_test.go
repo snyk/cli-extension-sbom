@@ -48,7 +48,7 @@ func TestSBOMTestWorkflow_SupplyMissingFile(t *testing.T) {
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
-	assert.ErrorContains(t, err, "Flag `--file` is required to execute this command. Value should point to a valid SBOM document.")
+	assert.ErrorContains(t, err, "The given filepath \"missing-file.txt\" does not exist.")
 }
 
 func TestSBOMTestWorkflow_SuccessPretty(t *testing.T) {

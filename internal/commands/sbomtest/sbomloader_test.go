@@ -83,7 +83,7 @@ func TestReadSBOMFile_FileDoesNotExist(t *testing.T) {
 	sbomContent, err := sbomtest.ReadSBOMFile(filename, errFactory)
 
 	require.Error(t, err)
-	require.Equal(t, "Flag `--file` is required to execute this command. Value should point to a valid SBOM document.", err.Error())
+	require.Equal(t, "The given filepath \"testdata/this-file-does-not-exist.txt\" does not exist.", err.Error())
 	require.Nil(t, sbomContent)
 }
 
