@@ -18,7 +18,7 @@ func ReadSBOMFile(filename string, errFactory *errors.ErrorFactory) ([]byte, err
 	info, err := os.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, errFactory.NewMissingFilenameFlagError()
+			return nil, errFactory.NewInvalidFilePathError(err, filename)
 		}
 		return nil, errFactory.NewFailedToReadFileError(err)
 	}

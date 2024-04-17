@@ -131,7 +131,7 @@ func (ef *ErrorFactory) IndeterminateWorkingDirectory(err error) *SBOMExtensionE
 
 func (ef *ErrorFactory) NewMissingExperimentalFlagError() *SBOMExtensionError {
 	return ef.newErr(
-		fmt.Errorf("exmperimental flag not set"),
+		fmt.Errorf("experimental flag not set"),
 		"Flag `--experimental` is required to execute this command.",
 	)
 }
@@ -174,4 +174,8 @@ func (ef *ErrorFactory) NewFatalSBOMTestError(err error) *SBOMExtensionError {
 		"Failed to test SBOM. There was an error when trying to test your SBOM,"+
 			"retrying may resolve the issue. If the error still occurs, contact support.",
 	)
+}
+
+func (ef *ErrorFactory) NewInvalidFilePathError(err error, path string) *SBOMExtensionError {
+	return ef.newErr(err, fmt.Sprintf("The given filepath %q does not exist.", path))
 }
