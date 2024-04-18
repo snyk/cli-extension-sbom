@@ -1,0 +1,1 @@
+{"results":[{"severity":"critical","total":8,"open":8,"ignored":0},{"severity":"high","total":19,"open":19,"ignored":0},{"severity":"medium","total":12,"open":12,"ignored":0},{"severity":"low","total":3,"open":3,"ignored":0}],"type":"sbom"}
