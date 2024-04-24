@@ -5,7 +5,7 @@
 [1mOpen issues:[0m
 
 × [LOW] [1mPrototype Pollution[0m
-  Introduced through: pkg:npm/minimist@1.2.0
+  Introduced through: pkg:npm/minimist@0.0.10
   URL: https://security.snyk.io/vuln/SNYK-JS-MINIMIST-2429795
 
 × [LOW] [1mRegular Expression Denial of Service (ReDoS)[0m
@@ -29,7 +29,7 @@
   URL: https://security.snyk.io/vuln/npm:hawk:20160119
 
 × [LOW] [1mRegular Expression Denial of Service (ReDoS)[0m
-  Introduced through: pkg:npm/mime@1.3.4
+  Introduced through: pkg:npm/mime@1.2.11
   URL: https://security.snyk.io/vuln/npm:mime:20170907
 
 × [LOW] [1mRegular Expression Denial of Service (ReDoS)[0m
@@ -37,11 +37,11 @@
   URL: https://security.snyk.io/vuln/npm:moment:20170905
 
 × [LOW] [1mRegular Expression Denial of Service (ReDoS)[0m
-  Introduced through: pkg:npm/ms@0.7.1
+  Introduced through: pkg:npm/ms@0.6.2
   URL: https://security.snyk.io/vuln/npm:ms:20170412
 
 [33m× [MEDIUM][0m [1mArbitrary Code Injection[0m
-  Introduced through: pkg:npm/ejs@1.0.0
+  Introduced through: pkg:npm/ejs@0.8.8
   URL: https://security.snyk.io/vuln/SNYK-JS-EJS-1049328
 
 [33m× [MEDIUM][0m [1mOpen Redirect[0m
@@ -109,7 +109,7 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-JSZIP-3188562
 
 [33m× [MEDIUM][0m [1mRegular Expression Denial of Service (ReDoS)[0m
-  Introduced through: pkg:npm/lodash@4.17.4
+  Introduced through: pkg:npm/lodash@4.17.15
   URL: https://security.snyk.io/vuln/SNYK-JS-LODASH-1018905
 
 [33m× [MEDIUM][0m [1mRegular Expression Denial of Service (ReDoS)[0m
@@ -137,11 +137,11 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-MARKED-584281
 
 [33m× [MEDIUM][0m [1mRegular Expression Denial of Service (ReDoS)[0m
-  Introduced through: pkg:npm/minimatch@3.0.0
+  Introduced through: pkg:npm/minimatch@0.3.0
   URL: https://security.snyk.io/vuln/SNYK-JS-MINIMATCH-3050818
 
 [33m× [MEDIUM][0m [1mPrototype Pollution[0m
-  Introduced through: pkg:npm/minimist@1.2.0
+  Introduced through: pkg:npm/minimist@0.0.10
   URL: https://security.snyk.io/vuln/SNYK-JS-MINIMIST-559764
 
 [33m× [MEDIUM][0m [1mPrototype Pollution[0m
@@ -233,7 +233,7 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-UNDERSCORE-1080984
 
 [33m× [MEDIUM][0m [1mPrototype Pollution[0m
-  Introduced through: pkg:npm/xml2js@0.4.23
+  Introduced through: pkg:npm/xml2js@0.4.19
   URL: https://security.snyk.io/vuln/SNYK-JS-XML2JS-5414874
 
 [33m× [MEDIUM][0m [1mPrototype Pollution[0m
@@ -245,15 +245,15 @@
   URL: https://security.snyk.io/vuln/npm:brace-expansion:20170302
 
 [33m× [MEDIUM][0m [1mCross-site Scripting (XSS)[0m
-  Introduced through: pkg:npm/ejs@1.0.0
+  Introduced through: pkg:npm/ejs@0.8.8
   URL: https://security.snyk.io/vuln/npm:ejs:20161130
 
 [33m× [MEDIUM][0m [1mDenial of Service (DoS)[0m
-  Introduced through: pkg:npm/ejs@1.0.0
+  Introduced through: pkg:npm/ejs@0.8.8
   URL: https://security.snyk.io/vuln/npm:ejs:20161130-1
 
 [33m× [MEDIUM][0m [1mPrototype Pollution[0m
-  Introduced through: pkg:npm/hoek@2.16.3
+  Introduced through: pkg:npm/hoek@0.9.1
   URL: https://security.snyk.io/vuln/npm:hoek:20180212
 
 [33m× [MEDIUM][0m [1mTiming Attack[0m
@@ -313,7 +313,7 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-ADMZIP-1065796
 
 [31m× [HIGH][0m [1mRegular Expression Denial of Service (ReDoS)[0m
-  Introduced through: pkg:npm/ansi-regex@4.1.0
+  Introduced through: pkg:npm/ansi-regex@2.1.1
   URL: https://security.snyk.io/vuln/SNYK-JS-ANSIREGEX-1583908
 
 [31m× [HIGH][0m [1mRemote Memory Exposure[0m
@@ -329,7 +329,7 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-DUSTJSLINKEDIN-1089257
 
 [31m× [HIGH][0m [1mRemote Code Execution (RCE)[0m
-  Introduced through: pkg:npm/ejs@1.0.0
+  Introduced through: pkg:npm/ejs@0.8.8
   URL: https://security.snyk.io/vuln/SNYK-JS-EJS-2803307
 
 [31m× [HIGH][0m [1mDenial of Service (DoS)[0m
@@ -365,11 +365,11 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-HANDLEBARS-534478
 
 [31m× [HIGH][0m [1mRegular Expression Denial of Service (ReDoS)[0m
-  Introduced through: pkg:npm/hawk@3.1.3
+  Introduced through: pkg:npm/hawk@1.1.1
   URL: https://security.snyk.io/vuln/SNYK-JS-HAWK-2808852
 
 [31m× [HIGH][0m [1mPrototype Pollution[0m
-  Introduced through: pkg:npm/ini@1.3.5
+  Introduced through: pkg:npm/ini@1.1.0
   URL: https://security.snyk.io/vuln/SNYK-JS-INI-1048974
 
 [31m× [HIGH][0m [1mServer-side Request Forgery (SSRF)[0m
@@ -397,7 +397,7 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-KERBEROS-568900
 
 [31m× [HIGH][0m [1mCommand Injection[0m
-  Introduced through: pkg:npm/lodash@4.17.4
+  Introduced through: pkg:npm/lodash@4.17.15
   URL: https://security.snyk.io/vuln/SNYK-JS-LODASH-1040724
 
 [31m× [HIGH][0m [1mPrototype Pollution[0m
@@ -405,11 +405,11 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-LODASH-450202
 
 [31m× [HIGH][0m [1mPrototype Pollution[0m
-  Introduced through: pkg:npm/lodash@4.17.4
+  Introduced through: pkg:npm/lodash@4.17.15
   URL: https://security.snyk.io/vuln/SNYK-JS-LODASH-567746
 
 [31m× [HIGH][0m [1mPrototype Pollution[0m
-  Introduced through: pkg:npm/lodash@4.17.4
+  Introduced through: pkg:npm/lodash@4.17.15
   URL: https://security.snyk.io/vuln/SNYK-JS-LODASH-608086
 
 [31m× [HIGH][0m [1mPrototype Pollution[0m
@@ -421,7 +421,7 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-LODASHSET-1320032
 
 [31m× [HIGH][0m [1mRegular Expression Denial of Service (ReDoS)[0m
-  Introduced through: pkg:npm/minimatch@3.0.0
+  Introduced through: pkg:npm/minimatch@0.3.0
   URL: https://security.snyk.io/vuln/SNYK-JS-MINIMATCH-1019388
 
 [31m× [HIGH][0m [1mDirectory Traversal[0m
@@ -469,11 +469,11 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-PARSEPATH-2936439
 
 [31m× [HIGH][0m [1mPrototype Poisoning[0m
-  Introduced through: pkg:npm/qs@2.4.2
+  Introduced through: pkg:npm/qs@1.2.2
   URL: https://security.snyk.io/vuln/SNYK-JS-QS-3153490
 
 [31m× [HIGH][0m [1mRegular Expression Denial of Service (ReDoS)[0m
-  Introduced through: pkg:npm/semver@6.3.0
+  Introduced through: pkg:npm/semver@1.1.4
   URL: https://security.snyk.io/vuln/SNYK-JS-SEMVER-3247795
 
 [31m× [HIGH][0m [1mPrototype Pollution[0m
@@ -481,7 +481,7 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-Y18N-1021887
 
 [31m× [HIGH][0m [1mArbitrary Code Execution[0m
-  Introduced through: pkg:npm/ejs@1.0.0
+  Introduced through: pkg:npm/ejs@0.8.8
   URL: https://security.snyk.io/vuln/npm:ejs:20161128
 
 [31m× [HIGH][0m [1mRegular Expression Denial of Service (ReDoS)[0m
@@ -509,7 +509,7 @@
   URL: https://security.snyk.io/vuln/npm:marked:20180225
 
 [31m× [HIGH][0m [1mRegular Expression Denial of Service (ReDoS)[0m
-  Introduced through: pkg:npm/minimatch@3.0.0
+  Introduced through: pkg:npm/minimatch@0.3.0
   URL: https://security.snyk.io/vuln/npm:minimatch:20160620
 
 [31m× [HIGH][0m [1mRegular Expression Denial of Service (ReDoS)[0m
@@ -521,7 +521,7 @@
   URL: https://security.snyk.io/vuln/npm:npmconf:20180512
 
 [31m× [HIGH][0m [1mPrototype Override Protection Bypass[0m
-  Introduced through: pkg:npm/qs@2.4.2
+  Introduced through: pkg:npm/qs@1.2.2
   URL: https://security.snyk.io/vuln/npm:qs:20170213
 
 [35m× [CRITICAL][0m [1mPrototype Pollution[0m

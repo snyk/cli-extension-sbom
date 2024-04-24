@@ -64,11 +64,11 @@ func sortIssues(issues []OpenIssue) {
 			return +1
 		}
 
-		if a.IntroducedBy[0] < b.IntroducedBy[0] {
+		if a.IntroducedBy[0].PURL < b.IntroducedBy[0].PURL {
 			return -1
 		}
 
-		if a.IntroducedBy[0] > b.IntroducedBy[0] {
+		if a.IntroducedBy[0].PURL > b.IntroducedBy[0].PURL {
 			return +1
 		}
 
