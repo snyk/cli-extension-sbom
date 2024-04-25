@@ -18,7 +18,7 @@
   URL: https://security.snyk.io/vuln/SNYK-AMZN2-CURL-6371161
 
 [33m× [MEDIUM][0m [1mInteger Overflow or Wraparound[0m
-  Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1, vim-minimal@9.0.2527-1.amzn2.0.1
+  Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
   URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6062273
 
 [31m× [HIGH][0m [1mImproper Input Validation[0m
@@ -26,7 +26,7 @@
   URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-3325575
 
 [35m× [CRITICAL][0m [1mInteger Overflow or Wraparound[0m
-  Introduced through: https://python.org|python@2.7.18, https://python.org|python@2.7.20
+  Introduced through: https://python.org|python@2.7.18
   URL: https://security.snyk.io/vuln/SNYK-UNMANAGED-PYTHON-2317677
 
 ╭────────────────────────────────────────────────────────────────────╮

@@ -127,11 +127,20 @@ func RenderPrettyResult(w io.Writer, orgID, filepath string, res *snykclient.SBO
 	untested := make([]view.Component, 0, len(res.Summary.Untested))
 
 	for i := range res.Vulnerabilities {
+		introducedBy := make([]view.IntroducedBy, 0, len(res.Vulnerabilities[i].Packages))
+		for _, pkg := range res.Vulnerabilities[i].Packages {
+			introducedBy = append(introducedBy, view.IntroducedBy{
+				Name:    pkg.Name,
+				Version: pkg.Version,
+				PURL:    pkg.PURL,
+			})
+		}
+
 		issues = append(issues, view.OpenIssue{
 			Description:  res.Vulnerabilities[i].Title,
 			Severity:     res.Vulnerabilities[i].SeverityLevel,
 			SnykRef:      res.Vulnerabilities[i].ID,
-			IntroducedBy: []string{res.Vulnerabilities[i].Packages[0].PURL},
+			IntroducedBy: introducedBy,
 		})
 	}
 

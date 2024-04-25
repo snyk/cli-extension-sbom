@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
-	"strings"
+	"slices"
 
 	"github.com/charmbracelet/lipgloss"
 
@@ -14,14 +14,20 @@ import (
 type OpenIssue struct {
 	Severity     severities.Level
 	Description  string
-	IntroducedBy []string
+	IntroducedBy []IntroducedBy
 	SnykRef      string
+}
+
+type IntroducedBy struct {
+	Name    string
+	Version string
+	PURL    string
 }
 
 type openIssue struct {
 	Severity     string
 	Description  string
-	IntroducedBy []string
+	IntroducedBy []IntroducedBy
 	SnykRef      string
 }
 
@@ -77,7 +83,7 @@ func generateIssues(issues ...OpenIssue) (*issuesComponent, error) {
 			SnykRef:     issues[i].SnykRef,
 		}
 
-		result.issues[i].IntroducedBy = make([]string, len(issues[i].IntroducedBy))
+		result.issues[i].IntroducedBy = make([]IntroducedBy, len(issues[i].IntroducedBy))
 		copy(result.issues[i].IntroducedBy, issues[i].IntroducedBy)
 	}
 
@@ -113,15 +119,34 @@ func (s *issuesComponent) String() string {
 	return s.str
 }
 
+func joinIntroducedBy(elems []IntroducedBy) string {
+	slices.SortFunc(elems, func(a, b IntroducedBy) int {
+		if a.Name < b.Name {
+			return -1
+		}
+		if a.Name > b.Name {
+			return +1
+		}
+		if a.Version < b.Version {
+			return -1
+		}
+		if a.Version > b.Version {
+			return +1
+		}
+		return 0
+	})
+	return elems[0].PURL
+}
+
 var issuesTemplate *template.Template = template.Must(
 	template.New("untestedComponents").
 		Funcs(template.FuncMap{
-			"join": strings.Join,
+			"join": joinIntroducedBy,
 		}).
 		Parse(`{{.Title}}
 {{range .Issues}}
 {{.Severity}} {{.Description}}
-  Introduced through: {{join .IntroducedBy ", "}}
+  Introduced through: {{join .IntroducedBy}}
   URL: https://security.snyk.io/vuln/{{.SnykRef}}
 {{end}}`),
 )
