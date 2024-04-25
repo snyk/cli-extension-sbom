@@ -128,8 +128,8 @@ type IncludedResource struct {
 }
 
 type Slot struct {
-	DisclosureTime  SlotTime `json:"disclosure_time"`
-	PublicationTime SlotTime `json:"publication_time"`
+	DisclosureTime  time.Time `json:"disclosure_time"`
+	PublicationTime time.Time `json:"publication_time"`
 
 	Exploit string `json:"exploit"`
 
@@ -162,19 +162,6 @@ const (
 	ResourceTypeRemedies        = "remedies"
 	ResourceTypeVulnerabilities = "vulnerabilities"
 )
-
-type SlotTime time.Time
-
-func (t *SlotTime) UnmarshalJSON(b []byte) error {
-	tmp, err := time.Parse("\"2006-01-02 15:04:05 +0000 UTC\"", string(b))
-	if err != nil {
-		return err
-	}
-
-	*t = SlotTime(tmp)
-
-	return nil
-}
 
 type Vulnerability struct {
 	ID      string
@@ -283,8 +270,8 @@ func (doc *SBOMTestResultResourceDocument) AsResult() *SBOMTestResult {
 				CreatedAt:  res.Attributes.CreatedAt,
 				ModifiedAt: res.Attributes.UpdatedAt,
 
-				DisclosedAt: time.Time(slot.DisclosureTime),
-				PublishedAt: time.Time(slot.PublicationTime),
+				DisclosedAt: slot.DisclosureTime,
+				PublishedAt: slot.PublicationTime,
 
 				Exploit: slot.Exploit,
 
