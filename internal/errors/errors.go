@@ -20,6 +20,10 @@ func (xerr SBOMExtensionError) Error() string {
 	return xerr.userMsg
 }
 
+func (xerr SBOMExtensionError) Unwrap() error {
+	return xerr.err
+}
+
 type ErrorFactory struct {
 	logger *log.Logger
 }
