@@ -11166,9 +11166,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-29 13:34:36 +0000 UTC",
+            "disclosure_time": "2022-09-29T13:34:36Z",
             "exploit": "Not Defined",
-            "publication_time": "2022-11-30 10:53:43.107477 +0000 UTC",
+            "publication_time": "2022-11-30T10:53:43.107477Z",
             "references": [
               {
                 "url": "https://github.com/snyk/snyk-eclipse-plugin/commit/b5a8bce25a359ced75f83a729fc6b2393fc9a495",
@@ -11250,9 +11250,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-29 13:34:36 +0000 UTC",
+            "disclosure_time": "2022-09-29T13:34:36Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-11-30 10:54:34.55666 +0000 UTC",
+            "publication_time": "2022-11-30T10:54:34.55666Z",
             "references": [
               {
                 "url": "https://github.com/snyk/cli/commit/80d97a93326406e09776156daf72e3caa03ae25a",
@@ -11346,9 +11346,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2020-11-28 00:00:00 +0000 UTC",
+            "disclosure_time": "2020-11-28T00:00:00Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-03-23 17:13:24 +0000 UTC",
+            "publication_time": "2021-03-23T17:13:24Z",
             "references": [
               {
                 "url": "https://github.com/npm/hosted-git-info/commit/bede0dc38e1785e732bf0a48ba6f81a4a908eba3",
@@ -11406,9 +11406,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-11-17 13:02:10 +0000 UTC",
+            "disclosure_time": "2020-11-17T13:02:10Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-02-15 11:50:50 +0000 UTC",
+            "publication_time": "2021-02-15T11:50:50Z",
             "references": [
               {
                 "url": "https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c",
@@ -11470,9 +11470,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2019-06-19 11:45:02 +0000 UTC",
+            "disclosure_time": "2019-06-19T11:45:02Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2019-07-02 11:45:01 +0000 UTC",
+            "publication_time": "2019-07-02T11:45:01Z",
             "references": [
               {
                 "url": "https://github.com/lodash/lodash/issues/4348",
@@ -11550,9 +11550,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-04-27 22:14:18 +0000 UTC",
+            "disclosure_time": "2020-04-27T22:14:18Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-04-28 14:59:14 +0000 UTC",
+            "publication_time": "2020-04-28T14:59:14Z",
             "references": [
               {
                 "url": "https://github.com/lodash/lodash/commit/c84fe82760fb2d3e03a63379b297a1cc1a2fce12",
@@ -11614,9 +11614,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2022-04-05 08:39:23 +0000 UTC",
+            "disclosure_time": "2022-04-05T08:39:23Z",
             "exploit": "Not Defined",
-            "publication_time": "2022-04-05 12:30:50.878091 +0000 UTC",
+            "publication_time": "2022-04-05T12:30:50.878091Z",
             "references": [
               {
                 "url": "https://github.com/moment/moment/commit/4211bfc8f15746be4019bba557e29a7ba83d54c5",
@@ -11674,9 +11674,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-29 13:34:36 +0000 UTC",
+            "disclosure_time": "2022-09-29T13:34:36Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-11-30 10:54:34.55666 +0000 UTC",
+            "publication_time": "2022-11-30T10:54:34.55666Z",
             "references": [
               {
                 "url": "https://github.com/snyk/cli/commit/80d97a93326406e09776156daf72e3caa03ae25a",
@@ -11770,9 +11770,9 @@
         "effective_severity_level": "low",
         "slots": [
           {
-            "disclosure_time": "2015-12-28 18:28:58 +0000 UTC",
+            "disclosure_time": "2015-12-28T18:28:58Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-08-27 23:22:22 +0000 UTC",
+            "publication_time": "2016-08-27T23:22:22Z",
             "references": [
               {
                 "url": "https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=809252",
@@ -11834,9 +11834,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2018-02-12 22:28:27 +0000 UTC",
+            "disclosure_time": "2018-02-12T22:28:27Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2018-02-14 13:22:50 +0000 UTC",
+            "publication_time": "2018-02-14T13:22:50Z",
             "references": [
               {
                 "url": "https://github.com/hapijs/hoek/commit/32ed5c9413321fbc37da5ca81a7cbab693786dee",
@@ -11902,9 +11902,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2023-11-28 12:47:27 +0000 UTC",
+            "disclosure_time": "2023-11-28T12:47:27Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2023-11-30 12:52:55.469185 +0000 UTC",
+            "publication_time": "2023-11-30T12:52:55.469185Z",
             "references": [
               {
                 "url": "https://github.com/isaacs/inflight/issues/5",
@@ -11962,9 +11962,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2019-03-18 21:29:08 +0000 UTC",
+            "disclosure_time": "2019-03-18T21:29:08Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-03-24 10:00:08 +0000 UTC",
+            "publication_time": "2019-03-24T10:00:08Z",
             "references": [
               {
                 "url": "https://github.com/nodeca/js-yaml/commit/a567ef3c6e61eb319f0bfc2671d91061afb01235",
@@ -12026,9 +12026,9 @@
         "effective_severity_level": "low",
         "slots": [
           {
-            "disclosure_time": "2022-03-18 12:24:05 +0000 UTC",
+            "disclosure_time": "2022-03-18T12:24:05Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-03-21 12:09:35 +0000 UTC",
+            "publication_time": "2022-03-21T12:09:35Z",
             "references": [
               {
                 "url": "https://github.com/minimistjs/minimist/commit/34e20b8461118608703d6485326abbb8e35e1703",
@@ -12094,9 +12094,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2023-07-17 05:31:42 +0000 UTC",
+            "disclosure_time": "2023-07-17T05:31:42Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2023-07-17 07:48:02.180674 +0000 UTC",
+            "publication_time": "2023-07-17T07:48:02.180674Z",
             "references": [
               {
                 "url": "https://github.com/automattic/mongoose/commit/305ce4ff789261df7e3f6e72363d0703e025f80d",
@@ -12158,9 +12158,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-14 11:49:15 +0000 UTC",
+            "disclosure_time": "2022-09-14T11:49:15Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-09-14 13:41:12.69111 +0000 UTC",
+            "publication_time": "2022-09-14T13:41:12.69111Z",
             "references": [
               {
                 "url": "https://github.com/IonicaBizau/parse-url/commit/881ecb46e39286b0c2b3c32fe61dca9377176884",
@@ -12214,9 +12214,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-04-13 09:47:38 +0000 UTC",
+            "disclosure_time": "2022-04-13T09:47:38Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-08-01 15:29:44.009204 +0000 UTC",
+            "publication_time": "2022-08-01T15:29:44.009204Z",
             "references": [
               {
                 "url": "https://github.com/richardgirges/express-fileupload/issues/312",
@@ -12282,9 +12282,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-15 12:05:03 +0000 UTC",
+            "disclosure_time": "2022-09-15T12:05:03Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-09-15 13:46:52.766957 +0000 UTC",
+            "publication_time": "2022-09-15T13:46:52.766957Z",
             "references": [
               {
                 "url": "https://github.com/IonicaBizau/parse-url/commit/881ecb46e39286b0c2b3c32fe61dca9377176884",
@@ -12342,9 +12342,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2021-09-30 14:22:21 +0000 UTC",
+            "disclosure_time": "2021-09-30T14:22:21Z",
             "exploit": "Not Defined",
-            "publication_time": "2021-11-09 18:42:15.313328 +0000 UTC",
+            "publication_time": "2021-11-09T18:42:15.313328Z",
             "references": [
               {
                 "url": "https://github.com/mishoo/UglifyJS/commit/157521066fc43cff2feab7ffc1ecea603617606b",
@@ -12414,9 +12414,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2016-11-27 22:00:00 +0000 UTC",
+            "disclosure_time": "2016-11-27T22:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-12-06 15:00:00 +0000 UTC",
+            "publication_time": "2016-12-06T15:00:00Z",
             "references": [
               {
                 "url": "https://github.com/mde/ejs/commit/49264e0037e313a0a3e033450b5c184112516d8f",
@@ -12478,9 +12478,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2017-02-13 00:00:00 +0000 UTC",
+            "disclosure_time": "2017-02-13T00:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-03-01 10:00:54 +0000 UTC",
+            "publication_time": "2017-03-01T10:00:54Z",
             "references": [
               {
                 "url": "https://github.com/ljharb/qs/commit/beade029171b8cef9cee0d03ebe577e2dd84976d",
@@ -12542,9 +12542,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2016-11-27 22:00:00 +0000 UTC",
+            "disclosure_time": "2016-11-27T22:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-12-06 15:00:00 +0000 UTC",
+            "publication_time": "2016-12-06T15:00:00Z",
             "references": [
               {
                 "url": "https://github.com/mde/ejs/commit/49264e0037e313a0a3e033450b5c184112516d8f",
@@ -12602,9 +12602,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2017-08-15 00:00:00 +0000 UTC",
+            "disclosure_time": "2017-08-15T00:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-12-25 15:00:00 +0000 UTC",
+            "publication_time": "2017-12-25T15:00:00Z",
             "references": [
               {
                 "url": "https://github.com/markedjs/marked/pull/976/commits/cb72584c5d9d32ebfdbb99e35fb9b81af2b79686",
@@ -12670,9 +12670,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2024-03-20 15:16:03 +0000 UTC",
+            "disclosure_time": "2024-03-20T15:16:03Z",
             "exploit": "Not Defined",
-            "publication_time": "2024-03-26 07:34:23.916017 +0000 UTC",
+            "publication_time": "2024-03-26T07:34:23.916017Z",
             "references": [
               {
                 "url": "https://github.com/expressjs/express/commit/0b746953c4bd8e377123527db11f9cd866e39f94",
@@ -12742,9 +12742,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2021-01-08 08:30:14 +0000 UTC",
+            "disclosure_time": "2021-01-08T08:30:14Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-05-04 08:56:24.293243 +0000 UTC",
+            "publication_time": "2021-05-04T08:56:24.293243Z",
             "references": [
               {
                 "url": "https://github.com/handlebars-lang/handlebars.js/commit/f0589701698268578199be25285b2ebea1c1e427",
@@ -12802,9 +12802,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-29 13:34:36 +0000 UTC",
+            "disclosure_time": "2022-09-29T13:34:36Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-11-30 10:54:34.55666 +0000 UTC",
+            "publication_time": "2022-11-30T10:54:34.55666Z",
             "references": [
               {
                 "url": "https://github.com/snyk/cli/commit/80d97a93326406e09776156daf72e3caa03ae25a",
@@ -12898,9 +12898,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-29 13:34:36 +0000 UTC",
+            "disclosure_time": "2022-09-29T13:34:36Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-11-30 10:54:34.55666 +0000 UTC",
+            "publication_time": "2022-11-30T10:54:34.55666Z",
             "references": [
               {
                 "url": "https://github.com/snyk/cli/commit/80d97a93326406e09776156daf72e3caa03ae25a",
@@ -12994,9 +12994,9 @@
         "effective_severity_level": "low",
         "slots": [
           {
-            "disclosure_time": "2017-09-05 21:00:00 +0000 UTC",
+            "disclosure_time": "2017-09-05T21:00:00Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2017-09-26 03:55:05 +0000 UTC",
+            "publication_time": "2017-09-26T03:55:05Z",
             "references": [
               {
                 "url": "https://github.com/debug-js/debug/commit/b6d12fdbc63b483e5c969da33ea6adc09946b5ac",
@@ -13074,9 +13074,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-07-29 15:08:59 +0000 UTC",
+            "disclosure_time": "2020-07-29T15:08:59Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-07-30 15:28:18 +0000 UTC",
+            "publication_time": "2020-07-30T15:28:18Z",
             "references": [
               {
                 "url": "https://github.com/richardgirges/express-fileupload/issues/236",
@@ -13142,9 +13142,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2022-05-06 06:18:15 +0000 UTC",
+            "disclosure_time": "2022-05-06T06:18:15Z",
             "exploit": "Not Defined",
-            "publication_time": "2022-05-06 14:22:54 +0000 UTC",
+            "publication_time": "2022-05-06T14:22:54Z",
             "references": [
               {
                 "url": "https://github.com/mozilla/hawk/pull/286/commits/ade134119bf1fdc4909d00f5a952c966f0075ad3",
@@ -13206,9 +13206,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2017-01-12 00:00:00 +0000 UTC",
+            "disclosure_time": "2017-01-12T00:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-01-30 18:00:00 +0000 UTC",
+            "publication_time": "2017-01-30T18:00:00Z",
             "references": [
               {
                 "url": "https://github.com/chjj/marked/commit/cd2f6f5b7091154c5526e79b5f3bfb4d15995a51",
@@ -13258,9 +13258,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-04-13 12:06:35 +0000 UTC",
+            "disclosure_time": "2022-04-13T12:06:35Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-08-01 15:29:31.878221 +0000 UTC",
+            "publication_time": "2022-08-01T15:29:31.878221Z",
             "references": [
               {
                 "url": "https://github.com/richardgirges/express-fileupload/issues/312",
@@ -13330,9 +13330,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2021-03-29 21:32:05 +0000 UTC",
+            "disclosure_time": "2021-03-29T21:32:05Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-03-30 14:57:04 +0000 UTC",
+            "publication_time": "2021-03-30T14:57:04Z",
             "references": [
               {
                 "url": "https://github.com/rs/node-netmask/commit/3f19a056c4eb808ea4a29f234274c67bc5a848f4",
@@ -13398,9 +13398,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2023-04-06 07:16:41 +0000 UTC",
+            "disclosure_time": "2023-04-06T07:16:41Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2023-04-06 07:22:23.185949 +0000 UTC",
+            "publication_time": "2023-04-06T07:22:23.185949Z",
             "references": [
               {
                 "url": "https://github.com/Leonidas-from-XIV/node-xml2js/commit/50a492aef9729b8b9b291c5cb2746ec7dc1369db",
@@ -13474,9 +13474,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2019-10-18 11:17:09 +0000 UTC",
+            "disclosure_time": "2019-10-18T11:17:09Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-10-22 15:08:40 +0000 UTC",
+            "publication_time": "2019-10-22T15:08:40Z",
             "references": [
               {
                 "url": "https://github.com/richardgirges/express-fileupload/pull/171",
@@ -13534,9 +13534,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2024-02-08 17:45:02 +0000 UTC",
+            "disclosure_time": "2024-02-08T17:45:02Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2024-02-11 07:37:52.680399 +0000 UTC",
+            "publication_time": "2024-02-11T07:37:52.680399Z",
             "references": [
               {
                 "url": "https://github.com/indutny/node-ip/commit/32f468f1245574785ec080705737a579be1223aa",
@@ -13614,9 +13614,9 @@
         "effective_severity_level": "low",
         "slots": [
           {
-            "disclosure_time": "2017-09-07 21:00:00 +0000 UTC",
+            "disclosure_time": "2017-09-07T21:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-09-27 05:48:40 +0000 UTC",
+            "publication_time": "2017-09-27T05:48:40Z",
             "references": [
               {
                 "url": "https://github.com/broofa/node-mime/commit/1df903fdeb9ae7eaa048795b8d580ce2c98f40b0",
@@ -13686,9 +13686,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2016-06-20 15:52:52 +0000 UTC",
+            "disclosure_time": "2016-06-20T15:52:52Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-06-20 15:52:52 +0000 UTC",
+            "publication_time": "2016-06-20T15:52:52Z",
             "references": [
               {
                 "url": "https://github.com/isaacs/minimatch/commit/6944abf9e0694bd22fd9dad293faa40c2bc8a955",
@@ -13742,9 +13742,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2017-03-04 22:00:00 +0000 UTC",
+            "disclosure_time": "2017-03-04T22:00:00Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2017-07-05 14:05:50 +0000 UTC",
+            "publication_time": "2017-07-05T14:05:50Z",
             "references": [
               {
                 "url": "https://github.com/request/tunnel-agent/commit/9ca95ec7219daface8a6fc2674000653de0922c0",
@@ -13806,9 +13806,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-29 13:34:36 +0000 UTC",
+            "disclosure_time": "2022-09-29T13:34:36Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-11-30 10:54:34.55666 +0000 UTC",
+            "publication_time": "2022-11-30T10:54:34.55666Z",
             "references": [
               {
                 "url": "https://github.com/snyk/cli/commit/80d97a93326406e09776156daf72e3caa03ae25a",
@@ -13902,9 +13902,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2019-09-24 15:14:43 +0000 UTC",
+            "disclosure_time": "2019-09-24T15:14:43Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-09-25 14:33:59 +0000 UTC",
+            "publication_time": "2019-09-25T14:33:59Z",
             "references": [
               {
                 "url": "https://github.com/handlebars-lang/handlebars.js/commit/156061eb7707575293613d7fdf90e2bdaac029ee",
@@ -13974,9 +13974,9 @@
         "effective_severity_level": "critical",
         "slots": [
           {
-            "disclosure_time": "2020-08-17 15:06:59 +0000 UTC",
+            "disclosure_time": "2020-08-17T15:06:59Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-08-17 15:17:02.764391 +0000 UTC",
+            "publication_time": "2020-08-17T15:17:02.764391Z",
             "references": [
               {
                 "url": "https://github.com/janl/node-jsonpointer/commit/234e3437019c6c07537ed2ad1e03b3e132b85e34",
@@ -14030,9 +14030,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2016-06-20 16:00:06 +0000 UTC",
+            "disclosure_time": "2016-06-20T16:00:06Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-06-20 16:00:06 +0000 UTC",
+            "publication_time": "2016-06-20T16:00:06Z",
             "references": [
               {
                 "url": "https://github.com/isaacs/minimatch/commit/6944abf9e0694bd22fd9dad293faa40c2bc8a955",
@@ -14090,9 +14090,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-10-18 06:00:25 +0000 UTC",
+            "disclosure_time": "2022-10-18T06:00:25Z",
             "exploit": "Not Defined",
-            "publication_time": "2022-10-18 06:29:18.07895 +0000 UTC",
+            "publication_time": "2022-10-18T06:29:18.07895Z",
             "references": [
               {
                 "url": "https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6",
@@ -14150,9 +14150,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2018-01-30 22:28:27 +0000 UTC",
+            "disclosure_time": "2018-01-30T22:28:27Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2018-02-14 13:22:50 +0000 UTC",
+            "publication_time": "2018-02-14T13:22:50Z",
             "references": [
               {
                 "url": "https://github.com/lodash/lodash/commit/d8e069cc3410082e44eb18fcf8e7f3d08ebe1d4a",
@@ -14230,9 +14230,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2019-10-30 15:57:14 +0000 UTC",
+            "disclosure_time": "2019-10-30T15:57:14Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-11-05 12:19:43 +0000 UTC",
+            "publication_time": "2019-11-05T12:19:43Z",
             "references": [
               {
                 "url": "https://github.com/wycats/handlebars.js/commit/8d5530ee2c3ea9f0aee3fde310b9f36887d00b8b",
@@ -14290,9 +14290,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2023-03-16 13:49:16 +0000 UTC",
+            "disclosure_time": "2023-03-16T13:49:16Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2023-03-17 07:46:44.219769 +0000 UTC",
+            "publication_time": "2023-03-17T07:46:44.219769Z",
             "references": [
               {
                 "url": "https://github.com/request/request/commit/d42332182512e56ba68446f49c3e3711e04301a2",
@@ -14358,9 +14358,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-10-25 14:24:22 +0000 UTC",
+            "disclosure_time": "2020-10-25T14:24:22Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-11-10 15:27:28 +0000 UTC",
+            "publication_time": "2020-11-10T15:27:28Z",
             "references": [
               {
                 "url": "https://github.com/yargs/y18n/commit/a9ac604abf756dec9687be3843e2c93bfe581f25",
@@ -14426,9 +14426,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2021-04-18 13:04:52 +0000 UTC",
+            "disclosure_time": "2021-04-18T13:04:52Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-07-25 14:10:32 +0000 UTC",
+            "publication_time": "2021-07-25T14:10:32Z",
             "references": [
               {
                 "url": "https://github.com/Stuk/jszip/commit/22357494f424178cb416cdb7d93b26dd4f824b36",
@@ -14494,9 +14494,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2021-08-31 17:53:55 +0000 UTC",
+            "disclosure_time": "2021-08-31T17:53:55Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-09-01 16:28:19 +0000 UTC",
+            "publication_time": "2021-09-01T16:28:19Z",
             "references": [
               {
                 "url": "https://github.com/aheckmann/mpath/commit/89402d2880d4ea3518480a8c9847c541f2d824fc",
@@ -14558,9 +14558,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-06-27 11:22:52 +0000 UTC",
+            "disclosure_time": "2022-06-27T11:22:52Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-06-27 15:15:24.917476 +0000 UTC",
+            "publication_time": "2022-06-27T15:15:24.917476Z",
             "references": [
               {
                 "url": "https://github.com/ionicabizau/parse-url/commit/21c72ab9412228eea753e2abc48f8962707b1fe3",
@@ -14622,9 +14622,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2023-06-08 14:45:59 +0000 UTC",
+            "disclosure_time": "2023-06-08T14:45:59Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2023-06-30 11:54:16.657348 +0000 UTC",
+            "publication_time": "2023-06-30T11:54:16.657348Z",
             "references": [
               {
                 "url": "https://github.com/salesforce/tough-cookie/commit/12d474791bb856004e858fdb1c47b7608d09cf6e",
@@ -14690,9 +14690,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2015-04-03 16:00:00 +0000 UTC",
+            "disclosure_time": "2015-04-03T16:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2015-04-03 16:00:00 +0000 UTC",
+            "publication_time": "2015-04-03T16:00:00Z",
             "references": [
               {
                 "url": "https://github.com/npm/npm/releases/tag/v2.7.5",
@@ -14750,9 +14750,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2021-03-26 13:19:46 +0000 UTC",
+            "disclosure_time": "2021-03-26T13:19:46Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-04-26 16:18:43 +0000 UTC",
+            "publication_time": "2021-04-26T16:18:43Z",
             "references": [
               {
                 "url": "https://github.com/advisories/GHSA-c6rp-wrp9-qr4q",
@@ -14818,9 +14818,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2018-12-28 20:34:57 +0000 UTC",
+            "disclosure_time": "2018-12-28T20:34:57Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-02-14 17:52:50 +0000 UTC",
+            "publication_time": "2019-02-14T17:52:50Z",
             "references": [
               {
                 "url": "https://github.com/handlebars-lang/handlebars.js/commit/de6ded486f84cf685e37e1bd719aad7211176241",
@@ -14890,9 +14890,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2020-10-16 16:47:34 +0000 UTC",
+            "disclosure_time": "2020-10-16T16:47:34Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-02-15 11:50:49 +0000 UTC",
+            "publication_time": "2021-02-15T11:50:49Z",
             "references": [
               {
                 "url": "https://github.com/lodash/lodash/commit/c4847ebe7d14540bb28a8b932a9ce1b9ecbfee1a",
@@ -14950,9 +14950,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2015-01-21 22:00:00 +0000 UTC",
+            "disclosure_time": "2015-01-21T22:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-06-28 13:07:29 +0000 UTC",
+            "publication_time": "2017-06-28T13:07:29Z",
             "references": [
               {
                 "url": "https://github.com/joyent/node-http-signature/commit/78ab1da232f31f695f5c362d863593a143aa8b56",
@@ -15014,9 +15014,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2015-05-20 16:45:00 +0000 UTC",
+            "disclosure_time": "2015-05-20T16:45:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-04-20 14:45:19 +0000 UTC",
+            "publication_time": "2016-04-20T14:45:19Z",
             "references": [
               {
                 "url": "https://github.com/chjj/marked/pull/592/commits/2cff85979be8e7a026a9aca35542c470cf5da523",
@@ -15078,9 +15078,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2017-09-08 21:00:00 +0000 UTC",
+            "disclosure_time": "2017-09-08T21:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-09-27 08:48:49 +0000 UTC",
+            "publication_time": "2017-09-27T08:48:49Z",
             "references": [
               {
                 "url": "https://github.com/jshttp/fresh/commit/21a0f0c2a5f447e0d40bc16be0c23fa98a7b46ec",
@@ -15138,9 +15138,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2019-04-13 06:31:34 +0000 UTC",
+            "disclosure_time": "2019-04-13T06:31:34Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-04-14 06:31:34 +0000 UTC",
+            "publication_time": "2019-04-14T06:31:34Z",
             "references": [
               {
                 "url": "https://github.com/wycats/handlebars.js/commit/cd38583216dce3252831916323202749431c773e",
@@ -15206,9 +15206,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2020-04-10 00:00:00 +0000 UTC",
+            "disclosure_time": "2020-04-10T00:00:00Z",
             "exploit": "Functional",
-            "publication_time": "2020-04-13 15:33:49 +0000 UTC",
+            "publication_time": "2020-04-13T15:33:49Z",
             "references": [
               {
                 "url": "https://github.com/jquery/jquery/commit/1d61fd9407e6fbe82fe55cb0b938307aa0791f77",
@@ -15274,9 +15274,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2019-04-05 15:54:43 +0000 UTC",
+            "disclosure_time": "2019-04-05T15:54:43Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-04-07 15:54:43 +0000 UTC",
+            "publication_time": "2019-04-07T15:54:43Z",
             "references": [
               {
                 "url": "https://github.com/nodeca/js-yaml/pull/480/commits/e18afbf1edcafb7add2c4c7b22abc8d6ebc2fa61",
@@ -15342,9 +15342,9 @@
         "effective_severity_level": "critical",
         "slots": [
           {
-            "disclosure_time": "2022-06-28 06:34:07 +0000 UTC",
+            "disclosure_time": "2022-06-28T06:34:07Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-06-28 11:34:59.384579 +0000 UTC",
+            "publication_time": "2022-06-28T11:34:59.384579Z",
             "references": [
               {
                 "url": "https://github.com/ionicabizau/parse-url/commit/21c72ab9412228eea753e2abc48f8962707b1fe3",
@@ -15406,9 +15406,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-30 07:18:14 +0000 UTC",
+            "disclosure_time": "2022-09-30T07:18:14Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-09-30 10:34:38 +0000 UTC",
+            "publication_time": "2022-09-30T10:34:38Z",
             "references": [
               {
                 "url": "https://github.com/snyk/snyk-go-plugin/commit/d8dfc11ebb185e89f62b464ebf7cdd20ecce629d",
@@ -15470,9 +15470,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2016-06-16 17:36:06 +0000 UTC",
+            "disclosure_time": "2016-06-16T17:36:06Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-06-16 17:36:06 +0000 UTC",
+            "publication_time": "2016-06-16T17:36:06Z",
             "references": [
               {
                 "url": "https://github.com/jshttp/negotiator/commit/26a05ec15cf7d1fa56000d66ebe9c9a1a62cb75c",
@@ -15530,9 +15530,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-07-31 17:13:38 +0000 UTC",
+            "disclosure_time": "2020-07-31T17:13:38Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-08-02 15:04:47.405171 +0000 UTC",
+            "publication_time": "2020-08-02T15:04:47.405171Z",
             "references": [
               {
                 "url": "https://github.com/mafintosh/is-my-json-valid/commit/c3fc04fc455d40e9b29537f8e2c73a28ce106edb",
@@ -15590,9 +15590,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-08-21 10:34:29 +0000 UTC",
+            "disclosure_time": "2020-08-21T10:34:29Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-08-21 12:53:03 +0000 UTC",
+            "publication_time": "2020-08-21T12:53:03Z",
             "references": [
               {
                 "url": "https://hackerone.com/reports/864701",
@@ -15650,9 +15650,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2022-07-28 10:26:24 +0000 UTC",
+            "disclosure_time": "2022-07-28T10:26:24Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-07-28 15:01:24 +0000 UTC",
+            "publication_time": "2022-07-28T15:01:24Z",
             "references": [
               {
                 "url": "https://github.com/Automattic/mongoose/commit/6a197316564742c0422309e1b5fecfa4faec126e",
@@ -15718,9 +15718,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-06-27 12:33:18 +0000 UTC",
+            "disclosure_time": "2022-06-27T12:33:18Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-06-27 12:44:32 +0000 UTC",
+            "publication_time": "2022-06-27T12:44:32Z",
             "references": [
               {
                 "url": "https://github.com/ionicabizau/parse-url/commit/21c72ab9412228eea753e2abc48f8962707b1fe3",
@@ -15782,9 +15782,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2017-03-01 22:00:00 +0000 UTC",
+            "disclosure_time": "2017-03-01T22:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-04-26 09:19:21 +0000 UTC",
+            "publication_time": "2017-04-26T09:19:21Z",
             "references": [
               {
                 "url": "https://github.com/juliangruber/brace-expansion/pull/35/commits/b13381281cead487cbdbfd6a69fb097ea5e456c3",
@@ -15850,9 +15850,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2021-09-09 14:27:43 +0000 UTC",
+            "disclosure_time": "2021-09-09T14:27:43Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-09-12 12:52:37 +0000 UTC",
+            "publication_time": "2021-09-12T12:52:37Z",
             "references": [
               {
                 "url": "https://github.com/chalk/ansi-regex/commit/419250fa510bf31b4cc672e76537a64f9332e1f1",
@@ -15918,9 +15918,9 @@
         "effective_severity_level": "critical",
         "slots": [
           {
-            "disclosure_time": "2019-11-18 19:42:01 +0000 UTC",
+            "disclosure_time": "2019-11-18T19:42:01Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-11-20 09:55:17 +0000 UTC",
+            "publication_time": "2019-11-20T09:55:17Z",
             "references": [
               {
                 "url": "https://github.com/wycats/handlebars.js/commit/198887808780bbef9dba67a8af68ece091d5baa7",
@@ -15978,9 +15978,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2020-04-27 22:13:11 +0000 UTC",
+            "disclosure_time": "2020-04-27T22:13:11Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-04-28 14:28:34 +0000 UTC",
+            "publication_time": "2020-04-28T14:28:34Z",
             "references": [
               {
                 "url": "https://github.com/handlebars-lang/handlebars.js/pull/1633",
@@ -16042,9 +16042,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-01-14 21:04:41 +0000 UTC",
+            "disclosure_time": "2022-01-14T21:04:41Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-01-16 15:23:59.300943 +0000 UTC",
+            "publication_time": "2022-01-16T15:23:59.300943Z",
             "references": [
               {
                 "url": "https://github.com/markedjs/marked/commit/c4a3ccd344b6929afa8a1d50ac54a721e57012c0",
@@ -16106,9 +16106,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2020-03-16 16:35:35 +0000 UTC",
+            "disclosure_time": "2020-03-16T16:35:35Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-03-16 16:35:33 +0000 UTC",
+            "publication_time": "2020-03-16T16:35:33Z",
             "references": [
               {
                 "url": "https://gist.github.com/Kirill89/dcd8100d010896157a36624119439832",
@@ -16170,9 +16170,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2021-01-28 07:59:22 +0000 UTC",
+            "disclosure_time": "2021-01-28T07:59:22Z",
             "exploit": "Not Defined",
-            "publication_time": "2021-02-15 17:04:18.10927 +0000 UTC",
+            "publication_time": "2021-02-15T17:04:18.10927Z",
             "references": [
               {
                 "url": "https://github.com/cthackers/adm-zip/commit/119dcad6599adccc77982feb14a0c7440fa63013",
@@ -16226,9 +16226,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2016-01-23 12:00:05 +0000 UTC",
+            "disclosure_time": "2016-01-23T12:00:05Z",
             "exploit": "Functional",
-            "publication_time": "2016-01-23 12:00:05 +0000 UTC",
+            "publication_time": "2016-01-23T12:00:05Z",
             "references": [
               {
                 "url": "https://github.com/ChALkeR/notes/blob/master/Buffer-knows-everything.md",
@@ -16294,9 +16294,9 @@
         "effective_severity_level": "low",
         "slots": [
           {
-            "disclosure_time": "2017-04-11 21:00:00 +0000 UTC",
+            "disclosure_time": "2017-04-11T21:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-05-15 06:02:45 +0000 UTC",
+            "publication_time": "2017-05-15T06:02:45Z",
             "references": [
               {
                 "url": "https://github.com/zeit/ms/pull/89/commits/305f2ddcd4eff7cc7c518aca6bb2b2d2daad8fef",
@@ -16354,9 +16354,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-07-31 17:14:47 +0000 UTC",
+            "disclosure_time": "2020-07-31T17:14:47Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-08-02 15:04:45.880122 +0000 UTC",
+            "publication_time": "2020-08-02T15:04:45.880122Z",
             "references": [
               {
                 "url": "https://github.com/mafintosh/is-my-json-valid/commit/3419563687df463b4ca709a2b46be8e15d6a2b3d",
@@ -16418,9 +16418,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-01-16 08:58:04 +0000 UTC",
+            "disclosure_time": "2022-01-16T08:58:04Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-01-16 14:42:47.883887 +0000 UTC",
+            "publication_time": "2022-01-16T14:42:47.883887Z",
             "references": [
               {
                 "url": "https://github.com/markedjs/marked/commit/c4a3ccd344b6929afa8a1d50ac54a721e57012c0",
@@ -16478,9 +16478,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-12-13 10:36:01 +0000 UTC",
+            "disclosure_time": "2020-12-13T10:36:01Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-12-13 15:57:48 +0000 UTC",
+            "publication_time": "2020-12-13T15:57:48Z",
             "references": [
               {
                 "url": "https://github.com/aheckmann/mquery/commit/792e69fd0a7281a0300be5cade5a6d7c1d468ad4",
@@ -16542,9 +16542,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2022-11-26 00:00:00 +0000 UTC",
+            "disclosure_time": "2022-11-26T00:00:00Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-12-04 12:24:32.307833 +0000 UTC",
+            "publication_time": "2022-12-04T12:24:32.307833Z",
             "references": [
               {
                 "url": "https://github.com/ljharb/qs/pull/428",
@@ -16610,9 +16610,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2018-02-27 15:06:27 +0000 UTC",
+            "disclosure_time": "2018-02-27T15:06:27Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2018-02-27 16:32:24 +0000 UTC",
+            "publication_time": "2018-02-27T16:32:24Z",
             "references": [
               {
                 "url": "https://github.com/markedjs/marked/pull/1083/commits/b15e42b67cec9ded8505e9d68bb8741ad7a9590d",
@@ -16678,9 +16678,9 @@
         "effective_severity_level": "low",
         "slots": [
           {
-            "disclosure_time": "2018-02-19 20:39:06 +0000 UTC",
+            "disclosure_time": "2018-02-19T20:39:06Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2018-02-19 16:32:28 +0000 UTC",
+            "publication_time": "2018-02-19T16:32:28Z",
             "references": [
               {
                 "url": "https://github.com/micromatch/braces/commit/abdafb0cae1e0c00f184abbadc692f4eaa98f451",
@@ -16734,9 +16734,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-03-02 19:21:25 +0000 UTC",
+            "disclosure_time": "2020-03-02T19:21:25Z",
             "exploit": "Not Defined",
-            "publication_time": "2020-03-07 00:19:23 +0000 UTC",
+            "publication_time": "2020-03-07T00:19:23Z",
             "references": [
               {
                 "url": "https://github.com/acornjs/acorn/commit/793c0e569ed1158672e3a40aeed1d8518832b802",
@@ -16794,9 +16794,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2021-12-07 14:51:02 +0000 UTC",
+            "disclosure_time": "2021-12-07T14:51:02Z",
             "exploit": "Functional",
-            "publication_time": "2022-05-19 10:52:23 +0000 UTC",
+            "publication_time": "2022-05-19T10:52:23Z",
             "references": [
               {
                 "url": "https://github.com/mscdex/dicer/pull/22/commits/b7fca2e93e8e9d4439d8acc5c02f5e54a0112dac",
@@ -16858,9 +16858,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2019-10-04 18:34:48 +0000 UTC",
+            "disclosure_time": "2019-10-04T18:34:48Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-10-18 17:22:39 +0000 UTC",
+            "publication_time": "2019-10-18T17:22:39Z",
             "references": [
               {
                 "url": "https://www.npmjs.com/advisories/1203",
@@ -16918,9 +16918,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2022-02-07 17:03:45 +0000 UTC",
+            "disclosure_time": "2022-02-07T17:03:45Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-04-12 14:21:55.230341 +0000 UTC",
+            "publication_time": "2022-04-12T14:21:55.230341Z",
             "references": [
               {
                 "url": "https://github.com/indexzero/nconf/pull/397",
@@ -16982,9 +16982,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2021-03-02 19:51:03 +0000 UTC",
+            "disclosure_time": "2021-03-02T19:51:03Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-03-29 14:54:59 +0000 UTC",
+            "publication_time": "2021-03-29T14:54:59Z",
             "references": [
               {
                 "url": "https://github.com/jashkenas/underscore/blob/cb5f6fc6c2400649d942f1e36f9e5191fb7a1bf1/modules/template.js%23L71",
@@ -17046,9 +17046,9 @@
         "effective_severity_level": "low",
         "slots": [
           {
-            "disclosure_time": "2022-11-28 13:29:26 +0000 UTC",
+            "disclosure_time": "2022-11-28T13:29:26Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2023-03-22 15:02:56.710165 +0000 UTC",
+            "publication_time": "2023-03-22T15:02:56.710165Z",
             "references": [
               {
                 "url": "https://github.com/jonschlinkert/word-wrap/commit/420dce9a2412b21881202b73a3c34f0edc53cb2e",
@@ -17114,9 +17114,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2016-11-27 22:00:00 +0000 UTC",
+            "disclosure_time": "2016-11-27T22:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-11-28 18:44:12 +0000 UTC",
+            "publication_time": "2016-11-28T18:44:12Z",
             "references": [
               {
                 "url": "https://github.com/mde/ejs/commit/3d447c5a335844b25faec04b1132dbc721f9c8f6",
@@ -17178,9 +17178,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-06-19 08:33:16 +0000 UTC",
+            "disclosure_time": "2022-06-19T08:33:16Z",
             "exploit": "Not Defined",
-            "publication_time": "2022-06-19 15:33:44.269688 +0000 UTC",
+            "publication_time": "2022-06-19T15:33:44.269688Z",
             "references": [
               {
                 "url": "https://github.com/sindresorhus/got/compare/v12.0.3...v12.1.0",
@@ -17242,9 +17242,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2019-03-26 08:40:15 +0000 UTC",
+            "disclosure_time": "2019-03-26T08:40:15Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2019-03-27 08:40:08 +0000 UTC",
+            "publication_time": "2019-03-27T08:40:08Z",
             "references": [
               {
                 "url": "https://github.com/jquery/jquery/commit/753d591aea698e57d6db58c9f722cd0808619b1b",
@@ -17318,9 +17318,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2021-11-14 15:05:57 +0000 UTC",
+            "disclosure_time": "2021-11-14T15:05:57Z",
             "exploit": "Not Defined",
-            "publication_time": "2021-11-14 16:49:43.070251 +0000 UTC",
+            "publication_time": "2021-11-14T16:49:43.070251Z",
             "references": [
               {
                 "url": "https://github.com/kriszyp/json-schema/commit/22f146111f541d9737e832823699ad3528ca7741",
@@ -17378,9 +17378,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2018-08-31 18:21:00 +0000 UTC",
+            "disclosure_time": "2018-08-31T18:21:00Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2019-02-01 18:21:00 +0000 UTC",
+            "publication_time": "2019-02-01T18:21:00Z",
             "references": [
               {
                 "url": "https://github.com/lodash/lodash/commit/90e6199a161b6445b01454517b40ef65ebecd2ad",
@@ -17462,9 +17462,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-06-28 00:01:01 +0000 UTC",
+            "disclosure_time": "2022-06-28T00:01:01Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-07-06 12:25:33.140856 +0000 UTC",
+            "publication_time": "2022-07-06T12:25:33.140856Z",
             "references": [
               {
                 "url": "https://github.com/ionicabizau/parse-url/commit/21c72ab9412228eea753e2abc48f8962707b1fe3",
@@ -17522,9 +17522,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-05-11 21:44:49 +0000 UTC",
+            "disclosure_time": "2020-05-11T21:44:49Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-05-12 21:52:20 +0000 UTC",
+            "publication_time": "2020-05-12T21:52:20Z",
             "references": [
               {
                 "url": "https://www.npmjs.com/advisories/1514",
@@ -17574,9 +17574,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-08-21 10:34:29 +0000 UTC",
+            "disclosure_time": "2020-08-21T10:34:29Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-08-21 12:53:03 +0000 UTC",
+            "publication_time": "2020-08-21T12:53:03Z",
             "references": [
               {
                 "url": "https://hackerone.com/reports/864701",
@@ -17630,9 +17630,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2021-03-18 13:23:15 +0000 UTC",
+            "disclosure_time": "2021-03-18T13:23:15Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-03-24 15:13:10.93196 +0000 UTC",
+            "publication_time": "2021-03-24T15:13:10.93196Z",
             "references": [
               {
                 "url": "https://github.com/Automattic/mongoose/commit/3ed44ffa13737be9fc0d709980da9c3c552d54e7",
@@ -17690,9 +17690,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2020-12-09 11:56:29 +0000 UTC",
+            "disclosure_time": "2020-12-09T11:56:29Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-01-20 16:41:56 +0000 UTC",
+            "publication_time": "2021-01-20T16:41:56Z",
             "references": [
               {
                 "url": "https://github.com/mde/ejs/commit/abaee2be937236b1b8da9a1f55096c17dda905fd",
@@ -17754,9 +17754,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2019-11-14 15:29:41 +0000 UTC",
+            "disclosure_time": "2019-11-14T15:29:41Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2019-11-15 15:48:43 +0000 UTC",
+            "publication_time": "2019-11-15T15:48:43Z",
             "references": [
               {
                 "url": "https://www.npmjs.com/advisories/1316",
@@ -17818,9 +17818,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-12-08 13:02:04 +0000 UTC",
+            "disclosure_time": "2020-12-08T13:02:04Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-12-10 18:08:38 +0000 UTC",
+            "publication_time": "2020-12-10T18:08:38Z",
             "references": [
               {
                 "url": "https://medium.com/csg-govtech/supply-chain-pollution-discovering-a-16-million-download-week-node-js-2fa4d2c27cf7",
@@ -17882,9 +17882,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2020-04-29 23:02:09 +0000 UTC",
+            "disclosure_time": "2020-04-29T23:02:09Z",
             "exploit": "Functional",
-            "publication_time": "2020-04-29 23:02:09 +0000 UTC",
+            "publication_time": "2020-04-29T23:02:09Z",
             "references": [
               {
                 "url": "https://github.com/jquery/jquery/security/advisories/GHSA-gxr4-xjj5-5px2",
@@ -17966,9 +17966,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2021-08-31 17:19:51 +0000 UTC",
+            "disclosure_time": "2021-08-31T17:19:51Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-11-03 16:34:28 +0000 UTC",
+            "publication_time": "2021-11-03T16:34:28Z",
             "references": [
               {
                 "url": "https://github.com/janl/node-jsonpointer/commit/a0345f3550cd9c4d89f33b126390202b89510ad4",
@@ -18034,9 +18034,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2023-01-25 16:00:59 +0000 UTC",
+            "disclosure_time": "2023-01-25T16:00:59Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2023-06-20 15:39:58.313421 +0000 UTC",
+            "publication_time": "2023-06-20T15:39:58.313421Z",
             "references": [
               {
                 "url": "https://github.com/npm/node-semver/commit/2f8fd41487acf380194579ecb6f8b1bbfe116be0",
@@ -18118,9 +18118,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2015-06-26 21:00:00 +0000 UTC",
+            "disclosure_time": "2015-06-26T21:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-11-27 00:00:00 +0000 UTC",
+            "publication_time": "2016-11-27T00:00:00Z",
             "references": [
               {
                 "url": "https://github.com/jquery/jquery/commit/f60729f3903d17917dc351f3ac87794de379b0cc",
@@ -18186,9 +18186,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2017-08-15 00:00:00 +0000 UTC",
+            "disclosure_time": "2017-08-15T00:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-12-25 15:00:00 +0000 UTC",
+            "publication_time": "2017-12-25T15:00:00Z",
             "references": [
               {
                 "url": "https://github.com/markedjs/marked/pull/976/commits/6d1901ff71abb83aa32ca9a5ce47471382ea42a9",
@@ -18250,9 +18250,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2018-05-12 09:54:39 +0000 UTC",
+            "disclosure_time": "2018-05-12T09:54:39Z",
             "exploit": "Functional",
-            "publication_time": "2018-05-13 14:26:27 +0000 UTC",
+            "publication_time": "2018-05-13T14:26:27Z",
             "references": [
               {
                 "url": "https://hackerone.com/reports/320269",
@@ -18310,9 +18310,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2014-02-06 07:33:48 +0000 UTC",
+            "disclosure_time": "2014-02-06T07:33:48Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2014-02-06 07:33:48 +0000 UTC",
+            "publication_time": "2014-02-06T07:33:48Z",
             "references": [
               {
                 "url": "http://blog.npmjs.org/post/80277229932/newly-paranoid-maintainers",
@@ -18382,9 +18382,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2023-01-04 12:08:19 +0000 UTC",
+            "disclosure_time": "2023-01-04T12:08:19Z",
             "exploit": "Not Defined",
-            "publication_time": "2023-01-04 13:41:05.971929 +0000 UTC",
+            "publication_time": "2023-01-04T13:41:05.971929Z",
             "references": [
               {
                 "url": "https://stuk.github.io/jszip/CHANGES.html",
@@ -18442,9 +18442,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2020-07-13 15:47:58 +0000 UTC",
+            "disclosure_time": "2020-07-13T15:47:58Z",
             "exploit": "Unproven",
-            "publication_time": "2020-07-27 15:44:09 +0000 UTC",
+            "publication_time": "2020-07-27T15:44:09Z",
             "references": [
               {
                 "url": "https://github.com/markedjs/marked/commit/bd4f8c464befad2b304d51e33e89e567326e62e0",
@@ -18502,9 +18502,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2020-03-10 08:22:24 +0000 UTC",
+            "disclosure_time": "2020-03-10T08:22:24Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-03-11 08:22:19 +0000 UTC",
+            "publication_time": "2020-03-11T08:22:19Z",
             "references": [
               {
                 "url": "https://gist.github.com/Kirill89/47feb345b09bf081317f08dd43403a8a",
@@ -18574,9 +18574,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2017-09-07 21:00:00 +0000 UTC",
+            "disclosure_time": "2017-09-07T21:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-09-21 08:07:51 +0000 UTC",
+            "publication_time": "2017-09-21T08:07:51Z",
             "references": [
               {
                 "url": "https://github.com/chjj/marked/issues/937",
@@ -18634,9 +18634,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2018-04-16 15:34:35 +0000 UTC",
+            "disclosure_time": "2018-04-16T15:34:35Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-07-04 15:34:22 +0000 UTC",
+            "publication_time": "2019-07-04T15:34:22Z",
             "references": [
               {
                 "url": "https://github.com/markedjs/marked/commit/09afabf69c6d0c919c03443f47bdfe476566105d",
@@ -18698,9 +18698,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2022-06-28 12:14:17 +0000 UTC",
+            "disclosure_time": "2022-06-28T12:14:17Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-06-28 14:05:39 +0000 UTC",
+            "publication_time": "2022-06-28T14:05:39Z",
             "references": [
               {
                 "url": "https://github.com/ionicabizau/parse-path/commit/f9ad8856a3c8ae18e1cf4caef5edbabbc42840e8",
@@ -18758,9 +18758,9 @@
         "effective_severity_level": "low",
         "slots": [
           {
-            "disclosure_time": "2016-01-19 21:51:35 +0000 UTC",
+            "disclosure_time": "2016-01-19T21:51:35Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-01-19 23:24:51 +0000 UTC",
+            "publication_time": "2016-01-19T23:24:51Z",
             "references": [
               {
                 "url": "https://github.com/hapijs/hawk/commit/0833f99ba64558525995a7e21d4093da1f3e15fa",
@@ -18822,9 +18822,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2016-01-19 04:57:05 +0000 UTC",
+            "disclosure_time": "2016-01-19T04:57:05Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-03-22 12:00:05 +0000 UTC",
+            "publication_time": "2016-03-22T12:00:05Z",
             "references": [
               {
                 "url": "https://github.com/ChALkeR/notes/blob/master/Buffer-knows-everything.md",
@@ -18894,9 +18894,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2020-08-27 15:16:42 +0000 UTC",
+            "disclosure_time": "2020-08-27T15:16:42Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2020-08-28 12:18:48 +0000 UTC",
+            "publication_time": "2020-08-28T12:18:48Z",
             "references": [
               {
                 "url": "https://github.com/rvagg/bl/commit/8a8c13c880e2bef519133ea43e0e9b78b5d0c91e",
@@ -18970,9 +18970,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-30 07:18:14 +0000 UTC",
+            "disclosure_time": "2022-09-30T07:18:14Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-09-30 10:34:38 +0000 UTC",
+            "publication_time": "2022-09-30T10:34:38Z",
             "references": [
               {
                 "url": "https://github.com/snyk/snyk-go-plugin/commit/d8dfc11ebb185e89f62b464ebf7cdd20ecce629d",
@@ -19034,9 +19034,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2021-01-08 17:08:45 +0000 UTC",
+            "disclosure_time": "2021-01-08T17:08:45Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-02-15 11:50:51 +0000 UTC",
+            "publication_time": "2021-02-15T11:50:51Z",
             "references": [
               {
                 "url": "https://github.com/handlebars-lang/handlebars.js/commit/b6d3de7123eebba603e321f04afdbae608e8fea8",
@@ -19094,9 +19094,9 @@
         "effective_severity_level": "low",
         "slots": [
           {
-            "disclosure_time": "2017-09-05 21:00:00 +0000 UTC",
+            "disclosure_time": "2017-09-05T21:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2017-11-28 14:47:22 +0000 UTC",
+            "publication_time": "2017-11-28T14:47:22Z",
             "references": [
               {
                 "url": "https://github.com/moment/moment/issues/4163",
@@ -19158,9 +19158,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2022-04-26 08:36:18 +0000 UTC",
+            "disclosure_time": "2022-04-26T08:36:18Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-04-26 13:41:31.870922 +0000 UTC",
+            "publication_time": "2022-04-26T13:41:31.870922Z",
             "references": [
               {
                 "url": "https://github.com/mde/ejs/commit/15ee698583c98dadc456639d6245580d17a24baf",
@@ -19234,9 +19234,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2021-01-12 12:42:32 +0000 UTC",
+            "disclosure_time": "2021-01-12T12:42:32Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-01-12 15:00:42 +0000 UTC",
+            "publication_time": "2021-01-12T15:00:42Z",
             "references": [
               {
                 "url": "https://github.com/gulpjs/glob-parent/pull/36",
@@ -19298,9 +19298,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2017-09-05 09:14:29 +0000 UTC",
+            "disclosure_time": "2017-09-05T09:14:29Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2019-04-05 09:14:22 +0000 UTC",
+            "publication_time": "2019-04-05T09:14:22Z",
             "references": [
               {
                 "url": "https://github.com/lodash/lodash/commit/5c08f18d365b64063bfbfa686cbb97cdd6267347",
@@ -19366,9 +19366,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-29 13:34:36 +0000 UTC",
+            "disclosure_time": "2022-09-29T13:34:36Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-11-30 10:54:34.55666 +0000 UTC",
+            "publication_time": "2022-11-30T10:54:34.55666Z",
             "references": [
               {
                 "url": "https://github.com/snyk/cli/commit/80d97a93326406e09776156daf72e3caa03ae25a",
@@ -19458,9 +19458,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2021-03-30 09:50:31 +0000 UTC",
+            "disclosure_time": "2021-03-30T09:50:31Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-03-30 14:57:04.262984 +0000 UTC",
+            "publication_time": "2021-03-30T14:57:04.262984Z",
             "references": [
               {
                 "url": "https://github.com/aheckmann/mquery/commit/158f059e058579d2d08c2f1380689f5f69336778",
@@ -19526,9 +19526,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2021-03-29 21:32:05 +0000 UTC",
+            "disclosure_time": "2021-03-29T21:32:05Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-03-30 14:57:04 +0000 UTC",
+            "publication_time": "2021-03-30T14:57:04Z",
             "references": [
               {
                 "url": "https://github.com/rs/node-netmask/commit/3f19a056c4eb808ea4a29f234274c67bc5a848f4",
@@ -19594,9 +19594,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2016-10-18 21:00:00 +0000 UTC",
+            "disclosure_time": "2016-10-18T21:00:00Z",
             "exploit": "Not Defined",
-            "publication_time": "2016-10-24 06:57:59 +0000 UTC",
+            "publication_time": "2016-10-24T06:57:59Z",
             "references": [
               {
                 "url": "https://github.com/moment/moment/commit/663f33e333212b3800b63592cd8e237ac8fabdb9",
@@ -19658,9 +19658,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2015-10-24 20:39:59 +0000 UTC",
+            "disclosure_time": "2015-10-24T20:39:59Z",
             "exploit": "Not Defined",
-            "publication_time": "2015-11-06 02:09:36 +0000 UTC",
+            "publication_time": "2015-11-06T02:09:36Z",
             "references": [
               {
                 "url": "https://www.openwall.com/lists/oss-security/2016/04/20/11",
@@ -19722,9 +19722,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2019-04-04 20:27:50 +0000 UTC",
+            "disclosure_time": "2019-04-04T20:27:50Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-04-07 06:53:47 +0000 UTC",
+            "publication_time": "2019-04-07T06:53:47Z",
             "references": [
               {
                 "url": "https://github.com/markedjs/marked/commit/00f1f7a23916ef27186d0904635aa3509af63d47",
@@ -19794,9 +19794,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2019-07-10 01:52:12 +0000 UTC",
+            "disclosure_time": "2019-07-10T01:52:12Z",
             "exploit": "Not Defined",
-            "publication_time": "2019-10-10 10:31:41 +0000 UTC",
+            "publication_time": "2019-10-10T10:31:41Z",
             "references": [
               {
                 "url": "https://github.com/Automattic/mongoose/commit/f3eca5b94d822225c04e96cbeed9f095afb3c31c",
@@ -19858,9 +19858,9 @@
         "effective_severity_level": "high",
         "slots": [
           {
-            "disclosure_time": "2021-05-30 13:37:37 +0000 UTC",
+            "disclosure_time": "2021-05-30T13:37:37Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2021-08-22 13:26:31 +0000 UTC",
+            "publication_time": "2021-08-22T13:26:31Z",
             "references": [
               {
                 "url": "https://github.com/TooTallNate/node-degenerator/commit/ccc3445354135398b6eb1a04c7d27c13b833f2d5",
@@ -19930,9 +19930,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2022-09-29 13:34:36 +0000 UTC",
+            "disclosure_time": "2022-09-29T13:34:36Z",
             "exploit": "Proof of Concept",
-            "publication_time": "2022-11-30 10:54:34.55666 +0000 UTC",
+            "publication_time": "2022-11-30T10:54:34.55666Z",
             "references": [
               {
                 "url": "https://github.com/snyk/cli/commit/80d97a93326406e09776156daf72e3caa03ae25a",
@@ -20026,9 +20026,9 @@
         "effective_severity_level": "medium",
         "slots": [
           {
-            "disclosure_time": "2017-10-13 23:01:42 +0000 UTC",
+            "disclosure_time": "2017-10-13T23:01:42Z",
             "exploit": "High",
-            "publication_time": "2017-10-15 07:10:40.818 +0000 UTC",
+            "publication_time": "2017-10-15T07:10:40.818Z",
             "references": [
               {
                 "url": "https://github.com/isaacs/st/commit/579960c629f12a27428e2da84c54f517e37b0a16",

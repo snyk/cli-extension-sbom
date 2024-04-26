@@ -10,7 +10,7 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
 
-const sbomTestAPIVersion = "2023-08-31~beta"
+const sbomTestAPIVersion = "2024-04-22~beta"
 
 type (
 	SnykClient struct {

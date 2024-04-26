@@ -39,7 +39,7 @@ func TestSnykClient_CreateSBOMTest(t *testing.T) {
 	expectedRequestBody := `{"data":{"type":"sbom_test","attributes":{"sbom":` + sbomContent + `}}}`
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
-		assert.Equal(t, "/rest/orgs/org1/sbom_tests?version=2023-08-31~beta", r.RequestURI)
+		assert.Equal(t, "/rest/orgs/org1/sbom_tests?version=2024-04-22~beta", r.RequestURI)
 		assert.Equal(t, "application/vnd.api+json", r.Header.Get("Content-Type"))
 
 		body, err := io.ReadAll(r.Body)
@@ -62,13 +62,13 @@ func TestSnykClient_GetStatus_RedirectToResults(t *testing.T) {
 		[]byte{},
 		http.StatusSeeOther,
 		http.Header{
-			"Location": {"/rest/orgs/org1/sbom_tests/test-id/results?version=2023-08-31~beta"},
+			"Location": {"/rest/orgs/org1/sbom_tests/test-id/results?version=2024-04-22~beta"},
 		},
 	)
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
 		// should not follow redirects - using `require` to fail the test fast
-		require.Equal(t, "/rest/orgs/org1/sbom_tests/test-id?version=2023-08-31~beta", r.RequestURI)
+		require.Equal(t, "/rest/orgs/org1/sbom_tests/test-id?version=2024-04-22~beta", r.RequestURI)
 	})
 
 	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
@@ -91,7 +91,7 @@ func TestSnykClient_GetStatus_Processing(t *testing.T) {
 	)
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
-		assert.Equal(t, "/rest/orgs/org1/sbom_tests/test-id?version=2023-08-31~beta", r.RequestURI)
+		assert.Equal(t, "/rest/orgs/org1/sbom_tests/test-id?version=2024-04-22~beta", r.RequestURI)
 	})
 
 	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
@@ -114,7 +114,7 @@ func TestSnykClient_GetStatus_Error(t *testing.T) {
 	)
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
-		assert.Equal(t, "/rest/orgs/org1/sbom_tests/test-id?version=2023-08-31~beta", r.RequestURI)
+		assert.Equal(t, "/rest/orgs/org1/sbom_tests/test-id?version=2024-04-22~beta", r.RequestURI)
 	})
 
 	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
@@ -158,7 +158,7 @@ func TestSnykClient_GetResults(t *testing.T) {
 	)
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
-		assert.Equal(t, "/rest/orgs/org1/sbom_tests/test-id/results?version=2023-08-31~beta", r.RequestURI)
+		assert.Equal(t, "/rest/orgs/org1/sbom_tests/test-id/results?version=2024-04-22~beta", r.RequestURI)
 	})
 
 	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
