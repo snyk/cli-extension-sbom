@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"strconv"
+	"strings"
 )
 
 type Summary struct {
@@ -118,23 +119,30 @@ func (s *summary) issuesCounter() string {
 		return total
 	}
 
-	var levels string
+	levels := []string{"["}
 
 	if s.critical > 0 {
-		levels += criticalStyle.Render(fmt.Sprintf("%d CRITICAL", s.critical))
+		levels = append(levels, criticalStyle.Render(fmt.Sprintf("%d CRITICAL ", s.critical)))
 	}
 
 	if s.high > 0 {
-		levels += highStyle.Render(fmt.Sprintf("  %d HIGH", s.high))
+		levels = append(levels, highStyle.Render(fmt.Sprintf("%d HIGH ", s.high)))
 	}
 
 	if s.medium > 0 {
-		levels += mediumStyle.Render(fmt.Sprintf("  %d MEDIUM", s.medium))
+		levels = append(levels, mediumStyle.Render(fmt.Sprintf("%d MEDIUM ", s.medium)))
 	}
 
 	if s.low > 0 {
-		levels += lowStyle.Render(fmt.Sprintf("  %d LOW", s.low))
+		levels = append(levels, lowStyle.Render(fmt.Sprintf("%d LOW", s.low)))
 	}
 
-	return fmt.Sprintf("%s [ %s ]", total, levels)
+	var details string
+
+	if len(levels) > 1 {
+		levels = append(levels, "]")
+		details = strings.Join(levels, " ")
+	}
+
+	return fmt.Sprintf("%s %s", total, details)
 }
