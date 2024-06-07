@@ -2,8 +2,6 @@ version: 2.1
 
 orbs:
   go: circleci/go@1.7.1
-  snyk: snyk/snyk@1.4.0
-  prodsec: snyk/prodsec-orb@1.0
 
 jobs:
   unit-test:
@@ -25,27 +23,17 @@ jobs:
     steps:
       - checkout
       - run: golangci-lint run -v ./...
-  snyk-scan:
-    parameters:
-      monitor:
-        type: boolean
-        default: false
-    resource_class: medium
+
+  security-scans:
     executor:
       name: go/default
       tag: '1.21'
+    resource_class: small
     steps:
       - checkout
-      - setup_remote_docker
-      - snyk/scan:
-          fail-on-issues: true
-          severity-threshold: high
-          monitor-on-build: << parameters.monitor >>
-      - snyk/scan:
-          command: code test
-          fail-on-issues: true
-          severity-threshold: high
-          monitor-on-build: false
+      - prodsec/security_scans:
+          mode: auto
+          iac-scan: disabled
 
 workflows:
   version: 2
@@ -55,25 +43,17 @@ workflows:
           name: Scan repository for secrets
           context:
             - snyk-bot-slack
-          channel: team-link-pipeline-info
-      - unit-test:
-          name: Unit Test
-      - lint:
-          name: Linting
-      - snyk-scan:
-          name: Snyk Scan branch
-          context:
-            - snyk-token-team-link
+          channel: team-unify-alerts
           filters:
             branches:
               ignore:
                 - main
-      - snyk-scan:
-          name: Snyk Scan and Monitor
-          monitor: true
+      - security-scans:
+          name: Security Scans
           context:
-            - snyk-token-team-link
-          filters:
-            branches:
-              only:
-                - main
+            - analysis_unify
+      - unit-test:
+          name: Unit Test
+      - lint:
+          name: Linting
+
