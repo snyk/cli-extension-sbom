@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   go: circleci/go@1.7.1
+  prodsec: snyk/prodsec-orb@1
 
 jobs:
   unit-test:
@@ -31,6 +32,9 @@ jobs:
     resource_class: small
     steps:
       - checkout
+      - go/load-cache
+      - go/mod-download
+      - go/save-cache
       - prodsec/security_scans:
           mode: auto
           iac-scan: disabled
