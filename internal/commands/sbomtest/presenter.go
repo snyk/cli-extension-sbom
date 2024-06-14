@@ -64,7 +64,7 @@ func resultToJSONOutput(res *snykclient.SBOMTestResult) JSONOutput {
 		}
 
 		if vuln.CWE != "" {
-			cve = append(cve, vuln.CWE)
+			cwe = append(cwe, vuln.CWE)
 		}
 
 		for pid := range vuln.Packages {
