@@ -49,7 +49,7 @@ type (
 	}
 
 	SemVer struct {
-		Vulnerable []string `json:"Vulnerable,omitempty"`
+		Vulnerable []string `json:"vulnerable,omitempty"`
 	}
 )
 
