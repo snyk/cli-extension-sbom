@@ -68,6 +68,17 @@ func Test_generateIssues(t *testing.T) {
 			},
 			SnykRef: "SNYK-AMZN2-VIMMINIMAL-6062273",
 		},
+		OpenIssue{
+			Severity:    severities.LowSeverity,
+			Description: "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
+			IntroducedBy: []IntroducedBy{
+				{
+					Name:    "dbt-core",
+					Version: "1.6.10",
+					PURL:    "pkg:pypi/dbt-core@1.6.10",
+				},
+			},
+		},
 	)
 
 	assert.NoError(t, err)
