@@ -15,3 +15,7 @@
 [33m× [MEDIUM][0m [1mInteger Overflow or Wraparound[0m
   Introduced through: vim-minimal@9.0.1367-1.amzn2.0.1
   URL: https://security.snyk.io/vuln/SNYK-AMZN2-VIMMINIMAL-6062273
+
+× [LOW] [1mImproper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')[0m
+  Introduced through: pkg:pypi/dbt-core@1.6.10
+  URL: https://security.snyk.io/vuln/

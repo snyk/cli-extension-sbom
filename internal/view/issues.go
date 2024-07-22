@@ -3,8 +3,8 @@ package view
 import (
 	"bytes"
 	"fmt"
-	"html/template"
 	"slices"
+	"text/template"
 
 	"github.com/charmbracelet/lipgloss"
 

@@ -2,7 +2,7 @@ package view
 
 import (
 	"bytes"
-	"html/template"
+	"text/template"
 )
 
 type testResult struct {

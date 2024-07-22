@@ -3,9 +3,9 @@ package view
 import (
 	"bytes"
 	"fmt"
-	"html/template"
 	"strconv"
 	"strings"
+	"text/template"
 )
 
 type Summary struct {
