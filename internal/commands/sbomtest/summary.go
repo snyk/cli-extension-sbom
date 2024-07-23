@@ -15,23 +15,23 @@ func BuildTestSummary(resultsSummary *snykclient.SBOMTestSummary) (data []byte, 
 		Results: []json_schemas.TestSummaryResult{
 			{
 				Severity: "critical",
-				Total:    resultsSummary.VulnerabilitiesBySeverity.Critical,
-				Open:     resultsSummary.VulnerabilitiesBySeverity.Critical,
+				Total:    resultsSummary.IssuesBySeverity.Critical,
+				Open:     resultsSummary.IssuesBySeverity.Critical,
 			},
 			{
 				Severity: "high",
-				Total:    resultsSummary.VulnerabilitiesBySeverity.High,
-				Open:     resultsSummary.VulnerabilitiesBySeverity.High,
+				Total:    resultsSummary.IssuesBySeverity.High,
+				Open:     resultsSummary.IssuesBySeverity.High,
 			},
 			{
 				Severity: "medium",
-				Total:    resultsSummary.VulnerabilitiesBySeverity.Medium,
-				Open:     resultsSummary.VulnerabilitiesBySeverity.Medium,
+				Total:    resultsSummary.IssuesBySeverity.Medium,
+				Open:     resultsSummary.IssuesBySeverity.Medium,
 			},
 			{
 				Severity: "low",
-				Total:    resultsSummary.VulnerabilitiesBySeverity.Low,
-				Open:     resultsSummary.VulnerabilitiesBySeverity.Low,
+				Total:    resultsSummary.IssuesBySeverity.Low,
+				Open:     resultsSummary.IssuesBySeverity.Low,
 			},
 		},
 	}
