@@ -25,12 +25,12 @@ type SBOMTestSummary struct {
 	TotalLicenseIssues   int                 `json:"total_license_issues"`
 	TotalVulnerabilities int                 `json:"total_vulnerabilities"`
 
-	VulnerabilitiesBySeverity struct {
+	IssuesBySeverity struct {
 		Critical int `json:"critical"`
 		High     int `json:"high"`
 		Medium   int `json:"medium"`
 		Low      int `json:"low"`
-	} `json:"vulnerabilities_by_severity"`
+	} `json:"issues_by_severity"`
 }
 
 type UntestedComponent struct {
@@ -75,12 +75,18 @@ type IncludedResource struct {
 				ID   string `json:"id"`
 			} `json:"data"`
 		} `json:"affected_package"`
-		Vulnerability struct {
+		Vulnerability *struct {
 			Data struct {
 				Type string `json:"type"`
 				ID   string `json:"id"`
 			} `json:"data"`
-		} `json:"vulnerability"`
+		} `json:"vulnerability,omitempty"`
+		LicenseIssue *struct {
+			Data struct {
+				Type string `json:"type"`
+				ID   string `json:"id"`
+			} `json:"data"`
+		} `json:"license_issue,omitempty"`
 	} `json:"relationships,omitempty"`
 
 	Attributes struct {
@@ -122,6 +128,7 @@ type IncludedResource struct {
 		} `json:"severities"`
 
 		EffectiveSeverityLevel severities.Level `json:"effective_severity_level"`
+		Severity               severities.Level `json:"severity,omitempty"`
 
 		Slots []Slot `json:"slots"`
 	} `json:"attributes,omitempty"`
@@ -161,6 +168,7 @@ const (
 	ResourceTypePackages        = "packages"
 	ResourceTypeRemedies        = "remedies"
 	ResourceTypeVulnerabilities = "vulnerabilities"
+	ResourceTypeLicenseIssues   = "license_issues"
 )
 
 type Vulnerability struct {
@@ -189,6 +197,15 @@ type Vulnerability struct {
 	Packages []*Package
 }
 
+type LicenseIssue struct {
+	ID    string
+	Title string
+
+	SeverityLevel severities.Level
+
+	Packages []*Package
+}
+
 type Package struct {
 	ID      string
 	Name    string
@@ -196,24 +213,17 @@ type Package struct {
 	PURL    string
 
 	Vulnerabilities []*Vulnerability
+	LicenseIssues   []*LicenseIssue
 }
 
 type SBOMTestResult struct {
 	Summary         *SBOMTestSummary
 	Packages        map[string]*Package
 	Vulnerabilities map[string]*Vulnerability
+	LicenseIssues   map[string]*LicenseIssue
 }
 
-func (doc *SBOMTestResultResourceDocument) AsResult() *SBOMTestResult {
-	r := SBOMTestResult{
-		Summary:         &doc.Data.Attributes.Summary,
-		Packages:        make(map[string]*Package),
-		Vulnerabilities: make(map[string]*Vulnerability),
-	}
-
-	remedies := make([]*IncludedResource, 0)
-
-	// extract all included resources
+func (doc *SBOMTestResultResourceDocument) extractIncludedResources(r *SBOMTestResult, remedies *[]*IncludedResource) {
 	for i, res := range doc.Included {
 		switch res.Type {
 		case ResourceTypePackages:
@@ -284,24 +294,53 @@ func (doc *SBOMTestResultResourceDocument) AsResult() *SBOMTestResult {
 				SeverityLevel: res.Attributes.EffectiveSeverityLevel,
 			}
 
+		case ResourceTypeLicenseIssues:
+			r.LicenseIssues[res.ID] = &LicenseIssue{
+				ID:            res.ID,
+				Title:         res.Attributes.Title,
+				SeverityLevel: res.Attributes.Severity,
+			}
 		case ResourceTypeRemedies:
-			remedies = append(remedies, doc.Included[i])
+			*remedies = append(*remedies, doc.Included[i])
 		}
 	}
+}
+
+func (doc *SBOMTestResultResourceDocument) AsResult() *SBOMTestResult {
+	r := SBOMTestResult{
+		Summary:         &doc.Data.Attributes.Summary,
+		Packages:        make(map[string]*Package),
+		Vulnerabilities: make(map[string]*Vulnerability),
+		LicenseIssues:   make(map[string]*LicenseIssue),
+	}
+
+	remedies := make([]*IncludedResource, 0)
+
+	// extract all included resources
+	doc.extractIncludedResources(&r, &remedies)
 
 	// connect packages and vulnerabilities
 	for _, rem := range remedies {
-		vuln, vok := r.Vulnerabilities[rem.Relationships.Vulnerability.Data.ID]
 		pkg, pok := r.Packages[rem.Relationships.AffectedPackage.Data.ID]
-
-		if !vok || !pok {
+		if !pok {
 			continue
 		}
-
-		pkg.Vulnerabilities = append(pkg.Vulnerabilities, vuln)
-
-		vuln.Packages = append(vuln.Packages, pkg)
-		vuln.SemVer = append(vuln.SemVer, pkg.Version)
+		if rem.Relationships.Vulnerability != nil {
+			vuln, vok := r.Vulnerabilities[rem.Relationships.Vulnerability.Data.ID]
+			if !vok {
+				continue
+			}
+			pkg.Vulnerabilities = append(pkg.Vulnerabilities, vuln)
+			vuln.Packages = append(vuln.Packages, pkg)
+			vuln.SemVer = append(vuln.SemVer, pkg.Version)
+		} else if rem.Relationships.LicenseIssue != nil {
+			lic, lok := r.LicenseIssues[rem.Relationships.LicenseIssue.Data.ID]
+			if !lok {
+				continue
+			}
+			pkg.LicenseIssues = append(pkg.LicenseIssues, lic)
+			lic.Packages = append(lic.Packages, pkg)
+		}
 	}
 
 	return &r

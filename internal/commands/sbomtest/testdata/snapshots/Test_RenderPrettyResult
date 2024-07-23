@@ -44,6 +44,10 @@
   Introduced through: pkg:npm/ejs@0.8.8
   URL: https://security.snyk.io/vuln/SNYK-JS-EJS-1049328
 
+[33m× [MEDIUM][0m [1mImproper Control of Dynamically-Managed Code Resources[0m
+  Introduced through: pkg:npm/ejs@0.8.8
+  URL: https://security.snyk.io/vuln/SNYK-JS-EJS-6689533
+
 [33m× [MEDIUM][0m [1mOpen Redirect[0m
   Introduced through: pkg:npm/express@4.12.4
   URL: https://security.snyk.io/vuln/SNYK-JS-EXPRESS-6474509
@@ -79,6 +83,10 @@
 [33m× [MEDIUM][0m [1mMissing Release of Resource after Effective Lifetime[0m
   Introduced through: pkg:npm/inflight@1.0.5
   URL: https://security.snyk.io/vuln/SNYK-JS-INFLIGHT-6095116
+
+[33m× [MEDIUM][0m [1mServer-Side Request Forgery (SSRF)[0m
+  Introduced through: pkg:npm/ip@1.1.5
+  URL: https://security.snyk.io/vuln/SNYK-JS-IP-7148531
 
 [33m× [MEDIUM][0m [1mPrototype Pollution[0m
   Introduced through: pkg:npm/jquery@2.2.4
@@ -304,6 +312,10 @@
   Introduced through: pkg:npm/tunnel-agent@0.4.3
   URL: https://security.snyk.io/vuln/npm:tunnel-agent:20170305
 
+[33m× [MEDIUM][0m [1mMPL-2.0 license[0m
+  Introduced through: pkg:npm/symbol@0.2.3
+  URL: https://security.snyk.io/vuln/snyk:lic:npm:symbol:MPL-2.0
+
 [31m× [HIGH][0m [1mRegular Expression Denial of Service (ReDoS)[0m
   Introduced through: pkg:npm/acorn@5.7.1
   URL: https://security.snyk.io/vuln/SNYK-JS-ACORN-559469
@@ -319,6 +331,10 @@
 [31m× [HIGH][0m [1mRemote Memory Exposure[0m
   Introduced through: pkg:npm/bl@0.9.5
   URL: https://security.snyk.io/vuln/SNYK-JS-BL-608877
+
+[31m× [HIGH][0m [1mUncontrolled resource consumption[0m
+  Introduced through: pkg:npm/braces@1.8.5
+  URL: https://security.snyk.io/vuln/SNYK-JS-BRACES-6838727
 
 [31m× [HIGH][0m [1mDenial of Service (DoS)[0m
   Introduced through: pkg:npm/dicer@0.3.0
@@ -396,7 +412,7 @@
   Introduced through: pkg:npm/kerberos@0.0.24
   URL: https://security.snyk.io/vuln/SNYK-JS-KERBEROS-568900
 
-[31m× [HIGH][0m [1mCommand Injection[0m
+[31m× [HIGH][0m [1mCode Injection[0m
   Introduced through: pkg:npm/lodash@4.17.15
   URL: https://security.snyk.io/vuln/SNYK-JS-LODASH-1040724
 
@@ -413,12 +429,20 @@
   URL: https://security.snyk.io/vuln/SNYK-JS-LODASH-608086
 
 [31m× [HIGH][0m [1mPrototype Pollution[0m
+  Introduced through: pkg:npm/lodash@4.17.15
+  URL: https://security.snyk.io/vuln/SNYK-JS-LODASH-6139239
+
+[31m× [HIGH][0m [1mPrototype Pollution[0m
   Introduced through: pkg:npm/lodash@4.17.4
   URL: https://security.snyk.io/vuln/SNYK-JS-LODASH-73638
 
 [31m× [HIGH][0m [1mPrototype Pollution[0m
   Introduced through: pkg:npm/lodash.set@4.3.2
   URL: https://security.snyk.io/vuln/SNYK-JS-LODASHSET-1320032
+
+[31m× [HIGH][0m [1mInefficient Regular Expression Complexity[0m
+  Introduced through: pkg:npm/micromatch@2.3.8
+  URL: https://security.snyk.io/vuln/SNYK-JS-MICROMATCH-6838728
 
 [31m× [HIGH][0m [1mRegular Expression Denial of Service (ReDoS)[0m
   Introduced through: pkg:npm/minimatch@0.3.0
@@ -524,9 +548,17 @@
   Introduced through: pkg:npm/qs@1.2.2
   URL: https://security.snyk.io/vuln/npm:qs:20170213
 
+[31m× [HIGH][0m [1mGPL-2.0 license[0m
+  Introduced through: pkg:npm/goof@1.0.1
+  URL: https://security.snyk.io/vuln/snyk:lic:npm:goof:GPL-2.0
+
 [35m× [CRITICAL][0m [1mPrototype Pollution[0m
   Introduced through: pkg:npm/handlebars@4.0.5
   URL: https://security.snyk.io/vuln/SNYK-JS-HANDLEBARS-534988
+
+[35m× [CRITICAL][0m [1mAuthentication Bypass[0m
+  Introduced through: pkg:npm/hawk@1.1.1
+  URL: https://security.snyk.io/vuln/SNYK-JS-HAWK-6969142
 
 [35m× [CRITICAL][0m [1mPrototype Pollution[0m
   Introduced through: pkg:npm/jsonpointer@4.0.1
@@ -542,5 +574,5 @@
 │    Test type:       Software Bill of Materials                       │
 │    Path:            ./path/to/sbom.cdx.json                          │
 │                                                                      │
-│    Open issues:     [1m133[0m [ [35m3 CRITICAL [0m [31m55 HIGH [0m [33m66 MEDIUM [0m 9 LOW ]    │
+│    Open issues:     [1m141[0m [ [35m4 CRITICAL [0m [31m59 HIGH [0m [33m69 MEDIUM [0m 9 LOW ]    │
 ╰──────────────────────────────────────────────────────────────────────╯
