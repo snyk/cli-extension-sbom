@@ -12,7 +12,7 @@ import (
 
 func TestBuilTestSummary(t *testing.T) {
 	mockResultsSummary := &snykclient.SBOMTestSummary{
-		VulnerabilitiesBySeverity: struct {
+		IssuesBySeverity: struct {
 			Critical int `json:"critical"`
 			High     int `json:"high"`
 			Medium   int `json:"medium"`
