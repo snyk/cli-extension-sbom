@@ -2,10 +2,14 @@ package snykclient
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"time"
+
+	snyk_errors "github.com/snyk/error-catalog-golang-public/snyk_errors"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
@@ -112,15 +116,39 @@ func (t *SBOMTest) GetStatus(ctx context.Context, errFactory *errors.ErrorFactor
 		return SBOMTestStatusFinished, nil
 	}
 
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return SBOMTestStatusIndeterminate, errFactory.NewFatalSBOMTestError(err)
+	}
+
+	// Attempt to parse into a JSON:API error document.
+	// If we get errors, we can return the first one as an
+	// error-catalog error.
+	var errDoc errorDocument
+	if err := json.Unmarshal(body, &errDoc); err == nil && len(errDoc.Errors) > 0 {
+		err := errDoc.Errors[0]
+		// The go-application-framework currently limits output to the title of the error. For it to
+		// give more context, we augment the title with additional info.
+		return SBOMTestStatusError, snyk_errors.Error{
+			StatusCode: resp.StatusCode,
+			Detail:     err.Detail,
+			ID:         err.ID,
+			ErrorCode:  err.Code,
+			Title: fmt.Sprintf(
+				"%s (Snyk Error Code: %s, SBOM Test ID: %s, Snyk Request ID: %s)",
+				err.Title, err.Code, t.ID, resp.Header.Get("Snyk-Request-Id")),
+		}
+	}
+
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return SBOMTestStatusIndeterminate, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	var body SBOMTestStatusResourceDocument
-	if err := parseResponse(resp, http.StatusOK, &body); err != nil {
+	var statusDoc SBOMTestStatusResourceDocument
+	if err := json.Unmarshal(body, &statusDoc); err != nil {
 		return SBOMTestStatusIndeterminate, errFactory.NewFatalSBOMTestError(err)
 	}
-	if body.Data.Attributes.Status == "error" {
+	if statusDoc.Data.Attributes.Status == "error" {
 		return SBOMTestStatusError, nil
 	}
 

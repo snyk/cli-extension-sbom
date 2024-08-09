@@ -10,7 +10,7 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
-func TestBuilTestSummary(t *testing.T) {
+func TestBuildTestSummary(t *testing.T) {
 	mockResultsSummary := &snykclient.SBOMTestSummary{
 		IssuesBySeverity: struct {
 			Critical int `json:"critical"`

@@ -175,7 +175,7 @@ func (ef *ErrorFactory) NewFailedToTestSBOMError() *SBOMExtensionError {
 func (ef *ErrorFactory) NewFatalSBOMTestError(err error) *SBOMExtensionError {
 	return ef.newErr(
 		err,
-		"Failed to test SBOM. There was an error when trying to test your SBOM,"+
+		"Failed to test SBOM. There was an error when trying to test your SBOM, "+
 			"retrying may resolve the issue. If the error still occurs, contact support.",
 	)
 }

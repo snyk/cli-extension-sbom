@@ -10,12 +10,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/mocks"
-	. "github.com/snyk/cli-extension-sbom/internal/snykclient"
+	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
 //go:embed testdata/sbom-test-result.response.json
@@ -25,7 +26,7 @@ var logger = log.New(&bytes.Buffer{}, "", 0)
 var errFactory = errors.NewErrorFactory(logger)
 
 func TestNewSnykClient(t *testing.T) {
-	client := NewSnykClient(http.DefaultClient, "http://example.com", "org1")
+	client := snykclient.NewSnykClient(http.DefaultClient, "http://example.com", "org1")
 	assert.NotNil(t, client)
 }
 
@@ -48,7 +49,7 @@ func TestSnykClient_CreateSBOMTest(t *testing.T) {
 		assert.Equal(t, expectedRequestBody, string(body))
 	})
 
-	client := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
+	client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
 
 	sbomTest, err := client.CreateSBOMTest(context.Background(), []byte(sbomContent), errFactory)
 
@@ -71,8 +72,8 @@ func TestSnykClient_GetStatus_RedirectToResults(t *testing.T) {
 		require.Equal(t, "/rest/orgs/org1/sbom_tests/test-id?version=2024-07-10~beta", r.RequestURI)
 	})
 
-	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-	sbomTest := &SBOMTest{
+	snykClient := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
+	sbomTest := &snykclient.SBOMTest{
 		SnykClient: snykClient,
 		ID:         "test-id",
 	}
@@ -80,7 +81,7 @@ func TestSnykClient_GetStatus_RedirectToResults(t *testing.T) {
 	status, err := sbomTest.GetStatus(context.Background(), errFactory)
 
 	assert.NoError(t, err)
-	assert.Equal(t, SBOMTestStatusFinished, status)
+	assert.Equal(t, snykclient.SBOMTestStatusFinished, status)
 }
 
 func TestSnykClient_GetStatus_Processing(t *testing.T) {
@@ -94,8 +95,8 @@ func TestSnykClient_GetStatus_Processing(t *testing.T) {
 		assert.Equal(t, "/rest/orgs/org1/sbom_tests/test-id?version=2024-07-10~beta", r.RequestURI)
 	})
 
-	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-	sbomTest := &SBOMTest{
+	snykClient := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
+	sbomTest := &snykclient.SBOMTest{
 		SnykClient: snykClient,
 		ID:         "test-id",
 	}
@@ -103,7 +104,7 @@ func TestSnykClient_GetStatus_Processing(t *testing.T) {
 	status, err := sbomTest.GetStatus(context.Background(), errFactory)
 
 	assert.NoError(t, err)
-	assert.Equal(t, SBOMTestStatusProcessing, status)
+	assert.Equal(t, snykclient.SBOMTestStatusProcessing, status)
 }
 
 func TestSnykClient_GetStatus_Error(t *testing.T) {
@@ -117,8 +118,8 @@ func TestSnykClient_GetStatus_Error(t *testing.T) {
 		assert.Equal(t, "/rest/orgs/org1/sbom_tests/test-id?version=2024-07-10~beta", r.RequestURI)
 	})
 
-	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-	sbomTest := &SBOMTest{
+	snykClient := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
+	sbomTest := &snykclient.SBOMTest{
 		SnykClient: snykClient,
 		ID:         "test-id",
 	}
@@ -126,7 +127,7 @@ func TestSnykClient_GetStatus_Error(t *testing.T) {
 	status, err := sbomTest.GetStatus(context.Background(), errFactory)
 
 	assert.NoError(t, err)
-	assert.Equal(t, SBOMTestStatusError, status)
+	assert.Equal(t, snykclient.SBOMTestStatusError, status)
 }
 
 func TestSnykClient_ServerError(t *testing.T) {
@@ -138,8 +139,8 @@ func TestSnykClient_ServerError(t *testing.T) {
 
 	mockHTTPClient := mocks.NewMockSBOMService(response)
 
-	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-	sbomTest := &SBOMTest{
+	snykClient := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
+	sbomTest := &snykclient.SBOMTest{
 		SnykClient: snykClient,
 		ID:         "test-id",
 	}
@@ -147,7 +148,40 @@ func TestSnykClient_ServerError(t *testing.T) {
 	status, err := sbomTest.GetStatus(context.Background(), errFactory)
 
 	assert.ErrorContains(t, err, "unexpected status code")
-	assert.Equal(t, SBOMTestStatusIndeterminate, status)
+	assert.Equal(t, snykclient.SBOMTestStatusIndeterminate, status)
+}
+
+func TestSnykClient_ErrorCatalogError(t *testing.T) {
+	response := mocks.NewMockResponse(
+		"application/vnd.api+json",
+		[]byte(`{
+			"jsonapi":{"version":"1.0"},
+			"errors":[{
+				"id":"ce2b3dc4-415d-4d47-97e2-2e5de2337524",
+				"title":"Unknown SBOM format",
+				"status":"422",
+				"code":"SNYK-SBOM-0006",
+				"meta":{"classification":"UNSUPPORTED","isErrorCatalogError":true},
+				"links":{"about":"https://docs.snyk.io/scan-with-snyk/error-catalog#snyk-sbom-0006"},
+				"source":{}
+			}]
+		}`),
+		http.StatusUnprocessableEntity,
+	)
+
+	mockHTTPClient := mocks.NewMockSBOMService(response)
+
+	snykClient := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
+	sbomTest := &snykclient.SBOMTest{
+		SnykClient: snykClient,
+		ID:         "test-id",
+	}
+
+	status, err := sbomTest.GetStatus(context.Background(), errFactory)
+
+	assert.ErrorAs(t, err, &snyk_errors.Error{})
+	assert.ErrorContains(t, err, "Unknown SBOM format")
+	assert.Equal(t, snykclient.SBOMTestStatusError, status)
 }
 
 func TestSnykClient_GetResults(t *testing.T) {
@@ -161,8 +195,8 @@ func TestSnykClient_GetResults(t *testing.T) {
 		assert.Equal(t, "/rest/orgs/org1/sbom_tests/test-id/results?version=2024-07-10~beta", r.RequestURI)
 	})
 
-	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-	sbomTest := &SBOMTest{
+	snykClient := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
+	sbomTest := &snykclient.SBOMTest{
 		SnykClient: snykClient,
 		ID:         "test-id",
 	}
@@ -187,8 +221,8 @@ func TestSBOMTest_WaitUntilComplete(t *testing.T) {
 		w.Header().Add("Location", "https://:")
 		w.WriteHeader(http.StatusSeeOther)
 	}))
-	snykClient := NewSnykClient(srv.Client(), srv.URL, "org1")
-	sbomTest := &SBOMTest{
+	snykClient := snykclient.NewSnykClient(srv.Client(), srv.URL, "org1")
+	sbomTest := &snykclient.SBOMTest{
 		SnykClient: snykClient,
 		ID:         "test-id",
 	}
@@ -210,15 +244,15 @@ func TestSBOMTest_WaitUntilCompleteErrors(t *testing.T) {
 		}
 		w.WriteHeader(http.StatusBadGateway)
 	}))
-	snykClient := NewSnykClient(srv.Client(), srv.URL, "org1")
-	sbomTest := &SBOMTest{
+	snykClient := snykclient.NewSnykClient(srv.Client(), srv.URL, "org1")
+	sbomTest := &snykclient.SBOMTest{
 		SnykClient: snykClient,
 		ID:         "test-id",
 	}
 
 	err := sbomTest.WaitUntilCompleteWithBackoff(context.Background(), backoff, errFactory)
 
-	assert.ErrorContains(t, err, "Failed to test SBOM. There was an error when trying to test your SBOM,retrying may resolve the issue. "+
+	assert.ErrorContains(t, err, "Failed to test SBOM. There was an error when trying to test your SBOM, retrying may resolve the issue. "+
 		"If the error still occurs, contact support.")
 	assert.Equal(t, numRequests, 6)
 }
