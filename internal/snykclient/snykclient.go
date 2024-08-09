@@ -2,10 +2,14 @@ package snykclient
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 	"time"
+
+	snyk_errors "github.com/snyk/error-catalog-golang-public/snyk_errors"
+	"github.com/snyk/rest-go-libs/v5/jsonapi"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
@@ -110,6 +114,25 @@ func (t *SBOMTest) GetStatus(ctx context.Context, errFactory *errors.ErrorFactor
 
 	if resp.StatusCode == http.StatusSeeOther {
 		return SBOMTestStatusFinished, nil
+	}
+
+	// Attempt to parse into a JSON:API error document.
+	// If we get errors, we can return the first one as an
+	// error-catalog error.
+	var errDoc jsonapi.ErrorDocument
+	if err := json.NewDecoder(resp.Body).Decode(&errDoc); err == nil && len(errDoc.Errors) > 0 {
+		err := errDoc.Errors[0]
+		// The go-application-framework currently limits output to the title of the error. For it to
+		// give more context, we augment the title with additional info.
+		return SBOMTestStatusError, snyk_errors.Error{
+			StatusCode: resp.StatusCode,
+			Detail:     err.Detail,
+			ID:         err.ID,
+			ErrorCode:  err.Code,
+			Title: fmt.Sprintf(
+				"%s (Snyk Error Code: %s, SBOM Test ID: %s, Snyk Request ID: %s)",
+				err.Title, err.Code, t.ID, resp.Header.Get("Snyk-Request-Id")),
+		}
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {

@@ -10,6 +10,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -148,6 +149,39 @@ func TestSnykClient_ServerError(t *testing.T) {
 
 	assert.ErrorContains(t, err, "unexpected status code")
 	assert.Equal(t, SBOMTestStatusIndeterminate, status)
+}
+
+func TestSnykClient_ErrorCatalogError(t *testing.T) {
+	response := mocks.NewMockResponse(
+		"application/vnd.api+json",
+		[]byte(`{
+			"jsonapi":{"version":"1.0"},
+			"errors":[{
+				"id":"ce2b3dc4-415d-4d47-97e2-2e5de2337524",
+				"title":"Unknown SBOM format",
+				"status":"422",
+				"code":"SNYK-SBOM-0006",
+				"meta":{"classification":"UNSUPPORTED","isErrorCatalogError":true},
+				"links":{"about":"https://docs.snyk.io/scan-with-snyk/error-catalog#snyk-sbom-0006"},
+				"source":{}
+			}]
+		}`),
+		http.StatusUnprocessableEntity,
+	)
+
+	mockHTTPClient := mocks.NewMockSBOMService(response)
+
+	snykClient := NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
+	sbomTest := &SBOMTest{
+		SnykClient: snykClient,
+		ID:         "test-id",
+	}
+
+	status, err := sbomTest.GetStatus(context.Background(), errFactory)
+
+	assert.ErrorAs(t, err, &snyk_errors.Error{})
+	assert.ErrorContains(t, err, "Unknown SBOM format")
+	assert.Equal(t, SBOMTestStatusError, status)
 }
 
 func TestSnykClient_GetResults(t *testing.T) {
