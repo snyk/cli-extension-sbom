@@ -22,6 +22,16 @@ type (
 		Remediation     interface{}     `json:"remediation,omitempty"`
 		Filtered        interface{}     `json:"filtered,omitempty"`
 		Vulnerabilities []Vulnerability `json:"vulnerabilities"`
+		LicenseIssues   []LicenseIssue  `json:"license_issues"`
+	}
+
+	LicenseIssue struct {
+		ID          string           `json:"id,omitempty"`
+		Name        string           `json:"name,omitempty"`
+		PackageName string           `json:"packageName,omitempty"`
+		Version     string           `json:"version,omitempty"`
+		Title       string           `json:"title,omitempty"`
+		Severity    severities.Level `json:"severity,omitempty"`
 	}
 
 	Vulnerability struct {
@@ -67,14 +77,12 @@ func resultToJSONOutput(res *snykclient.SBOMTestResult) JSONOutput {
 			cwe = append(cwe, vuln.CWE)
 		}
 
-		for pid := range vuln.Packages {
-			packages := vuln.Packages
-
+		for _, pkg := range vuln.Packages {
 			vulns = append(vulns, Vulnerability{
 				ID:          vuln.ID,
-				PackageName: packages[pid].Name,
-				Name:        packages[pid].Name,
-				Version:     packages[pid].Version,
+				PackageName: pkg.Name,
+				Name:        pkg.Name,
+				Version:     pkg.Version,
 
 				Title: vuln.Title,
 
@@ -103,13 +111,33 @@ func resultToJSONOutput(res *snykclient.SBOMTestResult) JSONOutput {
 		}
 	}
 
-	sortIssues(vulns)
+	sortVulnerabilities(vulns)
+
+	lics := make([]LicenseIssue, 0, len(res.LicenseIssues))
+
+	for _, lic := range res.LicenseIssues {
+		for _, pkg := range lic.Packages {
+			lics = append(lics, LicenseIssue{
+				ID:          lic.ID,
+				PackageName: pkg.Name,
+				Name:        pkg.Name,
+				Version:     pkg.Version,
+
+				Title: lic.Title,
+
+				Severity: lic.SeverityLevel,
+			})
+		}
+	}
+
+	sortLicenseIssues(lics)
 
 	return JSONOutput{
 		OK:              res.Summary.TotalIssues == 0,
 		DependencyCount: len(res.Summary.Tested) + len(res.Summary.Untested),
-		Summary:         fmt.Sprintf("Found %d vulnerabilities", len(res.Vulnerabilities)),
+		Summary:         fmt.Sprintf("Found %d issues", res.Summary.TotalIssues),
 		Vulnerabilities: vulns,
+		LicenseIssues:   lics,
 	}
 }
 
@@ -125,7 +153,6 @@ func RenderJSONResult(w io.Writer, res *snykclient.SBOMTestResult) error {
 func RenderPrettyResult(w io.Writer, orgID, filepath string, res *snykclient.SBOMTestResult) error {
 	issues := make([]view.OpenIssue, 0, len(res.Vulnerabilities))
 	untested := make([]view.Component, 0, len(res.Summary.Untested))
-
 	for i := range res.Vulnerabilities {
 		introducedBy := make([]view.IntroducedBy, 0, len(res.Vulnerabilities[i].Packages))
 		for _, pkg := range res.Vulnerabilities[i].Packages {
@@ -143,6 +170,23 @@ func RenderPrettyResult(w io.Writer, orgID, filepath string, res *snykclient.SBO
 			IntroducedBy: introducedBy,
 		})
 	}
+	for i := range res.LicenseIssues {
+		introducedBy := make([]view.IntroducedBy, 0, len(res.LicenseIssues[i].Packages))
+		for _, pkg := range res.LicenseIssues[i].Packages {
+			introducedBy = append(introducedBy, view.IntroducedBy{
+				Name:    pkg.Name,
+				Version: pkg.Version,
+				PURL:    pkg.PURL,
+			})
+		}
+
+		issues = append(issues, view.OpenIssue{
+			Description:  res.LicenseIssues[i].Title,
+			Severity:     res.LicenseIssues[i].SeverityLevel,
+			SnykRef:      res.LicenseIssues[i].ID,
+			IntroducedBy: introducedBy,
+		})
+	}
 
 	for i := range res.Summary.Untested {
 		untested = append(untested, view.Component{
@@ -156,10 +200,10 @@ func RenderPrettyResult(w io.Writer, orgID, filepath string, res *snykclient.SBO
 		Path: filepath,
 		Summary: view.Summary{
 			TotalIssues: res.Summary.TotalIssues,
-			Critical:    res.Summary.VulnerabilitiesBySeverity.Critical,
-			High:        res.Summary.VulnerabilitiesBySeverity.High,
-			Medium:      res.Summary.VulnerabilitiesBySeverity.Medium,
-			Low:         res.Summary.VulnerabilitiesBySeverity.Low,
+			Critical:    res.Summary.IssuesBySeverity.Critical,
+			High:        res.Summary.IssuesBySeverity.High,
+			Medium:      res.Summary.IssuesBySeverity.Medium,
+			Low:         res.Summary.IssuesBySeverity.Low,
 		},
 		Issues:   issues,
 		Untested: untested,
@@ -170,8 +214,42 @@ func RenderPrettyResult(w io.Writer, orgID, filepath string, res *snykclient.SBO
 	return err
 }
 
-func sortIssues(vulns []Vulnerability) {
+func sortVulnerabilities(vulns []Vulnerability) {
 	slices.SortFunc(vulns, func(a, b Vulnerability) int {
+		if a.Severity != b.Severity {
+			return int(a.Severity - b.Severity)
+		}
+
+		if a.ID < b.ID {
+			return -1
+		}
+
+		if a.ID > b.ID {
+			return +1
+		}
+
+		if a.PackageName < b.PackageName {
+			return -1
+		}
+
+		if a.PackageName > b.PackageName {
+			return +1
+		}
+
+		if a.Version < b.Version {
+			return -1
+		}
+
+		if a.Version > b.Version {
+			return +1
+		}
+
+		return 0
+	})
+}
+
+func sortLicenseIssues(lics []LicenseIssue) {
+	slices.SortFunc(lics, func(a, b LicenseIssue) int {
 		if a.Severity != b.Severity {
 			return int(a.Severity - b.Severity)
 		}
