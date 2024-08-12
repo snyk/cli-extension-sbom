@@ -3,8 +3,10 @@ package sbomtest
 import (
 	"bytes"
 	"context"
+	stderrors "errors"
 	"fmt"
 
+	"github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
@@ -76,6 +78,10 @@ func TestWorkflow(
 
 	err = sbomTest.WaitUntilComplete(ctx, errFactory)
 	if err != nil {
+		var snykErr snyk_errors.Error
+		if stderrors.As(err, &snykErr) {
+			return nil, snykErr
+		}
 		return nil, err
 	}
 
