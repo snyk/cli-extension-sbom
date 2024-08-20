@@ -83,7 +83,7 @@ func TestSBOMWorkflow_InvalidFormat(t *testing.T) {
 	_, err := sbomcreate.SBOMWorkflow(mockICTX, []workflow.Data{})
 
 	assert.ErrorContains(t, err, "The format provided (cyclonedx+json) is not one of the available formats. "+
-		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, cyclonedx1.5+json, cyclonedx1.5+xml, spdx2.3+json")
+		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, cyclonedx1.5+json, cyclonedx1.5+xml, cyclonedx1.6+json, cyclonedx1.6+xml, spdx2.3+json")
 }
 
 func TestSBOMWorkflow_NoOrgID(t *testing.T) {
