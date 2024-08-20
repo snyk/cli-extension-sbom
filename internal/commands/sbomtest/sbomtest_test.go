@@ -109,7 +109,7 @@ func TestSBOMTestWorkflow_SuccessJSON(t *testing.T) {
 
 	payloadBytes, ok := data.GetPayload().([]byte)
 	assert.True(t, ok)
-	assert.Contains(t, string(payloadBytes), `"Found 141 issues"`)
+	assert.Contains(t, string(payloadBytes), `"Found 140 issues"`)
 	summaryData := result[1]
 	assert.Equal(t, summaryData.GetContentType(), content_type.TEST_SUMMARY)
 

@@ -31,6 +31,8 @@ type SBOMTestSummary struct {
 		Medium   int `json:"medium"`
 		Low      int `json:"low"`
 	} `json:"issues_by_severity"`
+
+	DocumentWarnings []string `json:"document_warnings"`
 }
 
 type UntestedComponent struct {

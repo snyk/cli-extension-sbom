@@ -11,6 +11,7 @@ type Presentation struct {
 	Untested  []Component
 	Issues    []OpenIssue
 	Summary   Summary
+	Warnings  []Warning
 }
 
 // Render will combine and _mutate_ data to construct view with issues sorted
@@ -21,6 +22,11 @@ type Presentation struct {
 // in the issues parameter.
 func Render(dst io.Writer, p *Presentation) (int, error) {
 	untestedView, err := generateUntestedComponents(p.Untested...)
+	if err != nil {
+		return 0, err
+	}
+
+	warningsView, err := generateWarnings(p.Warnings...)
 	if err != nil {
 		return 0, err
 	}
@@ -37,7 +43,12 @@ func Render(dst io.Writer, p *Presentation) (int, error) {
 		return 0, err
 	}
 
-	result, err := GenerateTestResult(p.Path, untestedView, issuesView, summaryView)
+	result, err := GenerateTestResult(
+		p.Path,
+		untestedView,
+		warningsView,
+		issuesView,
+		summaryView)
 	if err != nil {
 		return 0, err
 	}

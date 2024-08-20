@@ -10,6 +10,12 @@ import (
 )
 
 func TestGenerateTestResult(t *testing.T) {
+	warnings, err := generateWarnings(
+		"Dependency graph is invalid. It references unknown component \"463-write-file-atomic@2.4.3\".",
+		"The given SBOM contains an invalid dependency graph.",
+		"Falling back on analysis without dependency graph information.")
+	require.NoError(t, err)
+
 	untested, err := generateUntestedComponents([]Component{{
 		Reference: "my reference 1",
 		Info:      "my reason 1",
@@ -23,7 +29,6 @@ func TestGenerateTestResult(t *testing.T) {
 		Reference: "my reference 4",
 		Info:      "my reason 4",
 	}}...)
-
 	require.NoError(t, err)
 
 	issues, err := generateIssues(
@@ -86,7 +91,6 @@ func TestGenerateTestResult(t *testing.T) {
 			SnykRef: "SNYK-AMZN2-VIMMINIMAL-6062273",
 		},
 	)
-
 	require.NoError(t, err)
 
 	summary, err := generateSummary(
@@ -101,22 +105,23 @@ func TestGenerateTestResult(t *testing.T) {
 			UntestedPkgs: 4,
 		},
 	)
-
 	require.NoError(t, err)
 
-	sum, err := GenerateTestResult(
-		"./sbom.dx",
-		untested, issues, summary,
-	)
-
+	sum, err := GenerateTestResult("./sbom.dx",
+		untested,
+		warnings,
+		issues,
+		summary)
 	assert.NoError(t, err)
 
 	snapshotter.SnapshotT(t, sum.String())
 }
 
 func TestGenerateTestResult_allComponentsTested(t *testing.T) {
-	untested, err := generateUntestedComponents()
+	warnings, err := generateWarnings()
+	require.NoError(t, err)
 
+	untested, err := generateUntestedComponents()
 	require.NoError(t, err)
 
 	issues, err := generateIssues(
@@ -198,10 +203,11 @@ func TestGenerateTestResult_allComponentsTested(t *testing.T) {
 
 	require.NoError(t, err)
 
-	sum, err := GenerateTestResult(
-		"./sbom.dx",
-		untested, issues, summary,
-	)
+	sum, err := GenerateTestResult("./sbom.dx",
+		untested,
+		warnings,
+		issues,
+		summary)
 
 	assert.NoError(t, err)
 

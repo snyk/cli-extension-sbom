@@ -2,6 +2,7 @@
 [1mTesting ./path/to/sbom.cdx.json[0m
 
 
+
 [1mOpen issues:[0m
 
 × [LOW] [1mPrototype Pollution[0m
@@ -59,10 +60,6 @@
 [33m× [MEDIUM][0m [1mArbitrary File Upload[0m
   Introduced through: pkg:npm/express-fileupload@0.0.5
   URL: https://security.snyk.io/vuln/SNYK-JS-EXPRESSFILEUPLOAD-2635946
-
-[33m× [MEDIUM][0m [1mRegular Expression Denial of Service (ReDoS)[0m
-  Introduced through: pkg:npm/glob-parent@2.0.0
-  URL: https://security.snyk.io/vuln/SNYK-JS-GLOBPARENT-1016905
 
 [33m× [MEDIUM][0m [1mOpen Redirect[0m
   Introduced through: pkg:npm/got@6.7.1
@@ -574,5 +571,5 @@
 │    Test type:       Software Bill of Materials                       │
 │    Path:            ./path/to/sbom.cdx.json                          │
 │                                                                      │
-│    Open issues:     [1m141[0m [ [35m4 CRITICAL [0m [31m59 HIGH [0m [33m69 MEDIUM [0m 9 LOW ]    │
+│    Open issues:     [1m140[0m [ [35m4 CRITICAL [0m [31m59 HIGH [0m [33m68 MEDIUM [0m 9 LOW ]    │
 ╰──────────────────────────────────────────────────────────────────────╯

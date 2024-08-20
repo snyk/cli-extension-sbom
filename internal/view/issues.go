@@ -11,6 +11,8 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/severities"
 )
 
+type Warning string
+
 type OpenIssue struct {
 	Severity     severities.Level
 	Description  string

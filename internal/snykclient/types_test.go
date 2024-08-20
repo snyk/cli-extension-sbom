@@ -21,7 +21,10 @@ func TestSBOMTestResultResouceDocument_AsResult(t *testing.T) {
 
 	result := doc.AsResult()
 
-	assert.Equal(t, 133, result.Summary.TotalIssues)
-	assert.Len(t, result.Packages, 101)
-	assert.Len(t, result.Vulnerabilities, 133)
+	assert.Equal(t, 140, result.Summary.TotalIssues)
+	assert.Len(t, result.Summary.DocumentWarnings, 3)
+
+	assert.Len(t, result.Packages, 103)
+	assert.Len(t, result.Vulnerabilities, 138)
+	assert.Len(t, result.LicenseIssues, 2)
 }
