@@ -8,6 +8,7 @@ import (
 type testResult struct {
 	path string
 
+	warnings *warnings
 	untested *untestedComponents
 	issues   *issuesComponent
 	summary  *summary
@@ -19,10 +20,17 @@ type testResult struct {
 // intended for human readable output.
 //
 // Function returns an error if generation of string representation fails.
-func GenerateTestResult(path string, untested *untestedComponents, issues *issuesComponent, sum *summary) (testResult, error) {
+func GenerateTestResult(
+	path string,
+	untested *untestedComponents,
+	warnings *warnings,
+	issues *issuesComponent,
+	sum *summary,
+) (testResult, error) {
 	s := testResult{
 		path: path,
 
+		warnings: warnings,
 		untested: untested,
 		issues:   issues,
 		summary:  sum,
@@ -41,11 +49,13 @@ func (r *testResult) computeString() error {
 	err := testResultTemplate.Execute(&buff, struct {
 		Title string
 
+		Warnings string
 		Untested string
 		Issues   string
 		Summary  string
 	}{
 		Title:    sectionStyle.Render("Testing " + r.path),
+		Warnings: r.warnings.String(),
 		Untested: r.untested.String(),
 		Issues:   r.issues.String(),
 		Summary:  r.summary.String(),
@@ -66,6 +76,8 @@ func (r *testResult) String() string {
 var testResultTemplate *template.Template = template.Must(template.New("testResult").Parse(`
 {{.Title}}
 
+{{if not (.Warnings | len | eq 0) }}{{.Warnings}}
+{{end}}
 {{if not (.Untested | len | eq 0) }}{{.Untested}}
 {{end}}
 {{.Issues}}

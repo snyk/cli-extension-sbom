@@ -23,6 +23,7 @@ type (
 		Filtered        interface{}     `json:"filtered,omitempty"`
 		Vulnerabilities []Vulnerability `json:"vulnerabilities"`
 		LicenseIssues   []LicenseIssue  `json:"license_issues"`
+		Warnings        []string        `json:"warnings,omitempty"`
 	}
 
 	LicenseIssue struct {
@@ -138,6 +139,7 @@ func resultToJSONOutput(res *snykclient.SBOMTestResult) JSONOutput {
 		Summary:         fmt.Sprintf("Found %d issues", res.Summary.TotalIssues),
 		Vulnerabilities: vulns,
 		LicenseIssues:   lics,
+		Warnings:        res.Summary.DocumentWarnings,
 	}
 }
 
@@ -151,6 +153,7 @@ func RenderJSONResult(w io.Writer, res *snykclient.SBOMTestResult) error {
 }
 
 func RenderPrettyResult(w io.Writer, orgID, filepath string, res *snykclient.SBOMTestResult) error {
+	warnings := make([]view.Warning, 0, len(res.Summary.DocumentWarnings))
 	issues := make([]view.OpenIssue, 0, len(res.Vulnerabilities))
 	untested := make([]view.Component, 0, len(res.Summary.Untested))
 	for i := range res.Vulnerabilities {
@@ -205,6 +208,7 @@ func RenderPrettyResult(w io.Writer, orgID, filepath string, res *snykclient.SBO
 			Medium:      res.Summary.IssuesBySeverity.Medium,
 			Low:         res.Summary.IssuesBySeverity.Low,
 		},
+		Warnings: warnings,
 		Issues:   issues,
 		Untested: untested,
 	}

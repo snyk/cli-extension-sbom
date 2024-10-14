@@ -1,6 +1,12 @@
 
 [1mTesting ./sbom.dx[0m
 
+[1m⚠️  Warnings:[0m
+
+· Falling back on analysis without dependency graph information.
+· The given SBOM contains an invalid dependency graph.
+· Dependency graph is invalid. It references unknown component "463-write-file-atomic@2.4.3".
+
 [1mUntested packages:[0m                                                  
                                                                     
 × [1mmy reference 1[0m                                                    
