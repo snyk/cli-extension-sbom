@@ -3,6 +3,7 @@ package snykclient
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/snyk/cli-extension-sbom/internal/severities"
@@ -247,11 +248,10 @@ func (doc *SBOMTestResultResourceDocument) extractIncludedResources(r *SBOMTestR
 
 			var cve, cwe string
 			for i := range res.Attributes.Problems {
-				switch res.Attributes.Problems[i].Source {
+				switch strings.ToUpper(res.Attributes.Problems[i].Source) {
 				case "CWE":
 					cwe = res.Attributes.Problems[i].ID
-
-				case "cve":
+				case "CVE":
 					cve = res.Attributes.Problems[i].ID
 				}
 			}
