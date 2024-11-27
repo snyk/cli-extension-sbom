@@ -57,7 +57,7 @@ func TestSnykClient_CreateSBOMTest(t *testing.T) {
 	assert.Equal(t, "test-id", sbomTest.ID)
 }
 
-func TestSnykClient_GetStatus_RedirectToResults(t *testing.T) {
+func TestSnykClient_GetSBOMTestStatus_RedirectToResults(t *testing.T) {
 	response := mocks.NewMockResponseWithHeaders(
 		"application/vnd.api+json",
 		[]byte{},
@@ -78,13 +78,13 @@ func TestSnykClient_GetStatus_RedirectToResults(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	status, err := sbomTest.GetStatus(context.Background(), errFactory)
+	status, err := sbomTest.GetSBOMTestStatus(context.Background(), errFactory)
 
 	assert.NoError(t, err)
 	assert.Equal(t, snykclient.SBOMTestStatusFinished, status)
 }
 
-func TestSnykClient_GetStatus_Processing(t *testing.T) {
+func TestSnykClient_GetSBOMTestStatus_Processing(t *testing.T) {
 	response := mocks.NewMockResponse(
 		"application/vnd.api+json",
 		[]byte(`{"data":{"id":"123","type":"sbom_tests","attributes":{"status":"processing"}},"jsonapi":{"version":"1.0"}}`),
@@ -101,13 +101,13 @@ func TestSnykClient_GetStatus_Processing(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	status, err := sbomTest.GetStatus(context.Background(), errFactory)
+	status, err := sbomTest.GetSBOMTestStatus(context.Background(), errFactory)
 
 	assert.NoError(t, err)
 	assert.Equal(t, snykclient.SBOMTestStatusProcessing, status)
 }
 
-func TestSnykClient_GetStatus_Error(t *testing.T) {
+func TestSnykClient_GetSBOMTestStatus_Error(t *testing.T) {
 	response := mocks.NewMockResponse(
 		"application/vnd.api+json",
 		[]byte(`{"data":{"id":"123","type":"sbom_tests","attributes":{"status":"error"}},"jsonapi":{"version":"1.0"}}`),
@@ -124,7 +124,7 @@ func TestSnykClient_GetStatus_Error(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	status, err := sbomTest.GetStatus(context.Background(), errFactory)
+	status, err := sbomTest.GetSBOMTestStatus(context.Background(), errFactory)
 
 	assert.NoError(t, err)
 	assert.Equal(t, snykclient.SBOMTestStatusError, status)
@@ -145,7 +145,7 @@ func TestSnykClient_ServerError(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	status, err := sbomTest.GetStatus(context.Background(), errFactory)
+	status, err := sbomTest.GetSBOMTestStatus(context.Background(), errFactory)
 
 	assert.ErrorContains(t, err, "unexpected status code")
 	assert.Equal(t, snykclient.SBOMTestStatusIndeterminate, status)
@@ -177,14 +177,14 @@ func TestSnykClient_ErrorCatalogError(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	status, err := sbomTest.GetStatus(context.Background(), errFactory)
+	status, err := sbomTest.GetSBOMTestStatus(context.Background(), errFactory)
 
 	assert.ErrorAs(t, err, &snyk_errors.Error{})
 	assert.ErrorContains(t, err, "Unknown SBOM format")
 	assert.Equal(t, snykclient.SBOMTestStatusError, status)
 }
 
-func TestSnykClient_GetResults(t *testing.T) {
+func TestSnykClient_GetSBOMTestResults(t *testing.T) {
 	response := mocks.NewMockResponse(
 		"application/vnd.api+json",
 		testResultMockResponse,
@@ -201,7 +201,7 @@ func TestSnykClient_GetResults(t *testing.T) {
 		ID:         "test-id",
 	}
 
-	result, err := sbomTest.GetResult(context.Background(), errFactory)
+	result, err := sbomTest.GetSBOMTestResult(context.Background(), errFactory)
 
 	assert.NoError(t, err)
 	assert.Equal(t, 133, result.Summary.TotalIssues)

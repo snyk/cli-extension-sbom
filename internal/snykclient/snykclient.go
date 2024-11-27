@@ -80,7 +80,7 @@ func (t *SnykClient) CreateSBOMTest(ctx context.Context, sbomJSON []byte, errFac
 	}, nil
 }
 
-func (t *SBOMTest) GetResult(ctx context.Context, errFactory *errors.ErrorFactory) (*SBOMTestResult, error) {
+func (t *SBOMTest) GetSBOMTestResult(ctx context.Context, errFactory *errors.ErrorFactory) (*SBOMTestResult, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, t.resultsURL(), http.NoBody)
 	if err != nil {
 		return nil, errFactory.NewFatalSBOMTestError(err)
@@ -99,7 +99,7 @@ func (t *SBOMTest) GetResult(ctx context.Context, errFactory *errors.ErrorFactor
 	return body.AsResult(), nil
 }
 
-func (t *SBOMTest) GetStatus(ctx context.Context, errFactory *errors.ErrorFactory) (SBOMTestStatus, error) {
+func (t *SBOMTest) GetSBOMTestStatus(ctx context.Context, errFactory *errors.ErrorFactory) (SBOMTestStatus, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, t.statusURL(), http.NoBody)
 	if err != nil {
 		return SBOMTestStatusIndeterminate, err
@@ -165,7 +165,7 @@ func (t *SBOMTest) WaitUntilCompleteWithBackoff(ctx context.Context, backoff bac
 	defer cancel()
 
 	for {
-		status, err := t.GetStatus(ctx, errFactory)
+		status, err := t.GetSBOMTestStatus(ctx, errFactory)
 		if err != nil {
 			return errFactory.NewFatalSBOMTestError(err)
 		}
