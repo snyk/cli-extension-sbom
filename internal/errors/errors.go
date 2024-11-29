@@ -180,6 +180,18 @@ func (ef *ErrorFactory) NewFatalSBOMTestError(err error) *SBOMExtensionError {
 	)
 }
 
+func (ef *ErrorFactory) NewFailedToMonitorSBOMError() *SBOMExtensionError {
+	return ef.NewFatalSBOMMonitorError(fmt.Errorf("failed to monitor SBOM"))
+}
+
+func (ef *ErrorFactory) NewFatalSBOMMonitorError(err error) *SBOMExtensionError {
+	return ef.newErr(
+		err,
+		"Failed to monitor SBOM. There was an error when trying to monitor your SBOM, "+
+			"retrying may resolve the issue. If the error still occurs, contact support.",
+	)
+}
+
 func (ef *ErrorFactory) NewInvalidFilePathError(err error, path string) *SBOMExtensionError {
 	return ef.newErr(err, fmt.Sprintf("The given filepath %q does not exist.", path))
 }
