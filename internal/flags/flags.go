@@ -80,3 +80,12 @@ func GetSBOMTestFlagSet() *pflag.FlagSet {
 
 	return flagSet
 }
+
+func GetSBOMMonitorFlagSet() *pflag.FlagSet {
+	flagSet := pflag.NewFlagSet("snyk-cli-extension-sbom-monitor", pflag.ExitOnError)
+
+	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom monitor command.")
+	flagSet.String(FlagFile, "", "Specify a SBOM file.")
+
+	return flagSet
+}
