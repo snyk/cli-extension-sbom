@@ -78,6 +78,8 @@ func SBOMWorkflow(
 }
 
 func newWorkflowData(depGraph workflow.Data, contentType string, sbom []byte) workflow.Data {
+	// TODO: refactor to workflow.NewData()
+	//nolint:staticcheck // Silencing since we are only upgrading the GAF to remediate a vuln.
 	return workflow.NewDataFromInput(
 		depGraph,
 		workflow.NewTypeIdentifier(WorkflowID, "sbom"),
