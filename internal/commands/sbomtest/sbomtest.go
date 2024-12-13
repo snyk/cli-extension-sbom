@@ -117,5 +117,7 @@ func TestWorkflow(
 
 func workflowData(data []byte, contentType string) workflow.Data {
 	id := workflow.NewTypeIdentifier(WorkflowID, "sbom.test")
+	// TODO: refactor to workflow.NewData()
+	//nolint:staticcheck // Silencing since we are only upgrading the GAF to remediate a vuln.
 	return workflow.NewDataFromInput(nil, id, contentType, data)
 }
