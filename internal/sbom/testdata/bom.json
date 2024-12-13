@@ -1,0 +1,44 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "serialNumber": "urn:uuid:78933f9a-cf34-45a0-bfef-b8201b8e1ab9",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-10-05T15:21:44+02:00",
+    "tools": [
+      {
+        "vendor": "CycloneDX",
+        "name": "cyclonedx-gomod",
+        "version": "v1.4.0",
+        "externalReferences": [
+          {
+            "url": "https://github.com/CycloneDX/cyclonedx-gomod",
+            "type": "vcs"
+          },
+          {
+            "url": "https://cyclonedx.org",
+            "type": "website"
+          }
+        ]
+      }
+    ],
+    "component": {
+      "bom-ref": "pkg:golang/gopkg.in/yaml.v2@v2.2.3?type=module",
+      "type": "application",
+      "name": "gopkg.in/yaml.v2",
+      "version": "v2.2.3",
+      "purl": "pkg:golang/gopkg.in/yaml.v2@v2.2.3?type=module\u0026goos=darwin\u0026goarch=arm64",
+      "externalReferences": [
+        {
+          "url": "https://github.com/go-yaml/yaml",
+          "type": "vcs"
+        }
+      ]
+    }
+  },
+  "dependencies": [
+    {
+      "ref": "pkg:golang/gopkg.in/yaml.v2@v2.2.3?type=module"
+    }
+  ]
+}

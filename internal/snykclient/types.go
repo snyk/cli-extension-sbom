@@ -9,6 +9,8 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/severities"
 )
 
+// region SBOM Test
+
 type SBOMTestResourceDocument struct {
 	JSONAPI *JSONAPI          `json:"jsonapi"`
 	Data    *SBOMTestResource `json:"data,omitempty"`
@@ -344,4 +346,93 @@ func (doc *SBOMTestResultResourceDocument) AsResult() *SBOMTestResult {
 	}
 
 	return &r
+}
+
+// region SBOM Monitor
+
+type SBOMMonitorState string
+
+const (
+	SBOMMonitorStateProcessing = SBOMMonitorState("processing")
+	SBOMMonitorStateComplete   = SBOMMonitorState("complete")
+	SBOMMonitorStateErr        = SBOMMonitorState("error")
+)
+
+type SBOMMonitorAttributes struct {
+	Created string           `json:"created,omitempty"`
+	Updated string           `json:"updated,omitempty"`
+	OrgID   string           `json:"org_id"` //nolint:tagliatelle // Want snake-case.
+	State   SBOMMonitorState `json:"state"`
+}
+
+type SBOMMonitorCreateAttributes struct {
+	SBOM       string `json:"sbom"`
+	TargetName string `json:"target_name,omitempty"` //nolint:tagliatelle // Want snake-case.
+}
+
+type ListSBOMMOnitorResponseBody struct {
+	Data    ListSBOMMonitorResponseData `json:"data,omitempty"`
+	JSONAPI JSONAPI                     `json:"jsonapi,omitempty"`
+}
+
+type ListSBOMMonitorResponseData []struct {
+	Attributes SBOMMonitorAttributes `json:"attributes,omitempty"`
+	ID         string                `json:"id"`
+	Type       string                `json:"type"`
+}
+
+type CreateSBOMMonitorRequestBody struct {
+	Data CreateSBOMMonitorRequestData `json:"data"`
+}
+
+type CreateSBOMMonitorRequestData struct {
+	Attributes SBOMMonitorCreateAttributes `json:"attributes,omitempty"`
+	Type       string                      `json:"type"`
+}
+
+type CreateSBOMMonitorResponseBody struct {
+	Data    CreateSBOMMonitorResponseData `json:"data,omitempty"`
+	Jsonapi JSONAPI                       `json:"jsonapi,omitempty"`
+}
+
+type CreateSBOMMonitorResponseData struct {
+	Attributes SBOMMonitorAttributes `json:"attributes,omitempty"`
+	ID         string                `json:"id"`
+	Type       string                `json:"type"`
+}
+
+type GetSBOMMonitorResponseBody struct {
+	Data    GetSBOMMonitorResponseData `json:"data,omitempty"`
+	Jsonapi JSONAPI                    `json:"jsonapi,omitempty"`
+}
+
+type GetSBOMMonitorResponseData struct {
+	Attributes SBOMMonitorAttributes `json:"attributes,omitempty"`
+	ID         string                `json:"id"`
+	Type       string                `json:"type"`
+}
+
+type UpdateSBOMMonitorRequestBody struct {
+	Data UpdateSBOMMonitorRequestData `json:"data"`
+}
+
+type UpdateSBOMMonitorRequestData struct {
+	Attributes SBOMMonitorUpdateAttributes `json:"attributes,omitempty"`
+	Type       string                      `json:"type"`
+	ID         string                      `json:"id"`
+}
+
+type SBOMMonitorUpdateAttributes struct {
+	SBOM string `json:"sbom"`
+}
+
+type UpdateSBOMMonitorResponseBody struct {
+	Data    UpdateSBOMMonitorResponseData `json:"data"`
+	JSONAPI JSONAPI                       `json:"jsonapi,omitempty"`
+}
+
+type UpdateSBOMMonitorResponseData struct {
+	Attributes SBOMMonitorAttributes `json:"attributes,omitempty"`
+	ID         string                `json:"id"`
+	Type       string                `json:"type"`
 }
