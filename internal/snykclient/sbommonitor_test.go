@@ -15,30 +15,51 @@ import (
 )
 
 func Test_CreateSBOMMonitor(t *testing.T) {
-	response := mocks.NewMockResponse(
-		"application/vnd.api+json",
-		[]byte(`{"data": {"id": "test-id"}}`),
-		http.StatusCreated,
-	)
-	sbomContent := `{"foo":"bar"}`
-	expectedRequestBody := `{"data":{"attributes":{"sbom":"{\"foo\":\"bar\"}"},"type":"sbom_monitor"}}`
+	tc := []struct {
+		filename            string
+		expectedRequestBody string
+	}{
+		{
+			filename:            "project.sbom.json",
+			expectedRequestBody: `{"data":{"attributes":{"sbom":"{\"foo\":\"bar\"}","filename":"project.sbom.json"},"type":"sbom_monitor"}}`,
+		},
+		{
+			filename:            "/home/myuser/project/project.sbom.json",
+			expectedRequestBody: `{"data":{"attributes":{"sbom":"{\"foo\":\"bar\"}","filename":"project.sbom.json"},"type":"sbom_monitor"}}`,
+		},
+		{
+			filename:            "",
+			expectedRequestBody: `{"data":{"attributes":{"sbom":"{\"foo\":\"bar\"}"},"type":"sbom_monitor"}}`,
+		},
+	}
 
-	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
-		assert.Equal(t, "/closed-beta/orgs/org1/sbom_monitors?version=2024-07-10~beta", r.RequestURI)
-		assert.Equal(t, "application/vnd.api+json", r.Header.Get("Content-Type"))
+	for _, tt := range tc {
+		t.Run(tt.filename, func(t *testing.T) {
+			response := mocks.NewMockResponse(
+				"application/vnd.api+json",
+				[]byte(`{"data": {"id": "test-id"}}`),
+				http.StatusCreated,
+			)
+			sbomContent := `{"foo":"bar"}`
 
-		body, err := io.ReadAll(r.Body)
-		assert.NoError(t, err)
+			mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
+				assert.Equal(t, "/closed-beta/orgs/org1/sbom_monitors?version=2024-07-10~beta", r.RequestURI)
+				assert.Equal(t, "application/vnd.api+json", r.Header.Get("Content-Type"))
 
-		assert.Equal(t, expectedRequestBody, string(body))
-	})
+				body, err := io.ReadAll(r.Body)
+				assert.NoError(t, err)
 
-	client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
+				assert.Equal(t, tt.expectedRequestBody, string(body))
+			})
 
-	sbomMonitor, err := client.CreateSBOMMonitor(context.Background(), []byte(sbomContent), "", errFactory)
+			client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
 
-	assert.NoError(t, err)
-	assert.Equal(t, "test-id", sbomMonitor.ID)
+			sbomMonitor, err := client.CreateSBOMMonitor(context.Background(), []byte(sbomContent), "", tt.filename, errFactory)
+
+			assert.NoError(t, err)
+			assert.Equal(t, "test-id", sbomMonitor.ID)
+		})
+	}
 }
 
 func TestSBOMMonitor_WaitUntilComplete(t *testing.T) {

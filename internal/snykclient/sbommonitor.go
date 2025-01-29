@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"path"
 	"time"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
@@ -21,8 +22,16 @@ type SBOMMonitor struct {
 	ID         string
 }
 
-func (t *SnykClient) CreateSBOMMonitor(ctx context.Context, sbomJSON []byte, targetName string, errFactory *errors.ErrorFactory) (*SBOMMonitor, error) {
+func (t *SnykClient) CreateSBOMMonitor(
+	ctx context.Context,
+	sbomJSON []byte,
+	targetName string,
+	filename string,
+	errFactory *errors.ErrorFactory,
+) (*SBOMMonitor, error) {
 	url := fmt.Sprintf("%s/closed-beta/orgs/%s/sbom_monitors?version=%s", t.apiBaseURL, t.orgID, sbomMonitorAPIVersion)
+
+	_, filename = path.Split(filename)
 
 	requestBody := CreateSBOMMonitorRequestBody{
 		Data: CreateSBOMMonitorRequestData{
@@ -30,6 +39,7 @@ func (t *SnykClient) CreateSBOMMonitor(ctx context.Context, sbomJSON []byte, tar
 			Attributes: SBOMMonitorCreateAttributes{
 				SBOM:       string(sbomJSON),
 				TargetName: targetName,
+				Filename:   filename,
 			},
 		},
 	}

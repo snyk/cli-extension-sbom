@@ -368,6 +368,7 @@ type SBOMMonitorAttributes struct {
 type SBOMMonitorCreateAttributes struct {
 	SBOM       string `json:"sbom"`
 	TargetName string `json:"target_name,omitempty"` //nolint:tagliatelle // Want snake-case.
+	Filename   string `json:"filename,omitempty"`
 }
 
 type ListSBOMMOnitorResponseBody struct {

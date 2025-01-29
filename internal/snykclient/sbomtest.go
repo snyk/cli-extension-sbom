@@ -28,7 +28,7 @@ type (
 const (
 	SBOMTestStatusIndeterminate = SBOMTestStatus("indeterminate")
 	SBOMTestStatusProcessing    = SBOMTestStatus("processing")
-	SBOMTestStatusError         = SBOMTestStatus("error")
+	SBOMTestStatusError         = SBOMTestStatus("error") //nolint:goconst // repeated error ok.
 	SBOMTestStatusFinished      = SBOMTestStatus("finished")
 )
 

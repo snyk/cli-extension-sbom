@@ -67,7 +67,7 @@ func MonitorWorkflow(
 		config.GetString(configuration.API_URL),
 		orgID,
 	)
-	sbomMonitor, err := client.CreateSBOMMonitor(ctx, bts, "", errFactory)
+	sbomMonitor, err := client.CreateSBOMMonitor(ctx, bts, "", filename, errFactory)
 	if err != nil {
 		return nil, err
 	}
