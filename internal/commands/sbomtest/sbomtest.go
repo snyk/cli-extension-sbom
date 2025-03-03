@@ -12,6 +12,7 @@ import (
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
+	"github.com/snyk/cli-extension-sbom/internal/sbom"
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
@@ -59,7 +60,7 @@ func TestWorkflow(
 
 	logger.Println("Target SBOM document:", filename)
 
-	bts, err := ReadSBOMFile(filename, errFactory)
+	bts, err := sbom.ReadSBOMFile(filename, errFactory)
 	if err != nil {
 		return nil, err
 	}
