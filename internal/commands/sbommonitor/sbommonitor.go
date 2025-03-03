@@ -2,12 +2,16 @@ package sbommonitor
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io/fs"
+	"os"
+	"path/filepath"
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
-	"github.com/snyk/cli-extension-sbom/internal/errors"
+	internalErrors "github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/sbom"
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
@@ -26,6 +30,33 @@ func RegisterWorkflows(e workflow.Engine) error {
 	return nil
 }
 
+func loadPolicyFile(policyPath, sbomFilePath string) ([]byte, error) {
+	policy := []byte("\n")
+	var policyFilePath string
+	if policyPath != "" {
+		policyFilePath = policyPath
+	} else {
+		policyFilePath = filepath.Join(filepath.Dir(sbomFilePath), ".snyk")
+	}
+
+	_, err := os.Stat(policyFilePath)
+	if err != nil {
+		if errors.Is(err, fs.ErrNotExist) {
+			return policy, nil
+		} else {
+			return nil, err
+		}
+	}
+
+	bts, err := os.ReadFile(policyFilePath)
+	if err != nil {
+		return nil, err
+	}
+	policy = bts
+
+	return policy, nil
+}
+
 func MonitorWorkflow(
 	ictx workflow.InvocationContext,
 	_ []workflow.Data,
@@ -34,7 +65,8 @@ func MonitorWorkflow(
 	logger := ictx.GetLogger()
 	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
-	errFactory := errors.NewErrorFactory(logger)
+	policyPath := config.GetString(flags.FlagPolicyPath)
+	errFactory := internalErrors.NewErrorFactory(logger)
 	ctx := context.Background()
 
 	logger.Println("SBOM Monitor workflow start")
@@ -67,6 +99,13 @@ func MonitorWorkflow(
 		config.GetString(configuration.API_URL),
 		orgID,
 	)
+
+	// TODO: Add the policy to the scanResult body
+	_, err = loadPolicyFile(policyPath, filename)
+	if err != nil {
+		return nil, err
+	}
+
 	sbomMonitor, err := client.CreateSBOMMonitor(ctx, bts, "", filename, errFactory)
 	if err != nil {
 		return nil, err
@@ -80,5 +119,5 @@ func MonitorWorkflow(
 
 func workflowData(data []byte, contentType string) workflow.Data {
 	id := workflow.NewTypeIdentifier(WorkflowID, "sbom.monitor")
-	return workflow.NewDataFromInput(nil, id, contentType, data)
+	return workflow.NewData(id, contentType, data)
 }
