@@ -1,4 +1,4 @@
-package sbomtest
+package sbom
 
 import (
 	"encoding/json"

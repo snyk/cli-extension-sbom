@@ -1,4 +1,4 @@
-package sbomtest_test
+package sbom_test
 
 import (
 	"bytes"
@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
 	"github.com/snyk/cli-extension-sbom/internal/errors"
+	"github.com/snyk/cli-extension-sbom/internal/sbom"
 )
 
 //go:embed testdata/bom.json
@@ -70,7 +70,7 @@ func TestIsSBOMJSON(t *testing.T) {
 		t.Run(tc.name, func(tt *testing.T) {
 			r := []byte(tc.content)
 
-			ok := sbomtest.IsSBOMJSON(r)
+			ok := sbom.IsSBOMJSON(r)
 
 			require.Equal(t, tc.expectedResult, ok)
 		})
@@ -80,7 +80,7 @@ func TestIsSBOMJSON(t *testing.T) {
 func TestReadSBOMFile_FileDoesNotExist(t *testing.T) {
 	filename := "testdata/this-file-does-not-exist.txt"
 
-	sbomContent, err := sbomtest.ReadSBOMFile(filename, errFactory)
+	sbomContent, err := sbom.ReadSBOMFile(filename, errFactory)
 
 	require.Error(t, err)
 	require.Equal(t, "The given filepath \"testdata/this-file-does-not-exist.txt\" does not exist.", err.Error())
@@ -90,7 +90,7 @@ func TestReadSBOMFile_FileDoesNotExist(t *testing.T) {
 func TestReadSBOMFile_FileIsDirectory(t *testing.T) {
 	folder := "testdata"
 
-	sbomContent, err := sbomtest.ReadSBOMFile(folder, errFactory)
+	sbomContent, err := sbom.ReadSBOMFile(folder, errFactory)
 
 	require.Error(t, err)
 	require.Equal(t, "The path provided points to a directory. Please ensure the `--file` flag value is pointing to a file.", err.Error())
@@ -98,7 +98,7 @@ func TestReadSBOMFile_FileIsDirectory(t *testing.T) {
 }
 
 func TestReadSBOMSuccessfully(t *testing.T) {
-	sbomContent, err := sbomtest.ReadSBOMFile("testdata/bom.json", errFactory)
+	sbomContent, err := sbom.ReadSBOMFile("testdata/bom.json", errFactory)
 
 	require.NoError(t, err)
 	require.Equal(t, sbomJson, string(sbomContent))
