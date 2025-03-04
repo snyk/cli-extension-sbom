@@ -8,7 +8,7 @@ jobs:
   unit-test:
     executor:
       name: go/default
-      tag: '1.21'
+      tag: '1.23'
     steps:
       - checkout
       - go/load-cache
@@ -20,7 +20,7 @@ jobs:
           race: true
   lint:
     docker:
-      - image: golangci/golangci-lint:v1.56.2-alpine
+      - image: golangci/golangci-lint:v1.64.6-alpine
     steps:
       - checkout
       - run: golangci-lint run -v ./...
@@ -28,7 +28,7 @@ jobs:
   security-scans:
     executor:
       name: go/default
-      tag: '1.21'
+      tag: '1.23'
     resource_class: small
     steps:
       - checkout
