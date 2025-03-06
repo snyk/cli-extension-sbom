@@ -59,5 +59,5 @@ func MonitorWorkflow(
 
 func workflowData(data []byte, contentType string) workflow.Data {
 	id := workflow.NewTypeIdentifier(WorkflowID, "sbom.monitor")
-	return workflow.NewDataFromInput(nil, id, contentType, data)
+	return workflow.NewData(id, contentType, data)
 }
