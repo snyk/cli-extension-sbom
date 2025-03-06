@@ -36,6 +36,19 @@ const npmProjectJSON = `
 }
 `
 
+const pipProjectJSON = `
+{
+	"name": "simple pip project",
+	"policy": "\n",
+	"facts": [{
+		"type": "depGraph",
+		"data": {"schemaVersion":"1.3.0","pkgManager":{"name":"pip"},"pkgs":[{"id":"certifi@2024.12.14","info":{"name":"certifi","version":"2024.12.14","purl":"pkg:pypi/certifi@2024.12.14"}},{"id":"charset-normalizer@3.4.1","info":{"name":"charset-normalizer","version":"3.4.1","purl":"pkg:pypi/charset-normalizer@3.4.1"}},{"id":"idna@3.10","info":{"name":"idna","version":"3.10","purl":"pkg:pypi/idna@3.10"}},{"id":"urllib3@2.3.0","info":{"name":"urllib3","version":"2.3.0","purl":"pkg:pypi/urllib3@2.3.0"}},{"id":"pip-project-sbom-monitor-test@0.0.0","info":{"name":"pip-project-sbom-monitor-test","version":"0.0.0","purl":"pkg:pypi/pip-project-sbom-monitor-test@0.0.0"}},{"id":"requests@2.32.3","info":{"name":"requests","version":"2.32.3","purl":"pkg:pypi/requests@2.32.3"}}],"graph":{"rootNodeId":"root-node","nodes":[{"nodeId":"idna@3.10","pkgId":"idna@3.10","deps":[]},{"nodeId":"urllib3@2.3.0","pkgId":"urllib3@2.3.0","deps":[]},{"nodeId":"root-node","pkgId":"pip-project-sbom-monitor-test@0.0.0","deps":[{"nodeId":"requests@2.32.3"}]},{"nodeId":"requests@2.32.3","pkgId":"requests@2.32.3","deps":[{"nodeId":"certifi@2024.12.14"},{"nodeId":"charset-normalizer@3.4.1"},{"nodeId":"idna@3.10"},{"nodeId":"urllib3@2.3.0"}]},{"nodeId":"certifi@2024.12.14","pkgId":"certifi@2024.12.14","deps":[]},{"nodeId":"charset-normalizer@3.4.1","pkgId":"charset-normalizer@3.4.1","deps":[]}]}}
+	}],
+	"target": { "name": "` + targetName + `" },
+	"identity": { "type": "pip" }
+}
+`
+
 func (t *SnykClient) ConvertSBOM(
 	ctx context.Context,
 	errFactory *errors.ErrorFactory,
@@ -54,5 +67,11 @@ func (t *SnykClient) ConvertSBOM(
 		return nil, err
 	}
 
-	return []ScanResult{pubProject, npmProject}, nil
+	var pipProject ScanResult
+	err = json.Unmarshal([]byte(pipProjectJSON), &pipProject)
+	if err != nil {
+		return nil, err
+	}
+
+	return []ScanResult{pubProject, npmProject, pipProject}, nil
 }
