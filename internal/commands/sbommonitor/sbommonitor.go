@@ -6,8 +6,9 @@ import (
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
-	"github.com/snyk/cli-extension-sbom/internal/errors"
+	internalErrors "github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
+	"github.com/snyk/cli-extension-sbom/internal/policy"
 )
 
 var WorkflowID = workflow.NewWorkflowIdentifier("sbom.monitor")
@@ -31,7 +32,9 @@ func MonitorWorkflow(
 	logger := ictx.GetLogger()
 	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
-	errFactory := errors.NewErrorFactory(logger)
+	errFactory := internalErrors.NewErrorFactory(logger)
+	policyPath := config.GetString(flags.FlagPolicyPath)
+	// ctx := context.Background()
 
 	logger.Println("SBOM Monitor workflow start")
 
@@ -52,6 +55,9 @@ func MonitorWorkflow(
 	}
 
 	logger.Println("Target SBOM document:", filename)
+
+	// TODO: Add the policy to the scanResult body
+	_ = policy.LoadPolicyFile(policyPath, filename)
 
 	data := "SBOM Monitor Success!"
 	return []workflow.Data{workflowData([]byte(data), "text/plain")}, nil
