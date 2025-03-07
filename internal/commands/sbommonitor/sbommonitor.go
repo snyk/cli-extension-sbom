@@ -1,6 +1,7 @@
 package sbommonitor
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 
@@ -57,6 +58,7 @@ func MonitorWorkflow(
 
 	logger.Println("Target SBOM document:", filename)
 
+	// todo: get an io.Reader (file descriptor) instead
 	bts, err := sbom.ReadSBOMFile(filename, errFactory)
 	if err != nil {
 		return nil, err
@@ -65,13 +67,14 @@ func MonitorWorkflow(
 	client := snykclient.NewSnykClient(
 		ictx.GetNetworkAccess().GetHttpClient(),
 		config.GetString(configuration.API_URL),
-		orgID,
-	)
+		orgID)
 
-	scanResults, err := client.ConvertSBOM(ctx, errFactory, bts, filename)
+	scanResults, err := client.ConvertSBOM(ctx, errFactory, bytes.NewBuffer(bts), filename)
 	if err != nil {
 		return nil, err
 	}
+
+	buf := bytes.NewBuffer(nil)
 
 	monitors := make([]snykclient.MonitorDepsResponse, 0)
 	for _, sr := range scanResults {
@@ -83,9 +86,11 @@ func MonitorWorkflow(
 		monitors = append(monitors, *monitor)
 	}
 
-	output := presentSBOMMonitor(monitors)
+	if _, err := buf.WriteString(presentSBOMMonitor(monitors)); err != nil {
+		return nil, err
+	}
 
-	return []workflow.Data{workflowData([]byte(output), "text/plain")}, nil
+	return []workflow.Data{workflowData(buf.Bytes(), "text/plain")}, nil
 }
 
 func workflowData(data []byte, contentType string) workflow.Data {

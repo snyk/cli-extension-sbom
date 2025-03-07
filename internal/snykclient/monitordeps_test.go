@@ -31,7 +31,7 @@ func Test_MonitorDeps(t *testing.T) {
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
 		assert.Equal(t, http.MethodPut, r.Method)
-		assert.Equal(t, "/v1/monitor-dependencies", r.RequestURI)
+		assert.Equal(t, "/v1/monitor-dependencies?org=org1", r.RequestURI)
 		assert.Equal(t, "application/json", r.Header.Get("Content-Type"))
 	})
 

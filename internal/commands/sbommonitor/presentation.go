@@ -9,6 +9,8 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
+// TODO: move this to internal/view pkg.
+// TODO: accept an io.Writer.
 func presentSBOMMonitor(monitors []snykclient.MonitorDepsResponse) string {
 	var body = make([]string, 0)
 

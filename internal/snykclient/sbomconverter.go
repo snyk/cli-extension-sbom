@@ -4,6 +4,7 @@ package snykclient
 import (
 	"context"
 	"encoding/json"
+	"io"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
@@ -52,7 +53,7 @@ const pipProjectJSON = `
 func (t *SnykClient) ConvertSBOM(
 	ctx context.Context,
 	errFactory *errors.ErrorFactory,
-	sbomBytes []byte,
+	sbom io.Reader,
 	filename string,
 ) ([]ScanResult, error) {
 	var pubProject ScanResult
