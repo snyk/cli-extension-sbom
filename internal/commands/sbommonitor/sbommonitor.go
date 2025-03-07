@@ -3,7 +3,6 @@ package sbommonitor
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
@@ -84,31 +83,9 @@ func MonitorWorkflow(
 		monitors = append(monitors, *monitor)
 	}
 
-	output := formatMonitorOutput(monitors)
+	output := presentSBOMMonitor(monitors)
+
 	return []workflow.Data{workflowData([]byte(output), "text/plain")}, nil
-}
-
-func formatMonitorOutput(monitors []snykclient.MonitorDepsResponse) string {
-	var sb strings.Builder
-	for _, m := range monitors {
-		if sb.Len() > 0 {
-			sb.WriteString("\n")
-			sb.WriteString("-------------------------------------------------------")
-			sb.WriteString("\n")
-		}
-
-		sb.WriteString("\n")
-		sb.WriteString("Monitoring '")
-		sb.WriteString(m.ProjectName)
-		sb.WriteString("'\n\n")
-		sb.WriteString("Explore this snapshot at ")
-		sb.WriteString(m.URI)
-		sb.WriteString("\n\n")
-		sb.WriteString("Notifications about newly disclosed issues related to these dependencies will be emailed to you.")
-		sb.WriteString("\n\n")
-	}
-
-	return sb.String()
 }
 
 func workflowData(data []byte, contentType string) workflow.Data {
