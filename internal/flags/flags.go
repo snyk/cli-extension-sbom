@@ -32,6 +32,7 @@ const (
 	FlagNugetAssetsProjectName       = "assets-project-name"
 	FlagNugetPkgsFolder              = "packages-folder"
 	FlagUnmanagedMaxDepth            = "max-depth"
+	FlagPolicyPath                   = "policy-path"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
@@ -77,6 +78,16 @@ func GetSBOMTestFlagSet() *pflag.FlagSet {
 
 	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom test command.")
 	flagSet.String(FlagFile, "", "Specify a SBOM file.")
+
+	return flagSet
+}
+
+func GetSBOMMonitorFlagSet() *pflag.FlagSet {
+	flagSet := pflag.NewFlagSet("snyk-cli-extension-sbom-monitor", pflag.ExitOnError)
+
+	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom monitor command.")
+	flagSet.String(FlagFile, "", "Specify a SBOM file.")
+	flagSet.String(FlagPolicyPath, "", "Manually pass a path to a .snyk policy file.")
 
 	return flagSet
 }
