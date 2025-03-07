@@ -30,14 +30,18 @@ func MonitorWorkflow(
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
-	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
+	// TODO: pass this to the policy loader
+	_ = config.GetString(flags.FlagPolicyPath)
+	// TODO: add this to scan results
+	_ = config.GetString(flags.FlagTargetName)
+	_ = config.GetString(flags.FlagTargetReference)
 	errFactory := errors.NewErrorFactory(logger)
 
 	logger.Println("SBOM Monitor workflow start")
 
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
-	if !experimental {
+	if !config.GetBool(flags.FlagExperimental) {
 		return nil, errFactory.NewMissingExperimentalFlagError()
 	}
 
