@@ -1,6 +1,8 @@
 package sbommonitor
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
@@ -8,6 +10,8 @@ import (
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
+	"github.com/snyk/cli-extension-sbom/internal/sbom"
+	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
 var WorkflowID = workflow.NewWorkflowIdentifier("sbom.monitor")
@@ -32,6 +36,7 @@ func MonitorWorkflow(
 	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
 	errFactory := errors.NewErrorFactory(logger)
+	ctx := context.Background()
 
 	logger.Println("SBOM Monitor workflow start")
 
@@ -53,8 +58,39 @@ func MonitorWorkflow(
 
 	logger.Println("Target SBOM document:", filename)
 
-	data := "SBOM Monitor Success!"
-	return []workflow.Data{workflowData([]byte(data), "text/plain")}, nil
+	// todo: get an io.Reader (file descriptor) instead
+	bts, err := sbom.ReadSBOMFile(filename, errFactory)
+	if err != nil {
+		return nil, err
+	}
+
+	client := snykclient.NewSnykClient(
+		ictx.GetNetworkAccess().GetHttpClient(),
+		config.GetString(configuration.API_URL),
+		orgID)
+
+	scanResults, err := client.ConvertSBOM(ctx, errFactory, bytes.NewBuffer(bts), filename)
+	if err != nil {
+		return nil, err
+	}
+
+	buf := bytes.NewBuffer(nil)
+
+	monitors := make([]snykclient.MonitorDepsResponse, 0)
+	for _, sr := range scanResults {
+		monitor, err := client.MonitorDeps(ctx, errFactory, &sr)
+		if err != nil {
+			return nil, err
+		}
+
+		monitors = append(monitors, *monitor)
+	}
+
+	if _, err := buf.WriteString(presentSBOMMonitor(monitors)); err != nil {
+		return nil, err
+	}
+
+	return []workflow.Data{workflowData(buf.Bytes(), "text/plain")}, nil
 }
 
 func workflowData(data []byte, contentType string) workflow.Data {
