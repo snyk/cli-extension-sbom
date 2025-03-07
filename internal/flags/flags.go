@@ -32,6 +32,9 @@ const (
 	FlagNugetAssetsProjectName       = "assets-project-name"
 	FlagNugetPkgsFolder              = "packages-folder"
 	FlagUnmanagedMaxDepth            = "max-depth"
+	FlagPolicyPath                   = "policy-path"
+	FlagTargetName                   = "target-name"
+	FlagTargetReference              = "target-reference"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
@@ -86,6 +89,9 @@ func GetSBOMMonitorFlagSet() *pflag.FlagSet {
 
 	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom monitor command.")
 	flagSet.String(FlagFile, "", "Specify a SBOM file.")
+	flagSet.String(FlagPolicyPath, "", "Manually pass a path to a .snyk policy file.")
+	flagSet.String(FlagTargetName, "", "Specify a name for the target.")
+	flagSet.String(FlagTargetReference, "", "Specify a reference that differentiates this project, for example, a branch name or version.")
 
 	return flagSet
 }
