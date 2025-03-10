@@ -8,6 +8,7 @@ import (
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
+	"github.com/snyk/cli-extension-sbom/internal/policy"
 )
 
 var WorkflowID = workflow.NewWorkflowIdentifier("sbom.monitor")
@@ -30,9 +31,9 @@ func MonitorWorkflow(
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
+	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
-	// TODO: pass this to the policy loader
-	_ = config.GetString(flags.FlagPolicyPath)
+	policyPath := config.GetString(flags.FlagPolicyPath)
 	// TODO: add this to scan results
 	_ = config.GetString(flags.FlagTargetName)
 	_ = config.GetString(flags.FlagTargetReference)
@@ -41,7 +42,7 @@ func MonitorWorkflow(
 	logger.Println("SBOM Monitor workflow start")
 
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
-	if !config.GetBool(flags.FlagExperimental) {
+	if !experimental {
 		return nil, errFactory.NewMissingExperimentalFlagError()
 	}
 
@@ -57,6 +58,9 @@ func MonitorWorkflow(
 	}
 
 	logger.Println("Target SBOM document:", filename)
+
+	// TODO: Add the policy to the scanResult body
+	_ = policy.LoadPolicyFile(policyPath, filename)
 
 	data := "SBOM Monitor Success!"
 	return []workflow.Data{workflowData([]byte(data), "text/plain")}, nil
