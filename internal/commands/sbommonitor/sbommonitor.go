@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
+	"github.com/snyk/go-application-framework/pkg/local_workflows/config_utils"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
@@ -14,6 +15,8 @@ import (
 var WorkflowID = workflow.NewWorkflowIdentifier("sbom.monitor")
 var WorkflowDataID = workflow.NewTypeIdentifier(WorkflowID, "sbom.monitor")
 
+const FeatureFlagSBOMMonitor = "feature_flag_sbom_monitor"
+
 func RegisterWorkflows(e workflow.Engine) error {
 	sbomFlagset := flags.GetSBOMMonitorFlagSet()
 
@@ -22,6 +25,9 @@ func RegisterWorkflows(e workflow.Engine) error {
 	if _, err := e.Register(WorkflowID, c, MonitorWorkflow); err != nil {
 		return fmt.Errorf("error while registering %s workflow: %w", WorkflowID, err)
 	}
+
+	config_utils.AddFeatureFlagToConfig(e, FeatureFlagSBOMMonitor, "sbomMonitorBeta")
+
 	return nil
 }
 
@@ -44,6 +50,12 @@ func MonitorWorkflow(
 	// As this is an experimental feature, we only want to continue if the experimental flag is set
 	if !experimental {
 		return nil, errFactory.NewMissingExperimentalFlagError()
+	}
+
+	// Check if the feature can be used
+	if !config.GetBool(FeatureFlagSBOMMonitor) {
+		// TODO: use error factory and a nicer message
+		return nil, fmt.Errorf("you cannot use this feature")
 	}
 
 	logger.Println("Getting preferred organization ID")
