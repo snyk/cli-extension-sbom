@@ -15,7 +15,7 @@ import (
 var exampleScanResult = snykclient.ScanResult{
 	Name:   "Bob",
 	Policy: "",
-	Facts: []snykclient.ScanResultFact{
+	Facts: []*snykclient.ScanResultFact{
 		{Type: "depGraph", Data: struct{}{}},
 	},
 	Target:          snykclient.ScanResultTarget{Name: "myTarget"},
@@ -23,7 +23,7 @@ var exampleScanResult = snykclient.ScanResult{
 	TargetReference: "",
 }
 
-func Test_MonitorDeps(t *testing.T) {
+func Test_MonitorDependencies(t *testing.T) {
 	response := mocks.NewMockResponse(
 		"application/json; charset=utf-8",
 		[]byte(`{"ok":true,"uri":"https://example.com/","isMonitored":true,"projectName":"myProject"}`),
@@ -37,7 +37,7 @@ func Test_MonitorDeps(t *testing.T) {
 	})
 
 	client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-	depsResp, err := client.MonitorDeps(context.Background(), errFactory, &exampleScanResult)
+	depsResp, err := client.MonitorDependencies(context.Background(), errFactory, &exampleScanResult)
 
 	assert.NoError(t, err)
 	assert.Equal(t, "https://example.com/", depsResp.URI)
@@ -79,7 +79,7 @@ func Test_MonitorDeps_ServerErrors(t *testing.T) {
 			mockHTTPClient := mocks.NewMockSBOMService(response)
 
 			client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-			_, err := client.MonitorDeps(context.Background(), errFactory, &exampleScanResult)
+			_, err := client.MonitorDependencies(context.Background(), errFactory, &exampleScanResult)
 
 			assert.ErrorContainsf(
 				t,
@@ -89,4 +89,28 @@ func Test_MonitorDeps_ServerErrors(t *testing.T) {
 			)
 		})
 	}
+}
+
+func TestScanResult_WithSnykPolicy(t *testing.T) {
+	r := snykclient.ScanResult{}
+
+	r.WithSnykPolicy([]byte("ignore: {}\n"))
+
+	assert.Equal(t, "ignore: {}\n", r.Policy)
+}
+
+func TestScanResult_WithTargetName(t *testing.T) {
+	r := snykclient.ScanResult{}
+
+	r.WithTargetName("my-sbom-target")
+
+	assert.Equal(t, "my-sbom-target", r.Target.Name)
+}
+
+func TestScanResult_WithTargetReference(t *testing.T) {
+	r := snykclient.ScanResult{}
+
+	r.WithTargetReference("main")
+
+	assert.Equal(t, "main", r.TargetReference)
 }

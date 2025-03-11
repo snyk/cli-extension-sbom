@@ -14,11 +14,11 @@ import (
 const ContentTypeHeader = "Content-Type"
 const MIMETypeJSON = "application/json"
 
-func (t *SnykClient) MonitorDeps(
+func (t *SnykClient) MonitorDependencies(
 	ctx context.Context,
 	errFactory *errors.ErrorFactory,
 	scanResult *ScanResult,
-) (*MonitorDepsResponse, error) {
+) (*MonitorDependenciesResponse, error) {
 	u, err := url.Parse(t.apiBaseURL + "/v1/monitor-dependencies")
 	if err != nil {
 		return nil, fmt.Errorf("monitor deps api url invalid: %w", err)
@@ -54,11 +54,32 @@ func (t *SnykClient) MonitorDeps(
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode) //nolint:goconst // ok to repeat error message.
 	}
 
-	var depsResp MonitorDepsResponse
+	var depsResp MonitorDependenciesResponse
 	err = json.NewDecoder(resp.Body).Decode(&depsResp)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal JSON response: %w", err)
 	}
 
 	return &depsResp, nil
+}
+
+func (r *ScanResult) WithSnykPolicy(plc []byte) *ScanResult {
+	if len(plc) > 0 {
+		r.Policy = string(plc)
+	}
+	return r
+}
+
+func (r *ScanResult) WithTargetName(n string) *ScanResult {
+	if n != "" {
+		r.Target.Name = n
+	}
+	return r
+}
+
+func (r *ScanResult) WithTargetReference(ref string) *ScanResult {
+	if ref != "" {
+		r.TargetReference = ref
+	}
+	return r
 }
