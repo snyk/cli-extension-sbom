@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
 
@@ -55,13 +54,8 @@ func (t *SnykClient) MonitorDeps(
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode) //nolint:goconst // ok to repeat error message.
 	}
 
-	bodyBytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response: %w", err)
-	}
-
 	var depsResp MonitorDepsResponse
-	err = json.Unmarshal(bodyBytes, &depsResp)
+	err = json.NewDecoder(resp.Body).Decode(&depsResp)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal JSON response: %w", err)
 	}
