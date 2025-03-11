@@ -52,7 +52,7 @@ func (t *SnykClient) MonitorDeps(
 	defer resp.Body.Close()
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode) //nolint:goconst // ok to repeat error message.
 	}
 
 	bodyBytes, err := io.ReadAll(resp.Body)

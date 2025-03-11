@@ -376,6 +376,10 @@ type ScanResultRequest struct {
 	ScanResult ScanResult `json:"scanResult"`
 }
 
+type SBOMConvertResponse struct {
+	ScanResults []ScanResult `json:"scanResults"`
+}
+
 type MonitorDepsResponse struct {
 	OK             bool        `json:"ok"`
 	Org            string      `json:"org"`
