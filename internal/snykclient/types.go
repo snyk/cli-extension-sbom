@@ -366,7 +366,7 @@ type ScanResultFact struct {
 type ScanResult struct {
 	Name            string             `json:"name"`
 	Policy          string             `json:"policy,omitempty"`
-	Facts           []ScanResultFact   `json:"facts"`
+	Facts           []*ScanResultFact  `json:"facts"`
 	Target          ScanResultTarget   `json:"target"`
 	Identity        ScanResultIdentity `json:"identity"`
 	TargetReference string             `json:"targetReference,omitempty"`
@@ -377,10 +377,10 @@ type ScanResultRequest struct {
 }
 
 type SBOMConvertResponse struct {
-	ScanResults []ScanResult `json:"scanResults"`
+	ScanResults []*ScanResult `json:"scanResults"`
 }
 
-type MonitorDepsResponse struct {
+type MonitorDependenciesResponse struct {
 	OK             bool        `json:"ok"`
 	Org            string      `json:"org"`
 	ID             string      `json:"id"`

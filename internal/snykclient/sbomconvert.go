@@ -20,7 +20,7 @@ func (t *SnykClient) SBOMConvert(
 	ctx context.Context,
 	errFactory *errors.ErrorFactory,
 	sbom io.Reader,
-) ([]ScanResult, error) {
+) ([]*ScanResult, error) {
 	u, err := buildSBOMConvertAPIURL(t.apiBaseURL, sbomConvertAPIVersion, t.orgID)
 	if err != nil {
 		return nil, fmt.Errorf("sbom convert api url invalid: %w", err)
