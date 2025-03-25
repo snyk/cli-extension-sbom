@@ -58,8 +58,7 @@ func MonitorWorkflow(
 
 	// Check if the feature can be used
 	if !config.GetBool(FeatureFlagSBOMMonitor) {
-		// TODO: use error factory and a nicer message
-		return nil, fmt.Errorf("you cannot use this feature")
+		return nil, errFactory.NewFeatureNotPermittedError(FeatureFlagSBOMMonitor)
 	}
 
 	logger.Println("Getting preferred organization ID")
@@ -77,8 +76,7 @@ func MonitorWorkflow(
 
 	fd, err := os.Open(filename)
 	if err != nil {
-		// TODO: handle error
-		panic(err)
+		return nil, errFactory.NewFailedToOpenFileError(err)
 	}
 
 	c := snykclient.NewSnykClient(
@@ -88,8 +86,8 @@ func MonitorWorkflow(
 
 	scans, err := c.SBOMConvert(context.Background(), errFactory, fd)
 	if err != nil {
-		// TODO: handle error
-		panic(err)
+		// Snyk Client returns err from error factory
+		return nil, err
 	}
 
 	logger.Println("Successfully converted SBOM")
@@ -105,8 +103,8 @@ func MonitorWorkflow(
 				WithTargetName(targetName))
 		if merr != nil {
 			// TODO: handle error
+			// TODO: refactor renderer so we can incrementally write results, errors
 			// TBD: should this fail the entire command?
-			// TBD: how to add this to the output?
 			logger.Println("Failed to monitor dep-graph", merr)
 			continue
 		}
@@ -116,8 +114,7 @@ func MonitorWorkflow(
 	var buf bytes.Buffer
 	_, err = view.RenderMonitor(&buf, res)
 	if err != nil {
-		// TODO: handle error
-		panic(err)
+		return nil, errFactory.NewRenderError(err)
 	}
 
 	return []workflow.Data{workflow.NewData(WorkflowDataID, "text/plain", buf.Bytes())}, nil

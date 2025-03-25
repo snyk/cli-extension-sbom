@@ -23,7 +23,7 @@ func (t *SnykClient) SBOMConvert(
 ) ([]*ScanResult, error) {
 	u, err := buildSBOMConvertAPIURL(t.apiBaseURL, sbomConvertAPIVersion, t.orgID)
 	if err != nil {
-		return nil, fmt.Errorf("sbom convert api url invalid: %w", err)
+		return nil, errFactory.NewSCAError(err)
 	}
 
 	req, err := http.NewRequestWithContext(
@@ -33,25 +33,32 @@ func (t *SnykClient) SBOMConvert(
 		sbom,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %w", err)
+		return nil, errFactory.NewSCAError(err)
 	}
 
 	req.Header.Set(ContentTypeHeader, MIMETypeOctetStream)
 
 	resp, err := t.client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to send request: %w", err)
+		return nil, errFactory.NewSCAError(err)
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	// TODO: when server-side things go wrong, we should be displaying a
+	// request ID, interaction ID.
+
+	if resp.StatusCode > 399 && resp.StatusCode < 500 {
+		return nil, errFactory.NewSCAError(fmt.Errorf("request to analyze SBOM document was rejected: %s", resp.Status))
+	}
+
+	if resp.StatusCode > 499 {
+		return nil, errFactory.NewSCAError(fmt.Errorf("analysis of SBOM document failed due to error: %s", resp.Status))
 	}
 
 	var convertResp SBOMConvertResponse
 	err = json.NewDecoder(resp.Body).Decode(&convertResp)
 	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal JSON response: %w", err)
+		return nil, errFactory.NewSCAError(err)
 	}
 
 	return convertResp.ScanResults, nil
