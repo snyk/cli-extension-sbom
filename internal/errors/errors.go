@@ -67,6 +67,13 @@ func (ef *ErrorFactory) NewEmptyOrgError() *SBOMExtensionError {
 	)
 }
 
+func (ef *ErrorFactory) NewFeatureNotPermittedError(featureFlag string) *SBOMExtensionError {
+	return ef.newErr(
+		fmt.Errorf("feature %q not permitted", featureFlag),
+		"The feature you are trying to use is not available for your organization.",
+	)
+}
+
 func (ef *ErrorFactory) NewDepGraphWorkflowError(err error) *SBOMExtensionError {
 	return ef.newErr(
 		fmt.Errorf("error while invoking depgraph workflow: %w", err),
@@ -154,6 +161,13 @@ func (ef *ErrorFactory) NewFailedToReadFileError(err error) *SBOMExtensionError 
 	)
 }
 
+func (ef *ErrorFactory) NewFailedToOpenFileError(err error) *SBOMExtensionError {
+	return ef.newErr(
+		err,
+		"failed to open file",
+	)
+}
+
 func (ef *ErrorFactory) NewFileIsDirectoryError() *SBOMExtensionError {
 	return ef.newErr(
 		fmt.Errorf("file is a directory"),
@@ -182,4 +196,18 @@ func (ef *ErrorFactory) NewFatalSBOMTestError(err error) *SBOMExtensionError {
 
 func (ef *ErrorFactory) NewInvalidFilePathError(err error, path string) *SBOMExtensionError {
 	return ef.newErr(err, fmt.Sprintf("The given filepath %q does not exist.", path))
+}
+
+func (ef *ErrorFactory) NewRenderError(err error) *SBOMExtensionError {
+	return ef.newErr(
+		err,
+		"Failed to render the output of the command.",
+	)
+}
+
+func (ef *ErrorFactory) NewSCAError(err error) *SBOMExtensionError {
+	return ef.newErr(
+		err,
+		fmt.Sprintf("There was an error while analyzing the SBOM document: %s", err),
+	)
 }

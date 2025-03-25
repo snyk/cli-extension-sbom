@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -48,18 +49,15 @@ func Test_SBOMConvert_InvalidJSONReturned(t *testing.T) {
 		http.StatusOK,
 	)
 
-	sbomContent := `{"foo":"bar"}`
-
 	mockHTTPClient := mocks.NewMockSBOMService(response)
 
 	client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
 	_, err := client.SBOMConvert(
 		context.Background(),
 		errFactory,
-		bytes.NewBuffer([]byte(sbomContent)),
-	)
+		strings.NewReader(`{"foo":"bar"}`))
 
-	assert.ErrorContains(t, err, "failed to unmarshal JSON response")
+	assert.ErrorContains(t, err, "unexpected EOF")
 }
 
 func Test_SBOMConvert_ServerErrors(t *testing.T) {
