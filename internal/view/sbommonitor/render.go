@@ -1,26 +1,43 @@
 package sbommonitor
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
-func RenderMonitor(dst io.Writer, monitors []*snykclient.MonitorDependenciesResponse) (int, error) {
-	var mp = make([]monitorProjectComponent, len(monitors))
-
-	for i, m := range monitors {
-		c, err := generateMonitorProjectComponent(m.ProjectName, m.URI)
-		if err != nil {
-			return 0, err
-		}
-		mp[i] = c
+func NewRenderer(w io.Writer) *Renderer {
+	return &Renderer{
+		w: w,
 	}
+}
 
-	monitor, err := generateMonitorComponent(mp)
+type Renderer struct {
+	w            io.Writer
+	renderDivier bool
+}
+
+func (r *Renderer) RenderMonitor(m *snykclient.MonitorDependenciesResponse) error {
+	err := monitorProjectDetailsTemplate.Execute(r.w, struct {
+		Title         string
+		URI           string
+		RenderDivider bool
+	}{
+		Title:         bold.Render(fmt.Sprintf("Monitoring '%s'...", m.ProjectName)),
+		URI:           m.URI,
+		RenderDivider: r.renderDivier,
+	})
+
 	if err != nil {
-		return 0, err
+		return fmt.Errorf("failed to render monitor: %w", err)
 	}
 
-	return io.WriteString(dst, monitor.String())
+	r.renderDivier = true
+
+	return nil
+}
+
+func (*Renderer) RenderMonitorError(err error) {
+	panic("not implemented")
 }

@@ -93,7 +93,9 @@ func MonitorWorkflow(
 	logger.Println("Successfully converted SBOM")
 
 	plc := policy.LoadPolicyFile(policyPath, filename)
-	res := make([]*snykclient.MonitorDependenciesResponse, 0, len(scans))
+
+	var buf bytes.Buffer
+	r := view.NewRenderer(&buf)
 
 	for _, s := range scans {
 		logger.Printf("Monitoring dep-graph (%s)\n", s.Identity.Type)
@@ -102,19 +104,14 @@ func MonitorWorkflow(
 				WithTargetReference(targetRef).
 				WithTargetName(targetName))
 		if merr != nil {
-			// TODO: handle error
-			// TODO: refactor renderer so we can incrementally write results, errors
-			// TBD: should this fail the entire command?
 			logger.Println("Failed to monitor dep-graph", merr)
+			// TODO: implement rendering of error
+			// r.RenderMonitorError(merr)
 			continue
 		}
-		res = append(res, mres)
-	}
-
-	var buf bytes.Buffer
-	_, err = view.RenderMonitor(&buf, res)
-	if err != nil {
-		return nil, errFactory.NewRenderError(err)
+		if err := r.RenderMonitor(mres); err != nil {
+			return nil, errFactory.NewRenderError(err)
+		}
 	}
 
 	return []workflow.Data{workflow.NewData(WorkflowDataID, "text/plain", buf.Bytes())}, nil

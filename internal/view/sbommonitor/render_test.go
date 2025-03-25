@@ -10,39 +10,42 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
-func TestRenderMonitor(t *testing.T) {
-	monitors := []*snykclient.MonitorDependenciesResponse{
-		{ProjectName: "Test Project", URI: "https://example.com/test_project"},
-	}
-
+func TestRenderer_RenderMonitor(t *testing.T) {
 	var buf bytes.Buffer
-	_, err := RenderMonitor(&buf, monitors)
-	require.NoError(t, err)
+	r := NewRenderer(&buf)
 
-	output := buf.String()
+	require.NoError(t, r.RenderMonitor(
+		&snykclient.MonitorDependenciesResponse{
+			ProjectName: "Test Project",
+			URI:         "https://example.com/test_project"}))
 
-	assert.Contains(t, output, monitors[0].ProjectName, "Output should contain the project name")
-	assert.Contains(t, output, monitors[0].URI, "Output should contain the URI")
+	out := buf.String()
 
-	snapshotter.SnapshotT(t, output)
+	assert.Contains(t, out, "Test Project")
+	assert.Contains(t, out, "https://example.com/test_project")
+
+	snapshotter.SnapshotT(t, out)
 }
 
-func TestRenderMonitor_MultipleProjects(t *testing.T) {
-	monitors := []*snykclient.MonitorDependenciesResponse{
-		{ProjectName: "Test Project", URI: "https://example.com/test_project"},
-		{ProjectName: "A Different Project", URI: "https://example.com/different_project"},
-	}
-
+func TestRenderer_RenderMonitor_MultipleProjects(t *testing.T) {
 	var buf bytes.Buffer
-	_, err := RenderMonitor(&buf, monitors)
-	require.NoError(t, err)
+	r := NewRenderer(&buf)
 
-	output := buf.String()
+	require.NoError(t, r.RenderMonitor(
+		&snykclient.MonitorDependenciesResponse{
+			ProjectName: "Test Project",
+			URI:         "https://example.com/test_project"}))
+	require.NoError(t, r.RenderMonitor(
+		&snykclient.MonitorDependenciesResponse{
+			ProjectName: "A Different Project",
+			URI:         "https://example.com/different_project"}))
 
-	for _, m := range monitors {
-		assert.Contains(t, output, m.ProjectName, "Output should contain the project name")
-		assert.Contains(t, output, m.URI, "Output should contain the URI")
-	}
+	out := buf.String()
 
-	snapshotter.SnapshotT(t, output)
+	assert.Contains(t, out, "Test Project")
+	assert.Contains(t, out, "https://example.com/test_project")
+	assert.Contains(t, out, "A Different Project")
+	assert.Contains(t, out, "https://example.com/different_project")
+
+	snapshotter.SnapshotT(t, buf.String())
 }
