@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 
@@ -13,7 +14,6 @@ import (
 
 const (
 	sbomConvertAPIVersion = "2025-03-06~beta"
-	MIMETypeOctetStream   = "application/octet-stream"
 )
 
 func (t *SnykClient) SBOMConvert(
@@ -26,17 +26,42 @@ func (t *SnykClient) SBOMConvert(
 		return nil, errFactory.NewSCAError(err)
 	}
 
+	pipeReader, pipeWriter := io.Pipe()
+	multipartWriter := multipart.NewWriter(pipeWriter)
+
+	go func() {
+		defer pipeWriter.Close()
+
+		fileWriter, err := multipartWriter.CreateFormFile("sbom", "sbom_file") //nolint:govet // Shadowing err not an issue
+		if err != nil {
+			pipeWriter.CloseWithError(err)
+			return
+		}
+
+		_, err = io.Copy(fileWriter, sbom)
+		if err != nil {
+			pipeWriter.CloseWithError(err)
+			return
+		}
+
+		err = multipartWriter.Close()
+		if err != nil {
+			pipeWriter.CloseWithError(err)
+			return
+		}
+	}()
+
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodPost,
 		u.String(),
-		sbom,
+		pipeReader,
 	)
 	if err != nil {
 		return nil, errFactory.NewSCAError(err)
 	}
 
-	req.Header.Set(ContentTypeHeader, MIMETypeOctetStream)
+	req.Header.Set(ContentTypeHeader, multipartWriter.FormDataContentType())
 
 	resp, err := t.client.Do(req)
 	if err != nil {
