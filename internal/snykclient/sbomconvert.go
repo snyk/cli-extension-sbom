@@ -1,6 +1,8 @@
 package snykclient
 
 import (
+	"bytes"
+	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -26,17 +28,26 @@ func (t *SnykClient) SBOMConvert(
 		return nil, errFactory.NewSCAError(err)
 	}
 
+	body := bytes.NewBuffer(nil)
+	writer := gzip.NewWriter(body)
+	_, err = io.Copy(writer, sbom)
+	if err != nil {
+		return nil, errFactory.NewSCAError(err)
+	}
+	writer.Close()
+
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodPost,
 		u.String(),
-		sbom,
+		body,
 	)
 	if err != nil {
 		return nil, errFactory.NewSCAError(err)
 	}
 
 	req.Header.Set(ContentTypeHeader, MIMETypeOctetStream)
+	req.Header.Set(ContentEncodingHeader, "gzip")
 
 	resp, err := t.client.Do(req)
 	if err != nil {
