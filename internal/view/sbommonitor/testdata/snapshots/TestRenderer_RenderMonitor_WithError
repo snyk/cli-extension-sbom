@@ -6,9 +6,10 @@ Notifications about newly disclosed issues related to these dependencies will be
 
 ─────────────────────────────────────────────────────
 
-[1mMonitoring 'A Different Project'...[0m
+[1mError[0m
 
-Explore this snapshot at https://example.com/different_project
+An error occurred while attempting to monitor parts of the SBOM document.
 
-Notifications about newly disclosed issues related to these dependencies will be emailed to you.
+Details:
+	something is very wrong!
 

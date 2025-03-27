@@ -99,17 +99,16 @@ func MonitorWorkflow(
 
 	for _, s := range scans {
 		logger.Printf("Monitoring dep-graph (%s)\n", s.Identity.Type)
+
 		mres, merr := c.MonitorDependencies(context.Background(), errFactory,
 			s.WithSnykPolicy(plc).
 				WithTargetReference(targetRef).
 				WithTargetName(targetName))
 		if merr != nil {
 			logger.Println("Failed to monitor dep-graph", merr)
-			// TODO: implement rendering of error
-			// r.RenderMonitorError(merr)
-			continue
 		}
-		if err := r.RenderMonitor(mres); err != nil {
+
+		if err := r.RenderMonitor(mres, merr); err != nil {
 			return nil, errFactory.NewRenderError(err)
 		}
 	}
