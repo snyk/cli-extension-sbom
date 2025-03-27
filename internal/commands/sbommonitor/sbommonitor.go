@@ -45,7 +45,7 @@ func MonitorWorkflow(
 	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
 	policyPath := config.GetString(flags.FlagPolicyPath)
-	targetName := config.GetString(flags.FlagTargetName)
+	remoteRepoURL := config.GetString(flags.FlagRemoteRepoURL)
 	targetRef := config.GetString(flags.FlagTargetReference)
 	errFactory := errors.NewErrorFactory(logger)
 
@@ -102,7 +102,7 @@ func MonitorWorkflow(
 		mres, merr := c.MonitorDependencies(context.Background(), errFactory,
 			s.WithSnykPolicy(plc).
 				WithTargetReference(targetRef).
-				WithTargetName(targetName))
+				WithTargetName(remoteRepoURL))
 		if merr != nil {
 			logger.Println("Failed to monitor dep-graph", merr)
 			// TODO: implement rendering of error
