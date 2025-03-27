@@ -12,6 +12,7 @@ import (
 )
 
 const ContentTypeHeader = "Content-Type"
+const ContentEncodingHeader = "Content-Encoding"
 const MIMETypeJSON = "application/json"
 
 func (t *SnykClient) MonitorDependencies(
