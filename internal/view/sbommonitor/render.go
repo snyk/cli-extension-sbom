@@ -18,15 +18,32 @@ type Renderer struct {
 	renderDivier bool
 }
 
-func (r *Renderer) RenderMonitor(m *snykclient.MonitorDependenciesResponse) error {
+func (r *Renderer) RenderMonitor(m *snykclient.MonitorDependenciesResponse, merr error) error {
+	var title string
+	var uri string
+	var errTitle string
+
+	if m != nil {
+		title = bold.Render(fmt.Sprintf("Monitoring '%s'...", m.ProjectName))
+		uri = m.URI
+	}
+
+	if merr != nil {
+		errTitle = bold.Render("Error")
+	}
+
 	err := monitorProjectDetailsTemplate.Execute(r.w, struct {
 		Title         string
 		URI           string
 		RenderDivider bool
+		Error         error
+		ErrorTitle    string
 	}{
-		Title:         bold.Render(fmt.Sprintf("Monitoring '%s'...", m.ProjectName)),
-		URI:           m.URI,
+		Title:         title,
+		URI:           uri,
 		RenderDivider: r.renderDivier,
+		Error:         merr,
+		ErrorTitle:    errTitle,
 	})
 
 	if err != nil {
@@ -36,8 +53,4 @@ func (r *Renderer) RenderMonitor(m *snykclient.MonitorDependenciesResponse) erro
 	r.renderDivier = true
 
 	return nil
-}
-
-func (*Renderer) RenderMonitorError(err error) {
-	panic("not implemented")
 }
