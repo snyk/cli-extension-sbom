@@ -1,3 +1,4 @@
+//nolint:goconst // Refusing to declare a constant for a string we use in fmt.Errorf.
 package snykclient
 
 import (
@@ -5,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -22,23 +24,22 @@ func (t *SnykClient) MonitorDependencies(
 ) (*MonitorDependenciesResponse, error) {
 	u, err := url.Parse(t.apiBaseURL + "/v1/monitor-dependencies")
 	if err != nil {
-		return nil, fmt.Errorf("monitor deps api url invalid: %w", err)
+		return nil, fmt.Errorf("failed to generate url: %w", err)
 	}
 	if t.orgID != "" {
 		v := url.Values{"org": {t.orgID}}
 		u.RawQuery = v.Encode()
 	}
 
-	scanResultReq := ScanResultRequest{ScanResult: *scanResult}
-	scanResultJSON, err := json.Marshal(scanResultReq)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create scan result request JSON: %w", err)
+	var reqBody bytes.Buffer
+	if err = json.NewEncoder(&reqBody).Encode(ScanResultRequest{ScanResult: *scanResult}); err != nil {
+		return nil, fmt.Errorf("failed to encode request body: %w", err)
 	}
 
 	req, err := http.NewRequestWithContext(ctx,
 		http.MethodPut,
 		u.String(),
-		bytes.NewReader(scanResultJSON))
+		&reqBody)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
@@ -51,17 +52,17 @@ func (t *SnykClient) MonitorDependencies(
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	// Check for an unsuccessful response from the v1 API
+	if err = getErrorFromV1Response(resp); err != nil { //nolint:gocritic // ok to reuse err variable.
+		return nil, err
 	}
 
-	var depsResp MonitorDependenciesResponse
-	err = json.NewDecoder(resp.Body).Decode(&depsResp)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal JSON response: %w", err)
+	var respBody MonitorDependenciesResponse
+	if err = json.NewDecoder(resp.Body).Decode(&respBody); err != nil {
+		return nil, fmt.Errorf("failed to parse response: %w", err)
 	}
 
-	return &depsResp, nil
+	return &respBody, nil
 }
 
 func (r *ScanResult) WithSnykPolicy(plc []byte) *ScanResult {
@@ -83,4 +84,49 @@ func (r *ScanResult) WithTargetReference(ref string) *ScanResult {
 		r.TargetReference = ref
 	}
 	return r
+}
+
+// getErrorFromV1Response parses an error response from the v1 API
+// and formats it into a human-readable string.
+//
+// The error responses from the v1 API are not adhering to one
+// single schema, but can come in all shapes and sizes, even
+// be text/plain.
+func getErrorFromV1Response(r *http.Response) error {
+	// We are only interested in 4xx and 5xx errors.
+	if r.StatusCode < 400 {
+		return nil
+	}
+
+	type v1APIErr struct {
+		// JSON:API Errors schema
+		Errors []struct {
+			Details string `json:"details"`
+		} `json:"errors"`
+
+		// Legacy error schemas
+		Message string `json:"message"`
+		ErrRef  string `json:"errorRef"`
+	}
+
+	// Read entire body so we can fall back if JSON-decoding
+	// fails.
+	bod, err := io.ReadAll(r.Body)
+	if err != nil {
+		return fmt.Errorf("unknown error (%s)", r.Status)
+	}
+
+	var apiErr v1APIErr
+	if err := json.Unmarshal(bod, &apiErr); err == nil {
+		// We're dealing with JSON.
+		if len(apiErr.Errors) > 0 {
+			// JSON:API error object. Use the first item, it's likely the only one.
+			return fmt.Errorf("%s (%s)", apiErr.Errors[0].Details, r.Status)
+		}
+
+		return fmt.Errorf("%s (%s)", apiErr.Message, r.Status)
+	}
+
+	// Not JSON. Use the body as raw text.
+	return fmt.Errorf("%s (%s)", bod, r.Status)
 }
