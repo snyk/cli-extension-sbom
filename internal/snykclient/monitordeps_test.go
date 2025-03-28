@@ -2,8 +2,8 @@ package snykclient_test
 
 import (
 	"context"
-	"fmt"
 	"net/http"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -46,47 +46,56 @@ func Test_MonitorDependencies(t *testing.T) {
 }
 
 func Test_MonitorDeps_ServerErrors(t *testing.T) {
-	testCases := []struct {
-		name         string
+	tc := map[string]struct {
 		statusCode   int
 		responseBody string
+		expectedErr  string
 	}{
-		{
-			name:         "Forbidden (403) - Feature not available",
+		"400 Bad Request - Plain text response": {
+			statusCode:   http.StatusBadRequest,
+			responseBody: "Bad Request",
+			expectedErr:  "Bad Request (400 Bad Request)",
+		},
+		"400 Bad Request - JSON response": {
+			statusCode:   http.StatusBadRequest,
+			responseBody: ` {"message":"Unexpected end of JSON input","errorRef":"5a545f44-7c47-4ccc-a91f-bd6a8bc55079"}`,
+			expectedErr:  "Unexpected end of JSON input (400 Bad Request)",
+		},
+		"401 Unauthorized": {
+			statusCode:   http.StatusUnauthorized,
+			responseBody: `{"jsonapi":{"version":"1.0"},"errors":[{"status":"401","details":"Unauthorized"}]}`,
+			expectedErr:  "Unauthorized (401 Unauthorized)",
+		},
+		"403 Forbidden": {
 			statusCode:   http.StatusForbidden,
 			responseBody: `{"message":"This functionality is not available on your plan."}`,
+			expectedErr:  "This functionality is not available on your plan. (403 Forbidden)",
 		},
-		{
-			name:         "Bad Request (400) - Malformed Request",
-			statusCode:   http.StatusBadRequest,
-			responseBody: "",
+		"404 Not Found": {
+			statusCode:   http.StatusNotFound,
+			responseBody: `{"code":404,"message":"bad API request, please contact support@snyk.io for assistance","error":"unsupported url"}`,
+			expectedErr:  "bad API request, please contact support@snyk.io for assistance (404 Not Found)",
 		},
-		{
-			name:         "Internal Server Error (500) - Server Issue",
+		"500 Internal Server Error": {
 			statusCode:   http.StatusInternalServerError,
 			responseBody: `{"message":"Internal server error."}`,
+			expectedErr:  "Internal server error. (500 Internal Server Error)",
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			response := mocks.NewMockResponse(
-				"application/json; charset=utf-8",
-				[]byte(tc.responseBody),
-				tc.statusCode,
-			)
-
-			mockHTTPClient := mocks.NewMockSBOMService(response)
+	for name, tt := range tc {
+		t.Run(name, func(t *testing.T) {
+			mockHTTPClient := mocks.NewMockSBOMService(
+				mocks.NewMockResponse(
+					"application/json; charset=utf-8",
+					[]byte(tt.responseBody),
+					tt.statusCode))
 
 			client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
 			_, err := client.MonitorDependencies(context.Background(), errFactory, &exampleScanResult)
 
-			assert.ErrorContainsf(
-				t,
-				err,
-				fmt.Sprintf("%d", tc.statusCode),
-				"Expected error to contain status code %d", tc.statusCode,
-			)
+			assert.ErrorContains(t, err, strconv.Itoa(tt.statusCode))
+			assert.ErrorContains(t, err, tt.expectedErr)
 		})
 	}
 }
