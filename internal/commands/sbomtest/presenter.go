@@ -42,6 +42,7 @@ type (
 		Identifiers          Identifier       `json:"identifiers,omitempty"`
 		ModificationTime     time.Time        `json:"modificationTime,omitempty"`
 		PackageName          string           `json:"packageName,omitempty"`
+		PackagePurl          string           `json:"packagePurl,omitempty"`
 		PublicationTime      time.Time        `json:"publicationTime,omitempty"`
 		SemVer               SemVer           `json:"semver,omitempty"`
 		Severity             severities.Level `json:"severity,omitempty"`
@@ -83,6 +84,7 @@ func resultToJSONOutput(res *snykclient.SBOMTestResult) JSONOutput {
 				PackageName: pkg.Name,
 				Name:        pkg.Name,
 				Version:     pkg.Version,
+				PackagePurl: pkg.PURL,
 
 				Title: vuln.Title,
 
