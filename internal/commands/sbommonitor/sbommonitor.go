@@ -78,6 +78,7 @@ func MonitorWorkflow(
 	if err != nil {
 		return nil, errFactory.NewFailedToOpenFileError(err)
 	}
+	defer fd.Close()
 
 	c := snykclient.NewSnykClient(
 		ictx.GetNetworkAccess().GetHttpClient(),
