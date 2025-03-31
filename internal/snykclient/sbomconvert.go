@@ -5,7 +5,6 @@ import (
 	"compress/gzip"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -55,15 +54,12 @@ func (t *SnykClient) SBOMConvert(
 	}
 	defer resp.Body.Close()
 
-	// TODO: when server-side things go wrong, we should be displaying a
-	// request ID, interaction ID.
-
 	if resp.StatusCode > 399 && resp.StatusCode < 500 {
-		return nil, errFactory.NewSCAError(fmt.Errorf("request to analyze SBOM document was rejected: %s", resp.Status))
+		return nil, errFactory.NewSCAError(errorWithRequestID("request to analyze SBOM document was rejected", resp))
 	}
 
 	if resp.StatusCode > 499 {
-		return nil, errFactory.NewSCAError(fmt.Errorf("analysis of SBOM document failed due to error: %s", resp.Status))
+		return nil, errFactory.NewSCAError(errorWithRequestID("analysis of SBOM document failed due to error", resp))
 	}
 
 	var convertResp SBOMConvertResponse
