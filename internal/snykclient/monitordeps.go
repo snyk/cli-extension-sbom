@@ -1,4 +1,3 @@
-//nolint:goconst // Refusing to declare a constant for a string we use in fmt.Errorf.
 package snykclient
 
 import (
@@ -113,7 +112,7 @@ func getErrorFromV1Response(r *http.Response) error {
 	// fails.
 	bod, err := io.ReadAll(r.Body)
 	if err != nil {
-		return fmt.Errorf("unknown error (%s)", r.Status)
+		return errorWithRequestID("unknown error (%s)", r)
 	}
 
 	var apiErr v1APIErr
@@ -121,12 +120,12 @@ func getErrorFromV1Response(r *http.Response) error {
 		// We're dealing with JSON.
 		if len(apiErr.Errors) > 0 {
 			// JSON:API error object. Use the first item, it's likely the only one.
-			return fmt.Errorf("%s (%s)", apiErr.Errors[0].Details, r.Status)
+			return errorWithRequestID(apiErr.Errors[0].Details, r)
 		}
 
-		return fmt.Errorf("%s (%s)", apiErr.Message, r.Status)
+		return errorWithRequestID(apiErr.Message, r)
 	}
 
 	// Not JSON. Use the body as raw text.
-	return fmt.Errorf("%s (%s)", bod, r.Status)
+	return errorWithRequestID(string(bod), r)
 }
