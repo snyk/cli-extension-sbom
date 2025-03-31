@@ -59,11 +59,11 @@ func (t *SnykClient) SBOMConvert(
 	// request ID, interaction ID.
 
 	if resp.StatusCode > 399 && resp.StatusCode < 500 {
-		return nil, errFactory.NewSCAError(fmt.Errorf("request to analyze SBOM document was rejected: %s", resp.Status))
+		return nil, errFactory.NewSCAError(fmt.Errorf("request to analyze SBOM document was rejected: %s (%s)", errorWithDefault(resp.Body), resp.Status))
 	}
 
 	if resp.StatusCode > 499 {
-		return nil, errFactory.NewSCAError(fmt.Errorf("analysis of SBOM document failed due to error: %s", resp.Status))
+		return nil, errFactory.NewSCAError(fmt.Errorf("analysis of SBOM document failed due to error: %s (%s)", errorWithDefault(resp.Body), resp.Status))
 	}
 
 	var convertResp SBOMConvertResponse
@@ -73,6 +73,19 @@ func (t *SnykClient) SBOMConvert(
 	}
 
 	return convertResp.ScanResults, nil
+}
+
+type errResponse struct {
+	Error string `json:"error"`
+}
+
+func errorWithDefault(body io.Reader) string {
+	var errResp errResponse
+	err := json.NewDecoder(body).Decode(&errResp)
+	if err != nil {
+		return "Unknown error"
+	}
+	return errResp.Error
 }
 
 func buildSBOMConvertAPIURL(apiBaseURL, apiVersion, orgID string) (*url.URL, error) {
