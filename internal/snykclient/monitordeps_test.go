@@ -3,6 +3,7 @@ package snykclient_test
 import (
 	"context"
 	"net/http"
+	"net/textproto"
 	"strconv"
 	"testing"
 
@@ -46,6 +47,8 @@ func Test_MonitorDependencies(t *testing.T) {
 }
 
 func Test_MonitorDeps_ServerErrors(t *testing.T) {
+	snykRequestIDHeader := textproto.CanonicalMIMEHeaderKey("snyk-request-id")
+
 	tc := map[string]struct {
 		statusCode   int
 		responseBody string
@@ -54,42 +57,45 @@ func Test_MonitorDeps_ServerErrors(t *testing.T) {
 		"400 Bad Request - Plain text response": {
 			statusCode:   http.StatusBadRequest,
 			responseBody: "Bad Request",
-			expectedErr:  "Bad Request (400 Bad Request)",
+			expectedErr:  "Bad Request (400 Bad Request - requestId: 74c05ab5-aa77-4e8f-aded-da30f5be4420)",
 		},
 		"400 Bad Request - JSON response": {
 			statusCode:   http.StatusBadRequest,
 			responseBody: ` {"message":"Unexpected end of JSON input","errorRef":"5a545f44-7c47-4ccc-a91f-bd6a8bc55079"}`,
-			expectedErr:  "Unexpected end of JSON input (400 Bad Request)",
+			expectedErr:  "Unexpected end of JSON input (400 Bad Request - requestId: 74c05ab5-aa77-4e8f-aded-da30f5be4420)",
 		},
 		"401 Unauthorized": {
 			statusCode:   http.StatusUnauthorized,
 			responseBody: `{"jsonapi":{"version":"1.0"},"errors":[{"status":"401","details":"Unauthorized"}]}`,
-			expectedErr:  "Unauthorized (401 Unauthorized)",
+			expectedErr:  "Unauthorized (401 Unauthorized - requestId: 74c05ab5-aa77-4e8f-aded-da30f5be4420)",
 		},
 		"403 Forbidden": {
 			statusCode:   http.StatusForbidden,
 			responseBody: `{"message":"This functionality is not available on your plan."}`,
-			expectedErr:  "This functionality is not available on your plan. (403 Forbidden)",
+			expectedErr:  "This functionality is not available on your plan. (403 Forbidden - requestId: 74c05ab5-aa77-4e8f-aded-da30f5be4420)",
 		},
 		"404 Not Found": {
 			statusCode:   http.StatusNotFound,
 			responseBody: `{"code":404,"message":"bad API request, please contact support@snyk.io for assistance","error":"unsupported url"}`,
-			expectedErr:  "bad API request, please contact support@snyk.io for assistance (404 Not Found)",
+			expectedErr:  "bad API request, please contact support@snyk.io for assistance (404 Not Found - requestId: 74c05ab5-aa77-4e8f-aded-da30f5be4420)",
 		},
 		"500 Internal Server Error": {
 			statusCode:   http.StatusInternalServerError,
 			responseBody: `{"message":"Internal server error."}`,
-			expectedErr:  "Internal server error. (500 Internal Server Error)",
+			expectedErr:  "Internal server error. (500 Internal Server Error - requestId: 74c05ab5-aa77-4e8f-aded-da30f5be4420)",
 		},
 	}
 
 	for name, tt := range tc {
 		t.Run(name, func(t *testing.T) {
 			mockHTTPClient := mocks.NewMockSBOMService(
-				mocks.NewMockResponse(
+				mocks.NewMockResponseWithHeaders(
 					"application/json; charset=utf-8",
 					[]byte(tt.responseBody),
-					tt.statusCode))
+					tt.statusCode,
+					http.Header{
+						snykRequestIDHeader: {"74c05ab5-aa77-4e8f-aded-da30f5be4420"},
+					}))
 
 			client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
 			_, err := client.MonitorDependencies(context.Background(), errFactory, &exampleScanResult)
