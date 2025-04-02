@@ -1,16 +1,14 @@
 module github.com/snyk/cli-extension-sbom
 
-go 1.23.0
-
-toolchain go1.23.4
+go 1.23.6
 
 require (
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/charmbracelet/lipgloss v0.10.0
 	github.com/golang/mock v1.6.0
 	github.com/muesli/termenv v0.15.2
-	github.com/snyk/error-catalog-golang-public v0.0.0-20250218074309-307ad7b38a60
-	github.com/snyk/go-application-framework v0.0.0-20250228141123-ae19bde3449f
+	github.com/snyk/error-catalog-golang-public v0.0.0-20250310083934-7ac627e3451f
+	github.com/snyk/go-application-framework v0.0.0-20250312152307-f382628a3a7e
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
@@ -80,7 +78,7 @@ require (
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect
 	github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3 // indirect
 	github.com/skeema/knownhosts v1.3.1 // indirect
-	github.com/snyk/code-client-go v1.15.0 // indirect
+	github.com/snyk/code-client-go v1.17.1 // indirect
 	github.com/snyk/go-httpauth v0.0.0-20231117135515-eb445fea7530 // indirect
 	github.com/speakeasy-api/jsonpath v0.6.1 // indirect
 	github.com/speakeasy-api/openapi-overlay v0.10.1 // indirect
