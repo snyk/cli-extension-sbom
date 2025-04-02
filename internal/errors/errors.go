@@ -154,6 +154,13 @@ func (ef *ErrorFactory) NewMissingFilenameFlagError() *SBOMExtensionError {
 	)
 }
 
+func (ef *ErrorFactory) NewMissingRemoteRepoUrlError() *SBOMExtensionError {
+	return ef.newErr(
+		fmt.Errorf("remote repo URL not found"),
+		"Can't determine remote URL automatically, please set a remote URL with `--remote-repo-url` flag.",
+	)
+}
+
 func (ef *ErrorFactory) NewFailedToReadFileError(err error) *SBOMExtensionError {
 	return ef.newErr(
 		err,

@@ -68,6 +68,12 @@ func MonitorWorkflow(
 		return nil, errFactory.NewEmptyOrgError()
 	}
 
+	if remoteRepoURL == "" {
+		// TODO: try and get from git context
+
+		return nil, errFactory.NewMissingRemoteRepoUrlError()
+	}
+
 	if filename == "" {
 		return nil, errFactory.NewMissingFilenameFlagError()
 	}
