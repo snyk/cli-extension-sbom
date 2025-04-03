@@ -12,6 +12,7 @@ import (
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
+	"github.com/snyk/cli-extension-sbom/internal/git"
 	"github.com/snyk/cli-extension-sbom/internal/policy"
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 	view "github.com/snyk/cli-extension-sbom/internal/view/sbommonitor"
@@ -38,7 +39,15 @@ func RegisterWorkflows(e workflow.Engine) error {
 
 func MonitorWorkflow(
 	ictx workflow.InvocationContext,
+	d []workflow.Data,
+) ([]workflow.Data, error) {
+	return MonitorWorkflowWithDI(ictx, d, &git.GitCmd{})
+}
+
+func MonitorWorkflowWithDI(
+	ictx workflow.InvocationContext,
 	_ []workflow.Data,
+	git git.Git,
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
@@ -69,9 +78,10 @@ func MonitorWorkflow(
 	}
 
 	if remoteRepoURL == "" {
-		// TODO: try and get from git context
-
-		return nil, errFactory.NewMissingRemoteRepoUrlError()
+		remoteRepoURL = git.GetRemoteOriginURL()
+		if remoteRepoURL == "" {
+			return nil, errFactory.NewMissingRemoteRepoUrlError()
+		}
 	}
 
 	if filename == "" {
