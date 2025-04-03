@@ -1,0 +1,14 @@
+{
+	"scanResults": [
+		{
+			"name": "alice",
+			"policy": "",
+			"target": {
+				"name": "alice-target"
+			},
+			"identity": {
+				"type": "npm"
+			}
+		}
+	]
+}
