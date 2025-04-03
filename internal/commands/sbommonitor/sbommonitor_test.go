@@ -116,12 +116,13 @@ func TestSBOMMonitorWorkflow_Success(t *testing.T) {
 
 	for _, testCase := range testTable {
 		t.Run(testCase.testName, func(t *testing.T) {
+			var monitorDependenciesRequestBody string
+
 			mockSBOMService := svcmocks.NewMockSBOMServiceMultiResponse(responses, func(r *http.Request) {
 				if strings.Contains(r.RequestURI, "monitor-dependencies") {
-					s, err := processRequest(r)
+					var err error
+					monitorDependenciesRequestBody, err = processRequest(r)
 					require.NoError(t, err)
-
-					assert.Contains(t, s, testCase.expectedRemoteUrl, "Request body should contain remote repo URL")
 				}
 			})
 			defer mockSBOMService.Close()
@@ -136,6 +137,8 @@ func TestSBOMMonitorWorkflow_Success(t *testing.T) {
 			_, err := sbommonitor.MonitorWorkflowWithDI(mockICTX, []workflow.Data{}, gitStub)
 
 			require.NoError(t, err)
+
+			assert.Contains(t, monitorDependenciesRequestBody, testCase.expectedRemoteUrl, "Request body should contain remote repo URL")
 		})
 	}
 }

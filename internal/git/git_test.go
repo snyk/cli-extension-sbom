@@ -18,8 +18,37 @@ func (g *testGitExec) Exec(cmd string, args ...string) (string, error) {
 }
 
 func Test_GetRemoteOriginUrl(t *testing.T) {
-	gitRemoteUrl := "http://example.com/git-url"
+	testCases := []struct {
+		name     string
+		origin   string
+		expected string
+	}{
+		{
+			name:     "HTTPS",
+			origin:   "https://github.com/snyk/cli-extension-sbom",
+			expected: "http://github.com/snyk/cli-extension-sbom",
+		},
+		{
+			name:     "HTTP",
+			origin:   "http://github.com/snyk/cli-extension-sbom",
+			expected: "http://github.com/snyk/cli-extension-sbom",
+		},
+		{
+			name:     "SSH",
+			origin:   "ssh://git@github.com:snyk/cli-extension-sbom.git",
+			expected: "http://github.com/snyk/cli-extension-sbom.git",
+		},
+		{
+			name:     "GIT",
+			origin:   "git@github.com:snyk/cli-extension-sbom.git",
+			expected: "http://github.com/snyk/cli-extension-sbom.git",
+		},
+	}
 
-	g := git.NewGitCmdWithExec(&testGitExec{cmdOutput: gitRemoteUrl})
-	assert.Equal(t, gitRemoteUrl, g.GetRemoteOriginURL())
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			g := git.NewGitCmdWithExec(&testGitExec{cmdOutput: testCase.origin})
+			assert.Equal(t, testCase.expected, g.GetRemoteOriginURL())
+		})
+	}
 }

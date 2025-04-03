@@ -1,8 +1,10 @@
 package git
 
 import (
+	"fmt"
+	"net/url"
 	"os/exec"
-	"strings"
+	"regexp"
 )
 
 type Git interface {
@@ -21,13 +23,29 @@ func NewGitCmdWithExec(c cmdExec) *gitCmd {
 	return &gitCmd{ce: c}
 }
 
+var originRegex = regexp.MustCompile(`(.+@)?(.+):(.+$)`)
+
 func (g *gitCmd) GetRemoteOriginURL() string {
-	_, err := g.ce.Exec("git", "remote", "get-url", "origin")
+	origin, err := g.ce.Exec("git", "remote", "get-url", "origin")
 	if err != nil {
 		return ""
 	}
-	// Parse cmdOutput
-	return ""
+
+	if origin == "" {
+		return ""
+	}
+
+	u, err := url.Parse(origin)
+	if err == nil && u.Host != "" && u.Scheme != "" && (u.Scheme == "ssh" || u.Scheme == "http" || u.Scheme == "https") {
+		return fmt.Sprintf("http://%s%s", u.Host, u.Path)
+	} else {
+		matches := originRegex.FindStringSubmatch(origin)
+		if len(matches) == 4 && matches[2] != "" && matches[3] != "" {
+			return fmt.Sprintf("http://%s/%s", matches[2], matches[3])
+		} else {
+			return origin
+		}
+	}
 }
 
 type cmdExec interface {
@@ -37,11 +55,9 @@ type cmdExec interface {
 type gitExec struct{}
 
 func (g *gitExec) Exec(name string, args ...string) (string, error) {
-	cmd := exec.Command(name, args...)
-	var out strings.Builder
-	err := cmd.Run()
+	output, err := exec.Command(name, args...).Output()
 	if err != nil {
 		return "", err
 	}
-	return out.String(), nil
+	return string(output), nil
 }
