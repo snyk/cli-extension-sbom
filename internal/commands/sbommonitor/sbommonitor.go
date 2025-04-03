@@ -41,7 +41,7 @@ func MonitorWorkflow(
 	ictx workflow.InvocationContext,
 	d []workflow.Data,
 ) ([]workflow.Data, error) {
-	return MonitorWorkflowWithDI(ictx, d, &git.GitCmd{})
+	return MonitorWorkflowWithDI(ictx, d, git.NewGitCmd())
 }
 
 func MonitorWorkflowWithDI(
