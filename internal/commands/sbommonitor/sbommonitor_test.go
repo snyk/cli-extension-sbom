@@ -49,6 +49,38 @@ func TestSBOMMonitorWorkflow_NoRemoteRepoURL(t *testing.T) {
 	assert.ErrorContains(t, err, "Can't determine remote URL automatically, please set a remote URL with `--remote-repo-url` flag.")
 }
 
+func TestSBOMMonitorWorkflow_PassRemoteRepoURL(t *testing.T) {
+	remoteGitURL := "https://example.com/flag-url"
+
+	responses := []svcmocks.MockResponse{
+		svcmocks.NewMockResponse("application/vnd.api+json", testResultMockResponse, http.StatusOK),
+		svcmocks.NewMockResponse("application/vnd.api+json", monitorDependenciesResultMockResponse, http.StatusOK),
+	}
+
+	var monitorDependenciesRequestBody string
+
+	mockSBOMService := svcmocks.NewMockSBOMServiceMultiResponse(responses, func(r *http.Request) {
+		if strings.Contains(r.RequestURI, "monitor-dependencies") {
+			var err error
+			monitorDependenciesRequestBody, err = processRequest(r)
+			require.NoError(t, err)
+		}
+	})
+	defer mockSBOMService.Close()
+
+	mockICTX := createMockICTXWithURL(t, mockSBOMService.URL)
+	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set(sbommonitor.FeatureFlagSBOMMonitor, true)
+	mockICTX.GetConfiguration().Set(flags.FlagRemoteRepoURL, remoteGitURL)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+
+	_, err := sbommonitor.MonitorWorkflow(mockICTX, []workflow.Data{})
+
+	require.NoError(t, err)
+
+	assert.Contains(t, monitorDependenciesRequestBody, remoteGitURL, "Request body should contain remote repo URL")
+}
+
 func TestSBOMMonitorWorkflow_Success(t *testing.T) {
 	testTable := []struct {
 		testName string
@@ -124,10 +156,8 @@ func processRequest(r *http.Request) (string, error) {
 		return "", err
 	}
 
-	// Now, we need to reset the body so that other parts of the system can read it too.
 	r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
-	// Here, we can pretend to do something with the body.
 	bodyString := string(bodyBytes)
 	return bodyString, nil
 }

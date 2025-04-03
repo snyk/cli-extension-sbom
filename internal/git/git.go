@@ -22,7 +22,7 @@ func NewGitCmdWithExec(c cmdExec) *gitCmd {
 }
 
 func (g *gitCmd) GetRemoteOriginURL() string {
-	cmdOutput, err := g.ce.Exec("git", "remote", "get-url", "origin")
+	_, err := g.ce.Exec("git", "remote", "get-url", "origin")
 	if err != nil {
 		return ""
 	}
