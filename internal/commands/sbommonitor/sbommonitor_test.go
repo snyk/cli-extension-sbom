@@ -119,9 +119,6 @@ func mockInvocationContext(
 	mockConfig.Set(configuration.AUTHENTICATION_TOKEN, "<SOME API TOKEN>")
 	mockConfig.Set(configuration.ORGANIZATION, "6277734c-fc84-4c74-9662-33d46ec66c53")
 	mockConfig.Set(configuration.API_URL, sbomServiceURL)
-	mockConfig.Set("format", "cyclonedx1.4+json")
-	mockConfig.Set("name", "goof")
-	mockConfig.Set("version", "0.0.0")
 
 	mockRuntimeInfo := runtimeinfo.New(
 		runtimeinfo.WithName("test-app"),
