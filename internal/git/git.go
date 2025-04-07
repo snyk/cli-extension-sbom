@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"os/exec"
 	"regexp"
+	"strings"
 )
 
 type Git interface {
@@ -31,6 +32,7 @@ func (g *gitCmd) GetRemoteOriginURL() string {
 		return ""
 	}
 
+	origin = strings.TrimSpace(origin)
 	if origin == "" {
 		return ""
 	}

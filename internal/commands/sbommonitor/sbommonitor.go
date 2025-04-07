@@ -120,7 +120,7 @@ func MonitorWorkflowWithDI(
 		mres, merr := c.MonitorDependencies(context.Background(), errFactory,
 			s.WithSnykPolicy(plc).
 				WithTargetReference(targetRef).
-				WithTargetName(remoteRepoURL))
+				WithTargetRemoteUrl(remoteRepoURL))
 		if merr != nil {
 			logger.Println("Failed to monitor dep-graph", merr)
 		}

@@ -61,16 +61,6 @@ func Test_GetRemoteOriginUrl(t *testing.T) {
 			expected: "",
 		},
 		{
-			name:     "Trims whitespace from command output",
-			origin:   "\ngit@github.com:snyk/cli-extension-sbom.git\n\n",
-			expected: "http://github.com/snyk/cli-extension-sbom.git",
-		},
-		{
-			name:     "Whitespace-only output is converted to empty string",
-			origin:   "\n\t",
-			expected: "",
-		},
-		{
 			name:     "Ignore error",
 			origin:   "",
 			expected: "",

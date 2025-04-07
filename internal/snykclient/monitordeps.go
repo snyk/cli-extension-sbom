@@ -71,9 +71,9 @@ func (r *ScanResult) WithSnykPolicy(plc []byte) *ScanResult {
 	return r
 }
 
-func (r *ScanResult) WithTargetName(n string) *ScanResult {
+func (r *ScanResult) WithTargetRemoteUrl(n string) *ScanResult {
 	if n != "" {
-		r.Target.Name = n
+		r.Target.RemoteUrl = n
 	}
 	return r
 }

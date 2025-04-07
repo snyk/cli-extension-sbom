@@ -349,7 +349,7 @@ func (doc *SBOMTestResultResourceDocument) AsResult() *SBOMTestResult {
 // region: Monitor Deps
 
 type ScanResultTarget struct {
-	Name string `json:"name"`
+	RemoteUrl string `json:"remoteUrl"`
 }
 
 type ScanResultIdentity struct {
