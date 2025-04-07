@@ -10,6 +10,7 @@ import (
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
+	"github.com/snyk/cli-extension-sbom/internal/bundlestore"
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/sbom"
@@ -34,7 +35,7 @@ func TestWorkflow(
 	_ []workflow.Data,
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
-	logger := ictx.GetLogger()
+	logger := ictx.GetEnhancedLogger()
 	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
 	errFactory := errors.NewErrorFactory(logger)
@@ -59,6 +60,13 @@ func TestWorkflow(
 	}
 
 	logger.Println("Target SBOM document:", filename)
+	bsc := bundlestore.NewClient(config, ictx.GetNetworkAccess().GetHttpClient, logger)
+	sbomBundleHash, err := bsc.UploadSBOM(ctx, filename)
+	if err != nil {
+		logger.Println("HERE", err)
+		return nil, err
+	}
+	logger.Println("BH", sbomBundleHash)
 
 	bts, err := sbom.ReadSBOMFile(filename, errFactory)
 	if err != nil {

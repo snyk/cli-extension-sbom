@@ -2,8 +2,9 @@ package errors
 
 import (
 	"fmt"
-	"log"
 	"strings"
+
+	"github.com/rs/zerolog"
 )
 
 // SBOMExtensionError represents something gone wrong during the
@@ -25,10 +26,10 @@ func (xerr SBOMExtensionError) Unwrap() error {
 }
 
 type ErrorFactory struct {
-	logger *log.Logger
+	logger *zerolog.Logger
 }
 
-func NewErrorFactory(logger *log.Logger) *ErrorFactory {
+func NewErrorFactory(logger *zerolog.Logger) *ErrorFactory {
 	return &ErrorFactory{
 		logger: logger,
 	}
