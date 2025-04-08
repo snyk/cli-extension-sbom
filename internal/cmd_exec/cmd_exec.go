@@ -1,4 +1,4 @@
-package git
+package cmd_exec
 
 import (
 	"fmt"
@@ -8,26 +8,26 @@ import (
 	"strings"
 )
 
-type Git interface {
+type RemoteRepoURLGetter interface {
 	GetRemoteOriginURL() string
 }
 
-type gitCmd struct {
-	ce cmdExec
+type cliRemoteRepoURLGetter struct {
+	exec cmdExecutor
 }
 
-func NewGitCmd() *gitCmd {
-	return NewGitCmdWithExec(&gitExec{})
+func NewCliRemoteRepoURLGetter() *cliRemoteRepoURLGetter {
+	return NewRemoteRepoURLGetter(&cliCmdExecutor{})
 }
 
-func NewGitCmdWithExec(c cmdExec) *gitCmd {
-	return &gitCmd{ce: c}
+func NewRemoteRepoURLGetter(c cmdExecutor) *cliRemoteRepoURLGetter {
+	return &cliRemoteRepoURLGetter{exec: c}
 }
 
 var originRegex = regexp.MustCompile(`(.+@)?(.+):(.+$)`)
 
-func (g *gitCmd) GetRemoteOriginURL() string {
-	origin, err := g.ce.Exec("git", "remote", "get-url", "origin")
+func (g *cliRemoteRepoURLGetter) GetRemoteOriginURL() string {
+	origin, err := g.exec.Exec("git", "remote", "get-url", "origin")
 	if err != nil {
 		return ""
 	}
@@ -50,13 +50,13 @@ func (g *gitCmd) GetRemoteOriginURL() string {
 	}
 }
 
-type cmdExec interface {
+type cmdExecutor interface {
 	Exec(string, ...string) (string, error)
 }
 
-type gitExec struct{}
+type cliCmdExecutor struct{}
 
-func (g *gitExec) Exec(name string, args ...string) (string, error) {
+func (g *cliCmdExecutor) Exec(name string, args ...string) (string, error) {
 	output, err := exec.Command(name, args...).Output()
 	if err != nil {
 		return "", err

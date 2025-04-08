@@ -10,9 +10,9 @@ import (
 	"github.com/snyk/go-application-framework/pkg/local_workflows/config_utils"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
+	"github.com/snyk/cli-extension-sbom/internal/cmd_exec"
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
-	"github.com/snyk/cli-extension-sbom/internal/git"
 	"github.com/snyk/cli-extension-sbom/internal/policy"
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 	view "github.com/snyk/cli-extension-sbom/internal/view/sbommonitor"
@@ -41,13 +41,13 @@ func MonitorWorkflow(
 	ictx workflow.InvocationContext,
 	d []workflow.Data,
 ) ([]workflow.Data, error) {
-	return MonitorWorkflowWithDI(ictx, d, git.NewGitCmd())
+	return MonitorWorkflowWithDI(ictx, d, cmd_exec.NewCliRemoteRepoURLGetter())
 }
 
 func MonitorWorkflowWithDI(
 	ictx workflow.InvocationContext,
 	_ []workflow.Data,
-	git git.Git,
+	remoteRepoUrlGetter cmd_exec.RemoteRepoURLGetter,
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
@@ -78,7 +78,7 @@ func MonitorWorkflowWithDI(
 	}
 
 	if remoteRepoURL == "" {
-		remoteRepoURL = git.GetRemoteOriginURL()
+		remoteRepoURL = remoteRepoUrlGetter.GetRemoteOriginURL()
 		if remoteRepoURL == "" {
 			return nil, errFactory.NewMissingRemoteRepoUrlError()
 		}
@@ -120,7 +120,7 @@ func MonitorWorkflowWithDI(
 		mres, merr := c.MonitorDependencies(context.Background(), errFactory,
 			s.WithSnykPolicy(plc).
 				WithTargetReference(targetRef).
-				WithTargetRemoteUrl(remoteRepoURL))
+				WithTargetRemoteURL(remoteRepoURL))
 		if merr != nil {
 			logger.Println("Failed to monitor dep-graph", merr)
 		}

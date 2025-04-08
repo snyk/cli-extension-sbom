@@ -117,9 +117,9 @@ func TestScanResult_WithSnykPolicy(t *testing.T) {
 func TestScanResult_WithTargetRemoteUrl(t *testing.T) {
 	r := snykclient.ScanResult{}
 
-	r.WithTargetRemoteUrl("my-sbom-target")
+	r.WithTargetRemoteURL("my-sbom-target")
 
-	assert.Equal(t, "my-sbom-target", r.Target.RemoteUrl)
+	assert.Equal(t, "my-sbom-target", r.Target.RemoteURL)
 }
 
 func TestScanResult_WithTargetReference(t *testing.T) {

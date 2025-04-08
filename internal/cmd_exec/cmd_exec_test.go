@@ -1,4 +1,4 @@
-package git_test
+package cmd_exec_test
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/snyk/cli-extension-sbom/internal/git"
+	"github.com/snyk/cli-extension-sbom/internal/cmd_exec"
 )
 
 type testGitExec struct {
@@ -76,7 +76,7 @@ func Test_GetRemoteOriginUrl(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			g := git.NewGitCmdWithExec(&testGitExec{cmdOutput: testCase.origin, cmdErr: testCase.execErr})
+			g := cmd_exec.NewRemoteRepoURLGetter(&testGitExec{cmdOutput: testCase.origin, cmdErr: testCase.execErr})
 			assert.Equal(t, testCase.expected, g.GetRemoteOriginURL())
 		})
 	}
