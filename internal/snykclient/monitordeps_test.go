@@ -19,7 +19,7 @@ var exampleScanResult = snykclient.ScanResult{
 	Facts: []*snykclient.ScanResultFact{
 		{Type: "depGraph", Data: struct{}{}},
 	},
-	Target:          snykclient.ScanResultTarget{Name: "myTarget"},
+	Target:          snykclient.ScanResultTarget{},
 	Identity:        snykclient.ScanResultIdentity{Type: "npm"},
 	TargetReference: "",
 }
@@ -114,12 +114,12 @@ func TestScanResult_WithSnykPolicy(t *testing.T) {
 	assert.Equal(t, "ignore: {}\n", r.Policy)
 }
 
-func TestScanResult_WithTargetName(t *testing.T) {
+func TestScanResult_WithTargetRemoteUrl(t *testing.T) {
 	r := snykclient.ScanResult{}
 
-	r.WithTargetName("my-sbom-target")
+	r.WithTargetRemoteURL("my-sbom-target")
 
-	assert.Equal(t, "my-sbom-target", r.Target.Name)
+	assert.Equal(t, "my-sbom-target", r.Target.RemoteURL)
 }
 
 func TestScanResult_WithTargetReference(t *testing.T) {

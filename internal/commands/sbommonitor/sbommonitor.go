@@ -10,6 +10,7 @@ import (
 	"github.com/snyk/go-application-framework/pkg/local_workflows/config_utils"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
+	"github.com/snyk/cli-extension-sbom/internal/cmd_exec"
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/policy"
@@ -38,7 +39,15 @@ func RegisterWorkflows(e workflow.Engine) error {
 
 func MonitorWorkflow(
 	ictx workflow.InvocationContext,
+	d []workflow.Data,
+) ([]workflow.Data, error) {
+	return MonitorWorkflowWithDI(ictx, d, cmd_exec.NewCliRemoteRepoURLGetter())
+}
+
+func MonitorWorkflowWithDI(
+	ictx workflow.InvocationContext,
 	_ []workflow.Data,
+	remoteRepoUrlGetter cmd_exec.RemoteRepoURLGetter,
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
@@ -69,9 +78,10 @@ func MonitorWorkflow(
 	}
 
 	if remoteRepoURL == "" {
-		// TODO: try and get from git context
-
-		return nil, errFactory.NewMissingRemoteRepoUrlError()
+		remoteRepoURL = remoteRepoUrlGetter.GetRemoteOriginURL()
+		if remoteRepoURL == "" {
+			return nil, errFactory.NewMissingRemoteRepoUrlError()
+		}
 	}
 
 	if filename == "" {
@@ -110,7 +120,7 @@ func MonitorWorkflow(
 		mres, merr := c.MonitorDependencies(context.Background(), errFactory,
 			s.WithSnykPolicy(plc).
 				WithTargetReference(targetRef).
-				WithTargetName(remoteRepoURL))
+				WithTargetRemoteURL(remoteRepoURL))
 		if merr != nil {
 			logger.Println("Failed to monitor dep-graph", merr)
 		}
