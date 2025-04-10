@@ -219,10 +219,11 @@ func (ef *ErrorFactory) NewSCAError(err error) *SBOMExtensionError {
 	)
 }
 
-func (ef *ErrorFactory) NewNoSupportedProjectsError() *SBOMExtensionError {
+func (ef *ErrorFactory) NewNoSupportedProjectsError(warnings string) *SBOMExtensionError {
 	return ef.newErr(
 		fmt.Errorf("no supported projects to monitor"),
-		"No supported projects were found in the SBOM you are trying to monitor. "+
+		warnings+
+			"No supported projects were found in the SBOM you are trying to monitor. "+
 			"Please check that your SBOM contains supported ecosystems and dependency relationships.",
 	)
 }

@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "id": "def-123",
+  "isMonitored": true,
+  "uri": "https://app.snyk.io/bar-baz",
+  "projectName": "myProjectName2"
+}

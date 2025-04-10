@@ -101,7 +101,7 @@ func MonitorWorkflowWithDI(
 		config.GetString(configuration.API_URL),
 		orgID)
 
-	scans, err := c.SBOMConvert(context.Background(), errFactory, fd)
+	scans, warnings, err := c.SBOMConvert(context.Background(), errFactory, fd)
 	if err != nil {
 		// Snyk Client returns err from error factory
 		return nil, err
@@ -110,13 +110,17 @@ func MonitorWorkflowWithDI(
 	logger.Println("Successfully converted SBOM")
 
 	if len(scans) < 1 {
-		return nil, errFactory.NewNoSupportedProjectsError()
+		return nil, errFactory.NewNoSupportedProjectsError(concatConversionWarnings(warnings))
 	}
 
 	plc := policy.LoadPolicyFile(policyPath, filename)
 
 	var buf bytes.Buffer
 	r := view.NewRenderer(&buf)
+
+	if err := r.RenderWarnings(warnings); err != nil {
+		return nil, errFactory.NewRenderError(err)
+	}
 
 	for _, s := range scans {
 		logger.Printf("Monitoring dep-graph (%s)\n", s.Identity.Type)

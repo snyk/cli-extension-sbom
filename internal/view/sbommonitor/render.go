@@ -18,6 +18,14 @@ type Renderer struct {
 	renderDivier bool
 }
 
+func (r *Renderer) RenderWarnings(warnings []*snykclient.ConversionWarning) error {
+	return warningsTemplate.Execute(r.w, struct {
+		Warnings []*snykclient.ConversionWarning
+	}{
+		Warnings: warnings,
+	})
+}
+
 func (r *Renderer) RenderMonitor(m *snykclient.MonitorDependenciesResponse, merr error) error {
 	var title string
 	var uri string

@@ -17,7 +17,8 @@ import (
 func Test_SBOMConvert(t *testing.T) {
 	response := mocks.NewMockResponse(
 		"application/json; charset=utf-8",
-		[]byte(`{"scanResults":[{"name":"Scan 1"},{"name":"Scan 2"}]}`),
+		[]byte(`{"scanResults":[{"name":"Scan 1"},{"name":"Scan 2"}],`+
+			`"warnings":[{"type":"warning","bom_ref":"pkg:maven/org.example/artifact@1.0.0","msg":"This is a warning"}]}`),
 		http.StatusOK,
 	)
 
@@ -30,7 +31,7 @@ func Test_SBOMConvert(t *testing.T) {
 	})
 
 	client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-	depsResp, err := client.SBOMConvert(
+	depsResp, warnResp, err := client.SBOMConvert(
 		context.Background(),
 		errFactory,
 		bytes.NewBuffer([]byte(sbomContent)),
@@ -40,6 +41,11 @@ func Test_SBOMConvert(t *testing.T) {
 	assert.Equal(t, 2, len(depsResp))
 	assert.Equal(t, "Scan 1", depsResp[0].Name)
 	assert.Equal(t, "Scan 2", depsResp[1].Name)
+
+	assert.Equal(t, 1, len(warnResp))
+	assert.Equal(t, "warning", warnResp[0].Type)
+	assert.Equal(t, "pkg:maven/org.example/artifact@1.0.0", warnResp[0].BOMRef)
+	assert.Equal(t, "This is a warning", warnResp[0].Msg)
 }
 
 func Test_SBOMConvert_InvalidJSONReturned(t *testing.T) {
@@ -52,7 +58,7 @@ func Test_SBOMConvert_InvalidJSONReturned(t *testing.T) {
 	mockHTTPClient := mocks.NewMockSBOMService(response)
 
 	client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-	_, err := client.SBOMConvert(
+	_, _, err := client.SBOMConvert(
 		context.Background(),
 		errFactory,
 		strings.NewReader(`{"foo":"bar"}`))
@@ -96,7 +102,7 @@ func Test_SBOMConvert_ServerErrors(t *testing.T) {
 			mockHTTPClient := mocks.NewMockSBOMService(response)
 
 			client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-			_, err := client.SBOMConvert(context.Background(), errFactory, bytes.NewBufferString(sbomContent))
+			_, _, err := client.SBOMConvert(context.Background(), errFactory, bytes.NewBufferString(sbomContent))
 
 			assert.ErrorContainsf(
 				t,
