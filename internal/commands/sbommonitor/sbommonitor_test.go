@@ -26,6 +26,9 @@ import (
 //go:embed testdata/sbom-test-convert.response.json
 var testResultMockResponse []byte
 
+//go:embed testdata/sbom-test-convert-no-results.response.json
+var testNoResultMockResponse []byte
+
 //go:embed testdata/registry-monitor-dependencies.response.json
 var monitorDependenciesResultMockResponse []byte
 
@@ -151,6 +154,29 @@ type GitStub struct {
 
 func (g *GitStub) GetRemoteOriginURL() string {
 	return g.remoteOriginURL
+}
+
+func TestSBOMMonitorWorkflow_NoTestableProjects(t *testing.T) {
+	remoteGitURL := "https://example.com/flag-url"
+
+	responses := []svcmocks.MockResponse{
+		svcmocks.NewMockResponse("application/vnd.api+json", testNoResultMockResponse, http.StatusOK),
+		svcmocks.NewMockResponse("application/vnd.api+json", monitorDependenciesResultMockResponse, http.StatusOK),
+	}
+
+	mockSBOMService := svcmocks.NewMockSBOMServiceMultiResponse(responses, func(r *http.Request) {})
+	defer mockSBOMService.Close()
+
+	mockICTX := createMockICTXWithURL(t, mockSBOMService.URL)
+	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set(sbommonitor.FeatureFlagSBOMMonitor, true)
+	mockICTX.GetConfiguration().Set(flags.FlagRemoteRepoURL, remoteGitURL)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+
+	_, err := sbommonitor.MonitorWorkflow(mockICTX, []workflow.Data{})
+
+	require.Error(t, err, "No supported projects were found in the SBOM you are trying to monitor. "+
+		"Please check that your SBOM contains supported ecosystems and dependency relationships.")
 }
 
 func processRequest(r *http.Request) (string, error) {

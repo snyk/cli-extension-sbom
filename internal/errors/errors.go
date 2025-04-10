@@ -218,3 +218,11 @@ func (ef *ErrorFactory) NewSCAError(err error) *SBOMExtensionError {
 		fmt.Sprintf("There was an error while analyzing the SBOM document: %s", err),
 	)
 }
+
+func (ef *ErrorFactory) NewNoSupportedProjectsError() *SBOMExtensionError {
+	return ef.newErr(
+		fmt.Errorf("no supported projects to monitor"),
+		"No supported projects were found in the SBOM you are trying to monitor. "+
+			"Please check that your SBOM contains supported ecosystems and dependency relationships.",
+	)
+}

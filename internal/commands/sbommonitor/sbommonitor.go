@@ -109,6 +109,10 @@ func MonitorWorkflowWithDI(
 
 	logger.Println("Successfully converted SBOM")
 
+	if len(scans) < 1 {
+		return nil, errFactory.NewNoSupportedProjectsError()
+	}
+
 	plc := policy.LoadPolicyFile(policyPath, filename)
 
 	var buf bytes.Buffer
