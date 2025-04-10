@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	sbomConvertAPIVersion = "2025-03-06~beta"
+	sbomConvertAPIVersion = "2025-03-06"
 	MIMETypeOctetStream   = "application/octet-stream"
 )
 
