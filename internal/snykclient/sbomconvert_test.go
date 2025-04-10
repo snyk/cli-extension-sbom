@@ -25,7 +25,7 @@ func Test_SBOMConvert(t *testing.T) {
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
-		assert.Equal(t, "/hidden/orgs/org1/sboms/convert?version=2025-03-06~beta", r.RequestURI)
+		assert.Equal(t, "/hidden/orgs/org1/sboms/convert?version=2025-03-06", r.RequestURI)
 		assert.Equal(t, "application/octet-stream", r.Header.Get("Content-Type"))
 	})
 
