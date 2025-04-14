@@ -47,7 +47,7 @@ func MonitorWorkflow(
 func MonitorWorkflowWithDI(
 	ictx workflow.InvocationContext,
 	_ []workflow.Data,
-	remoteRepoUrlGetter cmd_exec.RemoteRepoURLGetter,
+	remoteRepoURLGetter cmd_exec.RemoteRepoURLGetter,
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
 	logger := ictx.GetLogger()
@@ -78,10 +78,13 @@ func MonitorWorkflowWithDI(
 	}
 
 	if remoteRepoURL == "" {
-		remoteRepoURL = remoteRepoUrlGetter.GetRemoteOriginURL()
-		if remoteRepoURL == "" {
-			return nil, errFactory.NewMissingRemoteRepoUrlError()
-		}
+		remoteRepoURL = remoteRepoURLGetter.GetRemoteOriginURL()
+	}
+
+	logger.Println("Remote Repository URL:", remoteRepoURL)
+
+	if remoteRepoURL == "" {
+		return nil, errFactory.NewMissingRemoteRepoUrlError()
 	}
 
 	if filename == "" {
@@ -124,7 +127,8 @@ func MonitorWorkflowWithDI(
 		mres, merr := c.MonitorDependencies(context.Background(), errFactory,
 			s.WithSnykPolicy(plc).
 				WithTargetReference(targetRef).
-				WithTargetRemoteURL(remoteRepoURL))
+				WithTargetRemoteURL(remoteRepoURL).
+				WithProjectIdentity(remoteRepoURL))
 		if merr != nil {
 			logger.Println("Failed to monitor dep-graph", merr)
 		}

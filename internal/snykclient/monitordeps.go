@@ -85,6 +85,13 @@ func (r *ScanResult) WithTargetReference(ref string) *ScanResult {
 	return r
 }
 
+func (r *ScanResult) WithProjectIdentity(fallback string) *ScanResult {
+	if r.Name == "" {
+		r.Name = r.Identity.Type + ":" + fallback
+	}
+	return r
+}
+
 // getErrorFromV1Response parses an error response from the v1 API
 // and formats it into a human-readable string.
 //

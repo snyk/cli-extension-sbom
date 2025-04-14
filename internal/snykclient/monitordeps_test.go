@@ -129,3 +129,14 @@ func TestScanResult_WithTargetReference(t *testing.T) {
 
 	assert.Equal(t, "main", r.TargetReference)
 }
+
+func TestScanResult_WithProjectIdentity(t *testing.T) {
+	r := snykclient.ScanResult{
+		Name:     "",
+		Identity: snykclient.ScanResultIdentity{Type: "npm"},
+	}
+
+	r.WithProjectIdentity("example-app")
+
+	assert.Equal(t, "npm:example-app", r.Name)
+}
