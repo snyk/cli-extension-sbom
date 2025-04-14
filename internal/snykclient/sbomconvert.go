@@ -21,17 +21,17 @@ func (t *SnykClient) SBOMConvert(
 	ctx context.Context,
 	errFactory *errors.ErrorFactory,
 	sbom io.Reader,
-) ([]*ScanResult, error) {
+) ([]*ScanResult, []*ConversionWarning, error) {
 	u, err := buildSBOMConvertAPIURL(t.apiBaseURL, sbomConvertAPIVersion, t.orgID)
 	if err != nil {
-		return nil, errFactory.NewSCAError(err)
+		return nil, nil, errFactory.NewSCAError(err)
 	}
 
 	body := bytes.NewBuffer(nil)
 	writer := gzip.NewWriter(body)
 	_, err = io.Copy(writer, sbom)
 	if err != nil {
-		return nil, errFactory.NewSCAError(err)
+		return nil, nil, errFactory.NewSCAError(err)
 	}
 	writer.Close()
 
@@ -42,7 +42,7 @@ func (t *SnykClient) SBOMConvert(
 		body,
 	)
 	if err != nil {
-		return nil, errFactory.NewSCAError(err)
+		return nil, nil, errFactory.NewSCAError(err)
 	}
 
 	req.Header.Set(ContentTypeHeader, MIMETypeOctetStream)
@@ -50,25 +50,25 @@ func (t *SnykClient) SBOMConvert(
 
 	resp, err := t.client.Do(req)
 	if err != nil {
-		return nil, errFactory.NewSCAError(err)
+		return nil, nil, errFactory.NewSCAError(err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode > 399 && resp.StatusCode < 500 {
-		return nil, errFactory.NewSCAError(errorWithRequestID("request to analyze SBOM document was rejected", resp))
+		return nil, nil, errFactory.NewSCAError(errorWithRequestID("request to analyze SBOM document was rejected", resp))
 	}
 
 	if resp.StatusCode > 499 {
-		return nil, errFactory.NewSCAError(errorWithRequestID("analysis of SBOM document failed due to error", resp))
+		return nil, nil, errFactory.NewSCAError(errorWithRequestID("analysis of SBOM document failed due to error", resp))
 	}
 
 	var convertResp SBOMConvertResponse
 	err = json.NewDecoder(resp.Body).Decode(&convertResp)
 	if err != nil {
-		return nil, errFactory.NewSCAError(err)
+		return nil, nil, errFactory.NewSCAError(err)
 	}
 
-	return convertResp.ScanResults, nil
+	return convertResp.ScanResults, convertResp.ConversionWarning, nil
 }
 
 func buildSBOMConvertAPIURL(apiBaseURL, apiVersion, orgID string) (*url.URL, error) {

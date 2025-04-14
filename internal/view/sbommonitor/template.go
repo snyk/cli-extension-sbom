@@ -4,6 +4,19 @@ import (
 	"text/template"
 )
 
+var warningsTemplate *template.Template = template.Must(
+	template.New("sbomMonitorWarnings").Parse(
+		`{{range .Warnings -}}
+WARNING: [{{.Type}}] {{.Msg -}}
+{{if gt (len .BOMRef) 0}} ({{.BOMRef}}){{end}}
+{{end}}
+{{- if gt (len .Warnings) 0}}
+─────────────────────────────────────────────────────
+
+{{ end -}}
+`),
+)
+
 var monitorProjectDetailsTemplate *template.Template = template.Must(
 	template.New("sbomMonitorProject").Parse(
 		`{{ if .RenderDivider }}

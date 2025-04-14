@@ -11,6 +11,66 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
+func TestRenderer_RenderWarnings_NoWarnings(t *testing.T) {
+	var buf bytes.Buffer
+	r := NewRenderer(&buf)
+
+	require.NoError(t, r.RenderWarnings([]*snykclient.ConversionWarning{}))
+
+	out := buf.String()
+	snapshotter.SnapshotT(t, out)
+}
+
+func TestRenderer_RenderWarnings(t *testing.T) {
+	var buf bytes.Buffer
+	r := NewRenderer(&buf)
+
+	require.NoError(t, r.RenderWarnings([]*snykclient.ConversionWarning{
+		{Type: "NoComponents", Msg: "This is a warning"},
+	}))
+
+	out := buf.String()
+
+	assert.Contains(t, out, "[NoComponents]")
+	assert.Contains(t, out, "This is a warning")
+	snapshotter.SnapshotT(t, out)
+}
+
+func TestRenderer_RenderWarningWithBOMRef(t *testing.T) {
+	var buf bytes.Buffer
+	r := NewRenderer(&buf)
+
+	require.NoError(t, r.RenderWarnings([]*snykclient.ConversionWarning{
+		{Type: "NoComponents", Msg: "This is a warning", BOMRef: "some-ref"},
+	}))
+
+	out := buf.String()
+
+	assert.Contains(t, out, "[NoComponents]")
+	assert.Contains(t, out, "This is a warning")
+	assert.Contains(t, out, "some-ref")
+	snapshotter.SnapshotT(t, out)
+}
+
+func TestRenderer_RenderMultipleWarnings(t *testing.T) {
+	var buf bytes.Buffer
+	r := NewRenderer(&buf)
+
+	require.NoError(t, r.RenderWarnings([]*snykclient.ConversionWarning{
+		{Type: "NoComponents", Msg: "This is a warning"},
+		{Type: "NoRootNode", Msg: "A warning about root nodes"},
+	}))
+
+	out := buf.String()
+
+	assert.Contains(t, out, "[NoComponents]")
+	assert.Contains(t, out, "This is a warning")
+	assert.Contains(t, out, "[NoRootNode]")
+	assert.Contains(t, out, "A warning about root nodes")
+
+	snapshotter.SnapshotT(t, out)
+}
+
 func TestRenderer_RenderMonitor(t *testing.T) {
 	var buf bytes.Buffer
 	r := NewRenderer(&buf)

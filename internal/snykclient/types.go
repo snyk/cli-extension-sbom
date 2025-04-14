@@ -376,8 +376,15 @@ type ScanResultRequest struct {
 	ScanResult ScanResult `json:"scanResult"`
 }
 
+type ConversionWarning struct {
+	Type   string `json:"type"`
+	BOMRef string `json:"bom_ref"`
+	Msg    string `json:"msg"`
+}
+
 type SBOMConvertResponse struct {
-	ScanResults []*ScanResult `json:"scanResults"`
+	ScanResults       []*ScanResult        `json:"scanResults"`
+	ConversionWarning []*ConversionWarning `json:"warnings"`
 }
 
 type MonitorDependenciesResponse struct {

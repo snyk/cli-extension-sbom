@@ -1,0 +1,20 @@
+WARNING: [NoComponents] This is a warning
+WARNING: [NoRootNode] No root node warning
+WARNING: [UnsupportedComponent] component must have a PackageURL (a-bom-ref)
+
+─────────────────────────────────────────────────────
+
+Monitoring 'myProjectName'...
+
+Explore this snapshot at https://app.snyk.io/foo-bar
+
+Notifications about newly disclosed issues related to these dependencies will be emailed to you.
+
+─────────────────────────────────────────────────────
+
+Monitoring 'myProjectName2'...
+
+Explore this snapshot at https://app.snyk.io/bar-baz
+
+Notifications about newly disclosed issues related to these dependencies will be emailed to you.
+
