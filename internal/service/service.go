@@ -11,6 +11,7 @@ import (
 	"net/url"
 
 	"github.com/rs/zerolog"
+
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
 
