@@ -3,11 +3,11 @@ package sbomtest_test
 import (
 	_ "embed"
 	"io"
-	"log"
 	"net/http"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/rs/zerolog"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/local_workflows/content_type"
 	"github.com/snyk/go-application-framework/pkg/mocks"
@@ -142,7 +142,7 @@ func mockInvocationContext(
 ) workflow.InvocationContext {
 	t.Helper()
 
-	mockLogger := log.New(io.Discard, "", 0)
+	mockLogger := zerolog.New(io.Discard)
 
 	mockConfig := configuration.New()
 	mockConfig.Set(configuration.AUTHENTICATION_TOKEN, "<SOME API TOKEN>")
@@ -160,7 +160,7 @@ func mockInvocationContext(
 	ictx.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
 	ictx.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
 	ictx.EXPECT().GetNetworkAccess().Return(networking.NewNetworkAccess(mockConfig)).AnyTimes()
-	ictx.EXPECT().GetLogger().Return(mockLogger).AnyTimes()
+	ictx.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
 	ictx.EXPECT().GetRuntimeInfo().Return(mockRuntimeInfo).AnyTimes()
 
 	return ictx
