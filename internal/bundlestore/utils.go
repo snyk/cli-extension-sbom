@@ -14,7 +14,7 @@ import (
 
 func hash(content []byte) string {
 	byteReader := bytes.NewReader(content)
-	reader, _ := charset.NewReaderLabel("UTF-8", byteReader)
+	reader, _ := charset.NewReaderLabel("UTF-8", byteReader) //nolint:errcheck // Code copied verbatim from go-application-framework
 	utf8content, err := io.ReadAll(reader)
 	if err != nil {
 		utf8content = content
@@ -42,6 +42,7 @@ func encodeRequestBody(requestBody []byte) (*bytes.Buffer, error) {
 	return b, nil
 }
 
+//nolint:gocritic // Code copied verbatim from go-application-framework
 func toRelativeUnixPath(baseDir string, absoluteFilePath string) (string, error) {
 	relativePath, err := filepath.Rel(baseDir, absoluteFilePath)
 	if err != nil {

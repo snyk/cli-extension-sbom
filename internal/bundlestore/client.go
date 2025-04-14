@@ -108,6 +108,7 @@ func (c *Client) request(
 	return responseBody, nil
 }
 
+//nolint:gocritic // Code copied verbatim from go-application-framework
 func (c *Client) createBundle(ctx context.Context, fileHashes map[string]string) (string, []string, error) {
 	requestBody, err := json.Marshal(fileHashes)
 	if err != nil {
@@ -127,6 +128,7 @@ func (c *Client) createBundle(ctx context.Context, fileHashes map[string]string)
 	return bundle.BundleHash, bundle.MissingFiles, nil
 }
 
+//nolint:gocritic // Code copied verbatim from go-application-framework
 func (c *Client) extendBundle(ctx context.Context, bundleHash string, files map[string]BundleFile, removedFiles []string) (string, []string, error) {
 	requestBody, err := json.Marshal(ExtendBundleRequest{
 		Files:        files,

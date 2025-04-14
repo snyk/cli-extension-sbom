@@ -5,7 +5,9 @@ import (
 	"context"
 	stderrors "errors"
 	"fmt"
+	"os"
 
+	"github.com/rs/zerolog"
 	"github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
@@ -60,14 +62,24 @@ func TestWorkflow(
 	}
 
 	logger.Println("Target SBOM document:", filename)
-	bsc := bundlestore.NewClient(config, ictx.GetNetworkAccess().GetHttpClient, logger)
-	sbomBundleHash, err := bsc.UploadSBOM(ctx, filename)
-	if err != nil {
-		logger.Println("HERE", err)
-		return nil, err
-	}
-	logger.Println("BH", sbomBundleHash)
 
+	isReachabilityEnabled := os.Getenv("SNYK_DEV_REACHABILITY") == "true"
+	if isReachabilityEnabled {
+		return sbomTestReachability(ctx, config, ictx, logger, filename)
+	} else {
+		return sbomTest(ctx, filename, errFactory, ictx, config, orgID, logger)
+	}
+}
+
+func sbomTest(
+	ctx context.Context,
+	filename string,
+	errFactory *errors.ErrorFactory,
+	ictx workflow.InvocationContext,
+	config configuration.Configuration,
+	orgID string,
+	logger *zerolog.Logger,
+) ([]workflow.Data, error) {
 	bts, err := sbom.ReadSBOMFile(filename, errFactory)
 	if err != nil {
 		return nil, err
@@ -122,6 +134,23 @@ func TestWorkflow(
 	}
 
 	return []workflow.Data{workflowData(buf.Bytes(), ct), workflowData(summaryData, summaryContentType)}, err
+}
+
+func sbomTestReachability(
+	ctx context.Context,
+	config configuration.Configuration,
+	ictx workflow.InvocationContext,
+	logger *zerolog.Logger,
+	filename string,
+) ([]workflow.Data, error) {
+	bsc := bundlestore.NewClient(config, ictx.GetNetworkAccess().GetHttpClient, logger)
+	sbomBundleHash, err := bsc.UploadSBOM(ctx, filename)
+	if err != nil {
+		logger.Println("HERE", err)
+		return nil, err
+	}
+	logger.Println("BH", sbomBundleHash)
+	return nil, nil
 }
 
 func workflowData(data []byte, contentType string) workflow.Data {
