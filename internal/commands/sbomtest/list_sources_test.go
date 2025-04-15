@@ -1,14 +1,15 @@
 package sbomtest_test
 
 import (
-	"fmt"
-	"github.com/rs/zerolog"
-	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"io"
 	"path/filepath"
 	"testing"
+
+	"github.com/rs/zerolog"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
 )
 
 func Test_ListsSources_Simplest(t *testing.T) {
@@ -21,7 +22,6 @@ func Test_ListsSources_Simplest(t *testing.T) {
 	var files = []string{}
 	for file := range filesCh {
 		files = append(files, file)
-		fmt.Printf("File: %s\n", file)
 	}
 	assert.Len(t, files, 2, "Expecting 2 files")
 	assert.Contains(t, files, filepath.Join(sourceDir, "package.json"))
@@ -38,7 +38,6 @@ func Test_ListsSources_WithIgnores(t *testing.T) {
 	var files = []string{}
 	for file := range filesCh {
 		files = append(files, file)
-		fmt.Printf("File: %s\n", file)
 	}
 	assert.Len(t, files, 3, "Expecting 3 files")
 	assert.Contains(t, files, filepath.Join(sourceDir, ".gitignore"))
