@@ -52,6 +52,7 @@ func TestSBOMMonitorWorkflow_NoExperimentalFlag(t *testing.T) {
 func TestSBOMMonitorWorkflow_NoRemoteRepoURL(t *testing.T) {
 	mockICTX := createMockICTX(t)
 	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set(sbommonitor.FeatureFlagSBOMMonitor, true)
 
 	g := &GitStub{remoteOriginURL: ""}

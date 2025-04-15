@@ -21,8 +21,9 @@ func (t *SnykClient) SBOMConvert(
 	ctx context.Context,
 	errFactory *errors.ErrorFactory,
 	sbom io.Reader,
+	remoteRepoURL string,
 ) ([]*ScanResult, []*ConversionWarning, error) {
-	u, err := buildSBOMConvertAPIURL(t.apiBaseURL, sbomConvertAPIVersion, t.orgID)
+	u, err := buildSBOMConvertAPIURL(t.apiBaseURL, sbomConvertAPIVersion, t.orgID, remoteRepoURL)
 	if err != nil {
 		return nil, nil, errFactory.NewSCAError(err)
 	}
@@ -71,7 +72,7 @@ func (t *SnykClient) SBOMConvert(
 	return convertResp.ScanResults, convertResp.ConversionWarning, nil
 }
 
-func buildSBOMConvertAPIURL(apiBaseURL, apiVersion, orgID string) (*url.URL, error) {
+func buildSBOMConvertAPIURL(apiBaseURL, apiVersion, orgID, remoteRepoURL string) (*url.URL, error) {
 	u, err := url.Parse(apiBaseURL)
 	if err != nil {
 		return nil, err
@@ -79,7 +80,10 @@ func buildSBOMConvertAPIURL(apiBaseURL, apiVersion, orgID string) (*url.URL, err
 
 	u = u.JoinPath("hidden", "orgs", orgID, "sboms", "convert")
 
-	query := url.Values{"version": {apiVersion}}
+	query := url.Values{
+		"version":         {apiVersion},
+		"remote_repo_url": {remoteRepoURL},
+	}
 	u.RawQuery = query.Encode()
 
 	return u, nil

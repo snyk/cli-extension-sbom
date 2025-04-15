@@ -26,8 +26,9 @@ func Test_SBOMConvert(t *testing.T) {
 
 	mockHTTPClient := mocks.NewMockSBOMService(response, func(r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
-		assert.Equal(t, "/hidden/orgs/org1/sboms/convert?version=2025-03-06", r.RequestURI)
+		assert.Equal(t, "/hidden/orgs/org1/sboms/convert?remote_repo_url=github.com%2Fsnyk%2Fcli-extension-sbom&version=2025-03-06", r.RequestURI)
 		assert.Equal(t, "application/octet-stream", r.Header.Get("Content-Type"))
+		assert.Equal(t, "gzip", r.Header.Get("Content-Encoding"))
 	})
 
 	client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
@@ -35,7 +36,7 @@ func Test_SBOMConvert(t *testing.T) {
 		context.Background(),
 		errFactory,
 		bytes.NewBuffer([]byte(sbomContent)),
-	)
+		"github.com/snyk/cli-extension-sbom")
 
 	assert.NoError(t, err)
 	assert.Equal(t, 2, len(depsResp))
@@ -61,7 +62,8 @@ func Test_SBOMConvert_InvalidJSONReturned(t *testing.T) {
 	_, _, err := client.SBOMConvert(
 		context.Background(),
 		errFactory,
-		strings.NewReader(`{"foo":"bar"}`))
+		strings.NewReader(`{"foo":"bar"}`),
+		"github.com/snyk/cli-extension-sbom")
 
 	assert.ErrorContains(t, err, "unexpected EOF")
 }
@@ -102,7 +104,11 @@ func Test_SBOMConvert_ServerErrors(t *testing.T) {
 			mockHTTPClient := mocks.NewMockSBOMService(response)
 
 			client := snykclient.NewSnykClient(mockHTTPClient.Client(), mockHTTPClient.URL, "org1")
-			_, _, err := client.SBOMConvert(context.Background(), errFactory, bytes.NewBufferString(sbomContent))
+			_, _, err := client.SBOMConvert(
+				context.Background(),
+				errFactory,
+				bytes.NewBufferString(sbomContent),
+				"github.com/snyk/cli-extension-sbom")
 
 			assert.ErrorContainsf(
 				t,

@@ -79,9 +79,6 @@ func MonitorWorkflowWithDI(
 
 	if remoteRepoURL == "" {
 		remoteRepoURL = remoteRepoUrlGetter.GetRemoteOriginURL()
-		if remoteRepoURL == "" {
-			return nil, errFactory.NewMissingRemoteRepoUrlError()
-		}
 	}
 
 	if filename == "" {
@@ -89,6 +86,12 @@ func MonitorWorkflowWithDI(
 	}
 
 	logger.Println("Target file:", filename)
+
+	if remoteRepoURL == "" {
+		return nil, errFactory.NewMissingRemoteRepoUrlError()
+	}
+
+	logger.Println("Remote repo URL:", remoteRepoURL)
 
 	fd, err := os.Open(filename)
 	if err != nil {
@@ -101,7 +104,7 @@ func MonitorWorkflowWithDI(
 		config.GetString(configuration.API_URL),
 		orgID)
 
-	scans, warnings, err := c.SBOMConvert(context.Background(), errFactory, fd)
+	scans, warnings, err := c.SBOMConvert(context.Background(), errFactory, fd, remoteRepoURL)
 	if err != nil {
 		// Snyk Client returns err from error factory
 		return nil, err
