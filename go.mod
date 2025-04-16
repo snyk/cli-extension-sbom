@@ -8,6 +8,7 @@ require (
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/charmbracelet/lipgloss v0.10.0
 	github.com/golang/mock v1.6.0
+	github.com/google/uuid v1.6.0
 	github.com/muesli/termenv v0.15.2
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.34.0
@@ -42,7 +43,6 @@ require (
 	github.com/go-openapi/swag v0.23.1 // indirect
 	github.com/gofrs/flock v0.12.1 // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

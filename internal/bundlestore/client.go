@@ -8,11 +8,16 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 
+	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	codeclient "github.com/snyk/code-client-go"
 	codeclienthttp "github.com/snyk/code-client-go/http"
+	codeclientscan "github.com/snyk/code-client-go/scan"
 	"github.com/snyk/go-application-framework/pkg/configuration"
+
+	listsources "github.com/snyk/cli-extension-sbom/internal/files"
 )
 
 type Client struct {
@@ -184,6 +189,26 @@ func (c *Client) UploadSBOM(ctx context.Context, sbomPath string) (string, error
 	return bundleHash, nil
 }
 
-func (c *Client) UploadSourceCode(ctx context.Context, sourceCodePath string) {
-	panic("unimplemented")
+func (c *Client) UploadSourceCode(ctx context.Context, sourceCodePath string) (string, error) {
+	requestID := uuid.New().String()
+	numThreads := runtime.NumCPU()
+	filesChan, err := listsources.ListSourcesForPath(sourceCodePath, c.logger, numThreads)
+	if err != nil {
+		c.logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("failed to list files in directory") //nolint:goconst // repeated sourceCodePath is fine
+		return "", err
+	}
+
+	target, err := codeclientscan.NewRepositoryTarget("") // TODO: pass in correct repo URL
+	if err != nil {
+		c.logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("failed to initialize target")
+		return "", err
+	}
+
+	bundle, err := c.codeScanner.Upload(ctx, requestID, target, filesChan, make(map[string]bool))
+	if err != nil {
+		c.logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("failed to upload source code")
+		return "", err
+	}
+
+	return bundle.GetBundleHash(), nil
 }
