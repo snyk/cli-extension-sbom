@@ -42,7 +42,12 @@ type (
 	}
 )
 
-func NewClient(config configuration.Configuration, hc codeclienthttp.HTTPClientFactory, logger *zerolog.Logger) *Client {
+func NewClient(
+	config configuration.Configuration,
+	hc codeclienthttp.HTTPClientFactory,
+	codeScannerMaybe *codeclient.CodeScanner, //nolint:gocritic // we want param to be optional
+	logger *zerolog.Logger,
+) *Client {
 	codeScannerConfig := &codeClientConfig{
 		localConfiguration: config,
 	}
@@ -51,11 +56,17 @@ func NewClient(config configuration.Configuration, hc codeclienthttp.HTTPClientF
 		hc,
 		codeclienthttp.WithLogger(logger),
 	)
-	codeScanner := codeclient.NewCodeScanner(
-		codeScannerConfig,
-		httpClient,
-		codeclient.WithLogger(logger),
-	)
+
+	var codeScanner codeclient.CodeScanner
+	if codeScannerMaybe != nil {
+		codeScanner = *codeScannerMaybe
+	} else {
+		codeScanner = codeclient.NewCodeScanner(
+			codeScannerConfig,
+			httpClient,
+			codeclient.WithLogger(logger),
+		)
+	}
 
 	return &Client{
 		hc(),
@@ -190,7 +201,6 @@ func (c *Client) UploadSBOM(ctx context.Context, sbomPath string) (string, error
 }
 
 func (c *Client) UploadSourceCode(ctx context.Context, sourceCodePath string) (string, error) {
-	requestID := uuid.New().String()
 	numThreads := runtime.NumCPU()
 	filesChan, err := listsources.ListSourcesForPath(sourceCodePath, c.logger, numThreads)
 	if err != nil {
@@ -204,6 +214,7 @@ func (c *Client) UploadSourceCode(ctx context.Context, sourceCodePath string) (s
 		return "", err
 	}
 
+	requestID := uuid.New().String()
 	bundle, err := c.codeScanner.Upload(ctx, requestID, target, filesChan, make(map[string]bool))
 	if err != nil {
 		c.logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("failed to upload source code")

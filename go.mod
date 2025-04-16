@@ -12,7 +12,7 @@ require (
 	github.com/muesli/termenv v0.15.2
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.34.0
-	github.com/snyk/code-client-go v1.21.0
+	github.com/snyk/code-client-go v1.21.1-0.20250416152313-c1fb6e504e65 // TODO: use main branch when https://github.com/snyk/code-client-go/pull/97 is merged
 	github.com/snyk/error-catalog-golang-public v0.0.0-20250218074309-307ad7b38a60
 	github.com/snyk/go-application-framework v0.0.0-20250403123644-f23723bf9378
 	github.com/spf13/pflag v1.0.6
@@ -90,6 +90,7 @@ require (
 	github.com/spf13/cobra v1.9.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.13.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/vmware-labs/yaml-jsonpath v0.3.2 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect

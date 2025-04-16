@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/rs/zerolog"
+	codeclient "github.com/snyk/code-client-go"
 	"github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
@@ -35,6 +36,13 @@ func RegisterWorkflows(e workflow.Engine) error {
 func TestWorkflow(
 	ictx workflow.InvocationContext,
 	_ []workflow.Data,
+) ([]workflow.Data, error) {
+	return testWorkflowImpl(ictx, nil)
+}
+
+func testWorkflowImpl(
+	ictx workflow.InvocationContext,
+	codeScannerMaybe *codeclient.CodeScanner, //nolint:gocritic // we want param to be optional
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
 	logger := ictx.GetEnhancedLogger()
@@ -65,7 +73,7 @@ func TestWorkflow(
 
 	isReachabilityEnabled := os.Getenv("SNYK_DEV_REACHABILITY") == "true"
 	if isReachabilityEnabled {
-		return sbomTestReachability(ctx, config, ictx, logger, filename)
+		return sbomTestReachability(ctx, config, ictx, logger, filename, codeScannerMaybe)
 	} else {
 		return sbomTest(ctx, filename, errFactory, ictx, config, orgID, logger)
 	}
@@ -142,8 +150,9 @@ func sbomTestReachability(
 	ictx workflow.InvocationContext,
 	logger *zerolog.Logger,
 	sbomPath string,
+	codeScannerMaybe *codeclient.CodeScanner, //nolint:gocritic // we want param to be optional
 ) ([]workflow.Data, error) {
-	bsc := bundlestore.NewClient(config, ictx.GetNetworkAccess().GetHttpClient, logger)
+	bsc := bundlestore.NewClient(config, ictx.GetNetworkAccess().GetHttpClient, codeScannerMaybe, logger)
 
 	sbomBundleHash, err := bsc.UploadSBOM(ctx, sbomPath)
 	if err != nil {
