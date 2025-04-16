@@ -47,7 +47,7 @@ func TestSBOMTestWorkflow_Reachability(t *testing.T) {
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set("json", true)
 
-	t.Setenv("SNYK_DEV_REACHABILITY", "true")
+	t.Setenv("INTERNAL_SNYK_DEV_REACHABILITY", "true")
 
 	_, err = sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 	require.NoError(t, err)

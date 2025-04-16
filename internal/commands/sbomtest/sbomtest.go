@@ -5,7 +5,6 @@ import (
 	"context"
 	stderrors "errors"
 	"fmt"
-	"os"
 
 	"github.com/rs/zerolog"
 	"github.com/snyk/error-catalog-golang-public/snyk_errors"
@@ -63,7 +62,7 @@ func TestWorkflow(
 
 	logger.Println("Target SBOM document:", filename)
 
-	isReachabilityEnabled := os.Getenv("SNYK_DEV_REACHABILITY") == "true"
+	isReachabilityEnabled := config.GetBool("INTERNAL_SNYK_DEV_REACHABILITY")
 	if isReachabilityEnabled {
 		return sbomTestReachability(ctx, config, ictx, logger, filename)
 	} else {
