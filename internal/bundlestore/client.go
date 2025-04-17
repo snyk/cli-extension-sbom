@@ -208,7 +208,7 @@ func (c *Client) UploadSourceCode(ctx context.Context, sourceCodePath string) (s
 		return "", err
 	}
 
-	target, err := codeclientscan.NewRepositoryTarget("") // TODO: pass in correct repo URL
+	target, err := codeclientscan.NewRepositoryTarget(sourceCodePath)
 	if err != nil {
 		c.logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("failed to initialize target")
 		return "", err
