@@ -5,11 +5,6 @@
 //
 //	mockgen -package=mocks -destination=../../mocks/mock_codescanner.go github.com/snyk/code-client-go CodeScanner
 //
-// NOTE: this file was manually updated to use the re-exported types from `bundle/bundle_types.go`. If
-// mocks are generated again we should do the same:
-// 1. Add this import to replace `bundle "github.com/snyk/code-client-go/bundle"`:
-//   - `bundle "github.com/snyk/code-client-go/internal/bundle"`
-//
 
 // Package mocks is a generated GoMock package.
 package mocks

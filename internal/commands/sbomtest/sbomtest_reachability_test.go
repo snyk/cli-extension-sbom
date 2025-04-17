@@ -14,8 +14,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	codeclient "github.com/snyk/code-client-go"
+	bundlemocks "github.com/snyk/code-client-go/bundle/mocks"
 	"github.com/snyk/go-application-framework/pkg/configuration"
-	"github.com/snyk/go-application-framework/pkg/mocks"
+	gafmocks "github.com/snyk/go-application-framework/pkg/mocks"
 	"github.com/snyk/go-application-framework/pkg/networking"
 	"github.com/snyk/go-application-framework/pkg/runtimeinfo"
 	"github.com/snyk/go-application-framework/pkg/workflow"
@@ -25,11 +26,12 @@ import (
 )
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocks -destination=../../mocks/mock_codescanner.go github.com/snyk/code-client-go CodeScanner
-//go:generate go run go.uber.org/mock/mockgen -package=mocks -destination=../../mocks/mock_bundle.go github.com/snyk/code-client-go/bundle Bundle
 
 func TestSBOMTestWorkflow_Reachability(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
+	ctrl_dep := gomock_deprecated.NewController(t)
+	defer ctrl_dep.Finish()
 
 	mockBundleHash := "mockHash123abc"
 
@@ -57,7 +59,7 @@ func TestSBOMTestWorkflow_Reachability(t *testing.T) {
 
 	t.Setenv("SNYK_DEV_REACHABILITY", "true")
 
-	mockBundle := svcmocks.NewMockBundle(ctrl)
+	mockBundle := bundlemocks.NewMockBundle(ctrl_dep)
 	mockCodeScanner := svcmocks.NewMockCodeScanner(ctrl)
 
 	mockCodeScanner.EXPECT().
@@ -96,7 +98,7 @@ func mockInvocationContext(
 	t *testing.T,
 	ctrl *gomock_deprecated.Controller,
 	sbomServiceURL string,
-	mockEngine *mocks.MockEngine,
+	mockEngine *gafmocks.MockEngine,
 ) workflow.InvocationContext {
 	t.Helper()
 
@@ -114,7 +116,7 @@ func mockInvocationContext(
 		runtimeinfo.WithName("test-app"),
 		runtimeinfo.WithVersion("1.2.3"))
 
-	ictx := mocks.NewMockInvocationContext(ctrl)
+	ictx := gafmocks.NewMockInvocationContext(ctrl)
 	ictx.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
 	ictx.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
 	ictx.EXPECT().GetNetworkAccess().Return(networking.NewNetworkAccess(mockConfig)).AnyTimes()
