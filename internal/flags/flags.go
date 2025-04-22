@@ -32,6 +32,9 @@ const (
 	FlagNugetAssetsProjectName       = "assets-project-name"
 	FlagNugetPkgsFolder              = "packages-folder"
 	FlagUnmanagedMaxDepth            = "max-depth"
+	FlagPolicyPath                   = "policy-path"
+	FlagRemoteRepoURL                = "remote-repo-url"
+	FlagTargetReference              = "target-reference"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
@@ -77,6 +80,18 @@ func GetSBOMTestFlagSet() *pflag.FlagSet {
 
 	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom test command.")
 	flagSet.String(FlagFile, "", "Specify a SBOM file.")
+
+	return flagSet
+}
+
+func GetSBOMMonitorFlagSet() *pflag.FlagSet {
+	flagSet := pflag.NewFlagSet("snyk-cli-extension-sbom-monitor", pflag.ExitOnError)
+
+	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom monitor command.")
+	flagSet.String(FlagFile, "", "Specify a SBOM file.")
+	flagSet.String(FlagPolicyPath, "", "Manually pass a path to a .snyk policy file.")
+	flagSet.String(FlagRemoteRepoURL, "", "Set or override the remote URL for the repository that you would like to monitor.")
+	flagSet.String(FlagTargetReference, "", "Specify a reference that differentiates this project, for example, a branch name or version.")
 
 	return flagSet
 }

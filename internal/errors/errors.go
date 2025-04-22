@@ -67,6 +67,13 @@ func (ef *ErrorFactory) NewEmptyOrgError() *SBOMExtensionError {
 	)
 }
 
+func (ef *ErrorFactory) NewFeatureNotPermittedError(featureFlag string) *SBOMExtensionError {
+	return ef.newErr(
+		fmt.Errorf("feature %q not permitted", featureFlag),
+		"The feature you are trying to use is not available for your organization.",
+	)
+}
+
 func (ef *ErrorFactory) NewDepGraphWorkflowError(err error) *SBOMExtensionError {
 	return ef.newErr(
 		fmt.Errorf("error while invoking depgraph workflow: %w", err),
@@ -147,10 +154,24 @@ func (ef *ErrorFactory) NewMissingFilenameFlagError() *SBOMExtensionError {
 	)
 }
 
+func (ef *ErrorFactory) NewMissingRemoteRepoUrlError() *SBOMExtensionError {
+	return ef.newErr(
+		fmt.Errorf("remote repo URL not found"),
+		"Can't determine remote URL automatically, please set a remote URL with `--remote-repo-url` flag.",
+	)
+}
+
 func (ef *ErrorFactory) NewFailedToReadFileError(err error) *SBOMExtensionError {
 	return ef.newErr(
 		err,
 		"failed to read file",
+	)
+}
+
+func (ef *ErrorFactory) NewFailedToOpenFileError(err error) *SBOMExtensionError {
+	return ef.newErr(
+		err,
+		"failed to open file",
 	)
 }
 
@@ -182,4 +203,27 @@ func (ef *ErrorFactory) NewFatalSBOMTestError(err error) *SBOMExtensionError {
 
 func (ef *ErrorFactory) NewInvalidFilePathError(err error, path string) *SBOMExtensionError {
 	return ef.newErr(err, fmt.Sprintf("The given filepath %q does not exist.", path))
+}
+
+func (ef *ErrorFactory) NewRenderError(err error) *SBOMExtensionError {
+	return ef.newErr(
+		err,
+		"Failed to render the output of the command.",
+	)
+}
+
+func (ef *ErrorFactory) NewSCAError(err error) *SBOMExtensionError {
+	return ef.newErr(
+		err,
+		fmt.Sprintf("There was an error while analyzing the SBOM document: %s", err),
+	)
+}
+
+func (ef *ErrorFactory) NewNoSupportedProjectsError(warnings string) *SBOMExtensionError {
+	return ef.newErr(
+		fmt.Errorf("no supported projects to monitor"),
+		warnings+
+			"No supported projects were found in the SBOM you are trying to monitor. "+
+			"Please check that your SBOM contains supported ecosystems and dependency relationships.",
+	)
 }

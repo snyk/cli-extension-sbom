@@ -345,3 +345,54 @@ func (doc *SBOMTestResultResourceDocument) AsResult() *SBOMTestResult {
 
 	return &r
 }
+
+// region: Monitor Deps
+
+type ScanResultTarget struct {
+	RemoteURL string `json:"remoteUrl"`
+}
+
+type ScanResultIdentity struct {
+	Type       string            `json:"type"`
+	TargetFile string            `json:"targetFile,omitempty"`
+	Args       map[string]string `json:"args,omitempty"`
+}
+
+type ScanResultFact struct {
+	Type string      `json:"type"`
+	Data interface{} `json:"data"`
+}
+
+type ScanResult struct {
+	Name            string             `json:"name"`
+	Policy          string             `json:"policy,omitempty"`
+	Facts           []*ScanResultFact  `json:"facts"`
+	Target          ScanResultTarget   `json:"target"`
+	Identity        ScanResultIdentity `json:"identity"`
+	TargetReference string             `json:"targetReference,omitempty"`
+}
+
+type ScanResultRequest struct {
+	ScanResult ScanResult `json:"scanResult"`
+}
+
+type ConversionWarning struct {
+	Type   string `json:"type"`
+	BOMRef string `json:"bom_ref"`
+	Msg    string `json:"msg"`
+}
+
+type SBOMConvertResponse struct {
+	ScanResults       []*ScanResult        `json:"scanResults"`
+	ConversionWarning []*ConversionWarning `json:"warnings"`
+}
+
+type MonitorDependenciesResponse struct {
+	OK             bool        `json:"ok"`
+	Org            string      `json:"org"`
+	ID             string      `json:"id"`
+	IsMonitored    bool        `json:"isMonitored"`
+	LicensesPolicy interface{} `json:"licensesPolicy"`
+	URI            string      `json:"uri"`
+	ProjectName    string      `json:"projectName"`
+}
