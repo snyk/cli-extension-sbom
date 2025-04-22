@@ -1,10 +1,7 @@
 package cmd_exec
 
 import (
-	"fmt"
-	"net/url"
 	"os/exec"
-	"regexp"
 	"strings"
 )
 
@@ -24,30 +21,13 @@ func NewRemoteRepoURLGetter(c cmdExecutor) *cliRemoteRepoURLGetter {
 	return &cliRemoteRepoURLGetter{exec: c}
 }
 
-var originRegex = regexp.MustCompile(`(.+@)?(.+):(.+$)`)
-
 func (g *cliRemoteRepoURLGetter) GetRemoteOriginURL() string {
 	origin, err := g.exec.Exec("git", "remote", "get-url", "origin")
 	if err != nil {
 		return ""
 	}
 
-	origin = strings.TrimSpace(origin)
-	if origin == "" {
-		return ""
-	}
-
-	u, err := url.Parse(origin)
-	if err == nil && u.Host != "" && u.Scheme != "" && (u.Scheme == "ssh" || u.Scheme == "http" || u.Scheme == "https") {
-		return fmt.Sprintf("http://%s%s", u.Host, u.Path)
-	} else {
-		matches := originRegex.FindStringSubmatch(origin)
-		if len(matches) == 4 && matches[2] != "" && matches[3] != "" {
-			return fmt.Sprintf("http://%s/%s", matches[2], matches[3])
-		} else {
-			return origin
-		}
-	}
+	return strings.TrimSpace(origin)
 }
 
 type cmdExecutor interface {
