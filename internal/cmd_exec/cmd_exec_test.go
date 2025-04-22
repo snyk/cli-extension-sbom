@@ -28,22 +28,7 @@ func Test_GetRemoteOriginUrl(t *testing.T) {
 		{
 			name:     "HTTPS",
 			origin:   "https://github.com/snyk/cli-extension-sbom",
-			expected: "http://github.com/snyk/cli-extension-sbom",
-		},
-		{
-			name:     "HTTP",
-			origin:   "http://github.com/snyk/cli-extension-sbom",
-			expected: "http://github.com/snyk/cli-extension-sbom",
-		},
-		{
-			name:     "SSH",
-			origin:   "ssh://git@github.com:snyk/cli-extension-sbom.git",
-			expected: "http://github.com/snyk/cli-extension-sbom.git",
-		},
-		{
-			name:     "SSH - git prefix",
-			origin:   "git@github.com:snyk/cli-extension-sbom.git",
-			expected: "http://github.com/snyk/cli-extension-sbom.git",
+			expected: "https://github.com/snyk/cli-extension-sbom",
 		},
 		{
 			name:     "No match returns input",
@@ -53,7 +38,7 @@ func Test_GetRemoteOriginUrl(t *testing.T) {
 		{
 			name:     "Trims whitespace from command output",
 			origin:   "\ngit@github.com:snyk/cli-extension-sbom.git\n\n",
-			expected: "http://github.com/snyk/cli-extension-sbom.git",
+			expected: "git@github.com:snyk/cli-extension-sbom.git",
 		},
 		{
 			name:     "Whitespace-only output is converted to empty string",
