@@ -12,7 +12,7 @@ require (
 	github.com/muesli/termenv v0.15.2
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.34.0
-	github.com/snyk/code-client-go v1.21.1-0.20250417123033-23e591fddff5 // TODO: use main branch when https://github.com/snyk/code-client-go/pull/97 is merged
+	github.com/snyk/code-client-go v1.21.2
 	github.com/snyk/error-catalog-golang-public v0.0.0-20250218074309-307ad7b38a60
 	github.com/snyk/go-application-framework v0.0.0-20250403123644-f23723bf9378
 	github.com/spf13/pflag v1.0.6
