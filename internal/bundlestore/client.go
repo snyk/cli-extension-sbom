@@ -42,12 +42,9 @@ type (
 	}
 )
 
-func NewClient(
-	config configuration.Configuration,
-	hc codeclienthttp.HTTPClientFactory,
-	codeScannerMaybe *codeclient.CodeScanner, //nolint:gocritic // we want param to be optional
-	logger *zerolog.Logger,
-) *Client {
+var CodeScanner codeclient.CodeScanner
+
+func NewClient(config configuration.Configuration, hc codeclienthttp.HTTPClientFactory, logger *zerolog.Logger) *Client {
 	codeScannerConfig := &codeClientConfig{
 		localConfiguration: config,
 	}
@@ -57,11 +54,8 @@ func NewClient(
 		codeclienthttp.WithLogger(logger),
 	)
 
-	var codeScanner codeclient.CodeScanner
-	if codeScannerMaybe != nil {
-		codeScanner = *codeScannerMaybe
-	} else {
-		codeScanner = codeclient.NewCodeScanner(
+	if CodeScanner == nil {
+		CodeScanner = codeclient.NewCodeScanner(
 			codeScannerConfig,
 			httpClient,
 			codeclient.WithLogger(logger),
@@ -71,7 +65,7 @@ func NewClient(
 	return &Client{
 		hc(),
 		*codeScannerConfig,
-		codeScanner,
+		CodeScanner,
 		logger,
 	}
 }
