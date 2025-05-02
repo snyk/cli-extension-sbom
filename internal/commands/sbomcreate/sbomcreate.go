@@ -30,7 +30,7 @@ func SBOMWorkflow(
 	_ []workflow.Data,
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
-	logger := ictx.GetLogger()
+	logger := ictx.GetEnhancedLogger()
 	format := config.GetString(flags.FlagFormat)
 	version := config.GetString(flags.FlagVersion)
 	errFactory := errors.NewErrorFactory(logger)

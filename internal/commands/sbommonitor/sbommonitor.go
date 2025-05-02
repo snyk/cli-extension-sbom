@@ -50,7 +50,7 @@ func MonitorWorkflowWithDI(
 	remoteRepoUrlGetter cmd_exec.RemoteRepoURLGetter,
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
-	logger := ictx.GetLogger()
+	logger := ictx.GetEnhancedLogger()
 	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
 	policyPath := config.GetString(flags.FlagPolicyPath)

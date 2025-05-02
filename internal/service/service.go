@@ -7,9 +7,10 @@ import (
 	stderr "errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/rs/zerolog"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
@@ -56,7 +57,7 @@ func DepGraphsToSBOM(
 	subject *Subject,
 	t *Tool,
 	format string,
-	logger *log.Logger,
+	logger *zerolog.Logger,
 	errFactory *errors.ErrorFactory,
 ) (result *SBOMResult, err error) {
 	payload, err := preparePayload(depGraphs, subject, t)

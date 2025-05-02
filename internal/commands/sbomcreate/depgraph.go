@@ -22,7 +22,7 @@ type DepGraphResult struct {
 func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	engine := ictx.GetEngine()
 	config := ictx.GetConfiguration()
-	logger := ictx.GetLogger()
+	logger := ictx.GetEnhancedLogger()
 	errFactory := errors.NewErrorFactory(logger)
 	name := config.GetString(flags.FlagName)
 	version := config.GetString(flags.FlagVersion)

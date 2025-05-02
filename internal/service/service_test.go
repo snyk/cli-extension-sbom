@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
 
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -56,8 +56,8 @@ func TestDepGraphsToSBOM(t *testing.T) {
 					r.RequestURI,
 				)
 			})
-			logger := log.New(&bytes.Buffer{}, "", 0)
-			errFactory := errors.NewErrorFactory(logger)
+			logger := zerolog.New(&bytes.Buffer{})
+			errFactory := errors.NewErrorFactory(&logger)
 
 			res, err := DepGraphsToSBOM(
 				http.DefaultClient,
@@ -67,7 +67,7 @@ func TestDepGraphsToSBOM(t *testing.T) {
 				nil,
 				nil,
 				tt.format,
-				logger,
+				&logger,
 				errFactory,
 			)
 			assert.NoError(t, err)
@@ -90,8 +90,8 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 			`"tools":[{"name":"snyk-cli","vendor":"Snyk","version":"1.2.3"}]}`,
 			string(body))
 	})
-	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
+	logger := zerolog.New(&bytes.Buffer{})
+	errFactory := errors.NewErrorFactory(&logger)
 	depGraphs := []json.RawMessage{[]byte("{}"), []byte("{}")}
 	subject := NewSubject("goof", "0.0.0")
 	tool := &Tool{Vendor: "Snyk", Name: "snyk-cli", Version: "1.2.3"}
@@ -104,7 +104,7 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 		subject,
 		tool,
 		format,
-		logger,
+		&logger,
 		errFactory,
 	)
 	assert.NoError(t, err)
@@ -123,8 +123,8 @@ func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
 			`"tools":[{"name":"snyk-cli","vendor":"Snyk","version":"1.2.3"}]}`,
 			string(body))
 	})
-	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
+	logger := zerolog.New(&bytes.Buffer{})
+	errFactory := errors.NewErrorFactory(&logger)
 	depGraphs := []json.RawMessage{[]byte("{}")}
 	subject := NewSubject("goof", "0.0.0")
 	tool := &Tool{Vendor: "Snyk", Name: "snyk-cli", Version: "1.2.3"}
@@ -137,15 +137,15 @@ func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
 		subject,
 		tool,
 		format,
-		logger,
+		&logger,
 		errFactory,
 	)
 	assert.NoError(t, err)
 }
 
 func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
-	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
+	logger := zerolog.New(&bytes.Buffer{})
+	errFactory := errors.NewErrorFactory(&logger)
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		t.Fatal("Server should not have been contacted")
@@ -162,7 +162,7 @@ func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
 		nil,
 		nil,
 		"cyclonedx1.4+json",
-		logger,
+		&logger,
 		errFactory,
 	)
 
@@ -203,8 +203,8 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			response := mocks.NewMockResponse("text/plain", []byte{}, tt.statusCode)
 			mockSBOMService := mocks.NewMockSBOMService(response)
-			logger := log.New(&bytes.Buffer{}, "", 0)
-			errFactory := errors.NewErrorFactory(logger)
+			logger := zerolog.New(&bytes.Buffer{})
+			errFactory := errors.NewErrorFactory(&logger)
 
 			_, err := DepGraphsToSBOM(
 				http.DefaultClient,
@@ -214,7 +214,7 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 				nil,
 				nil,
 				"cyclonedx1.4+json",
-				logger,
+				&logger,
 				errFactory,
 			)
 			assert.Error(t, err)
@@ -224,24 +224,24 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 }
 
 func TestValidateSBOMFormat_EmptyFormat(t *testing.T) {
-	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
+	logger := zerolog.New(&bytes.Buffer{})
+	errFactory := errors.NewErrorFactory(&logger)
 	err := ValidateSBOMFormat(errFactory, "")
 	assert.ErrorContains(t, err, "Must set `--format` flag to specify an SBOM format. "+
 		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, cyclonedx1.5+json, cyclonedx1.5+xml, cyclonedx1.6+json, cyclonedx1.6+xml, spdx2.3+json")
 }
 
 func TestValidateSBOMFormat_InvalidFormat(t *testing.T) {
-	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
+	logger := zerolog.New(&bytes.Buffer{})
+	errFactory := errors.NewErrorFactory(&logger)
 	err := ValidateSBOMFormat(errFactory, "not+a+format")
 	assert.ErrorContains(t, err, "The format provided (not+a+format) is not one of the available formats. "+
 		"Available formats are: cyclonedx1.4+json, cyclonedx1.4+xml, cyclonedx1.5+json, cyclonedx1.5+xml, cyclonedx1.6+json, cyclonedx1.6+xml, spdx2.3+json")
 }
 
 func TestValidateSBOMFormat_ValidFormats(t *testing.T) {
-	logger := log.New(&bytes.Buffer{}, "", 0)
-	errFactory := errors.NewErrorFactory(logger)
+	logger := zerolog.New(&bytes.Buffer{})
+	errFactory := errors.NewErrorFactory(&logger)
 
 	tc := []string{
 		"cyclonedx1.4+json",

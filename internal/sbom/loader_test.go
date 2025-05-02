@@ -3,9 +3,9 @@ package sbom_test
 import (
 	"bytes"
 	_ "embed"
-	"log"
 	"testing"
 
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
@@ -15,8 +15,8 @@ import (
 //go:embed testdata/bom.json
 var sbomJson string
 
-var logger = log.New(&bytes.Buffer{}, "", 0)
-var errFactory = errors.NewErrorFactory(logger)
+var logger = zerolog.New(&bytes.Buffer{})
+var errFactory = errors.NewErrorFactory(&logger)
 
 func TestIsSBOMJSON(t *testing.T) {
 	testCases := []struct {
