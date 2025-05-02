@@ -20,6 +20,7 @@ import (
 )
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocks -destination=../../mocks/mock_codescanner.go github.com/snyk/code-client-go CodeScanner
+//go:generate go run go.uber.org/mock/mockgen -package=mocks -destination=../../mocks/mock_bundlestore_client.go github.com/snyk/cli-extension-sbom/internal/bundlestore Client
 
 func TestSBOMTestWorkflow_Reachability(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -63,7 +64,10 @@ func TestSBOMTestWorkflow_Reachability(t *testing.T) {
 		Upload(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 		Return(mockBundle, nil).
 		Times(1)
+
+	originalCodeScanner := bundlestore.CodeScanner
 	bundlestore.CodeScanner = mockCodeScanner
+	t.Cleanup(func() { bundlestore.CodeScanner = originalCodeScanner })
 
 	_, err = sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 	require.NoError(t, err)
@@ -75,4 +79,73 @@ func TestSBOMTestWorkflow_Reachability(t *testing.T) {
 
 	assert.Equal(t, http.MethodPut, capturedRequests[1].Method)
 	assert.Equal(t, "/bundle/"+mockBundleHash, capturedRequests[1].URL.Path)
+}
+
+func TestSBOMTestWorkflow_Reachability_DefaultPath(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctrl_dep := gomock_deprecated.NewController(t)
+	defer ctrl_dep.Finish()
+
+	mockICTX := createMockICTXWithURL(t, "")
+	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	mockICTX.GetConfiguration().Set("json", true)
+
+	t.Setenv("INTERNAL_SNYK_DEV_REACHABILITY", "true")
+
+	expectedSourceCodePath := "."
+
+	mockBundlestoreClient := svcmocks.NewMockClient(ctrl)
+	mockBundlestoreClient.
+		EXPECT().
+		UploadSourceCode(gomock.Any(), expectedSourceCodePath).
+		Return("source-code-hash", nil).
+		Times(1)
+	mockBundlestoreClient.
+		EXPECT().
+		UploadSBOM(gomock.Any(), gomock.Any()).
+		Return("sbom-hash", nil).AnyTimes()
+
+	originalClient := sbomtest.BundlestoreClient
+	sbomtest.BundlestoreClient = mockBundlestoreClient
+	t.Cleanup(func() { sbomtest.BundlestoreClient = originalClient })
+
+	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+	require.NoError(t, err)
+}
+
+func TestSBOMTestWorkflow_Reachability_ExplicitPath(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctrl_dep := gomock_deprecated.NewController(t)
+	defer ctrl_dep.Finish()
+
+	mockICTX := createMockICTXWithURL(t, "")
+	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	mockICTX.GetConfiguration().Set("json", true)
+	mockICTX.GetConfiguration().Set("source-dir", "foo/bar/baz")
+
+	t.Setenv("INTERNAL_SNYK_DEV_REACHABILITY", "true")
+
+	expectedSourceCodePath := "foo/bar/baz"
+
+	mockBundlestoreClient := svcmocks.NewMockClient(ctrl)
+	mockBundlestoreClient.
+		EXPECT().
+		UploadSourceCode(gomock.Any(), expectedSourceCodePath).
+		Return("source-code-hash", nil).
+		Times(1)
+	mockBundlestoreClient.
+		EXPECT().
+		UploadSBOM(gomock.Any(), gomock.Any()).
+		Return("sbom-hash", nil).AnyTimes()
+
+	originalClient := sbomtest.BundlestoreClient
+	sbomtest.BundlestoreClient = mockBundlestoreClient
+	t.Cleanup(func() { sbomtest.BundlestoreClient = originalClient })
+
+	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+	require.NoError(t, err)
 }

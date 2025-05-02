@@ -228,3 +228,17 @@ func (ef *ErrorFactory) NewNoSupportedProjectsError(warnings string) *SBOMExtens
 			"Please check that your SBOM contains supported ecosystems and dependency relationships.",
 	)
 }
+
+func (ef *ErrorFactory) NewDirectoryDoesNotExistError(dirPath string) *SBOMExtensionError {
+	return ef.newErr(
+		fmt.Errorf("directory does not exist"),
+		fmt.Sprintf("The directory %s does not exist", dirPath),
+	)
+}
+
+func (ef *ErrorFactory) NewDirectoryIsEmptyError(dirPath string) *SBOMExtensionError {
+	return ef.newErr(
+		fmt.Errorf("directory is empty"),
+		fmt.Sprintf("The directory %s is empty", dirPath),
+	)
+}
