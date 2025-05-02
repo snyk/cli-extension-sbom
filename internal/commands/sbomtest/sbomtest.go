@@ -140,16 +140,26 @@ func sbomTestReachability(
 	config configuration.Configuration,
 	ictx workflow.InvocationContext,
 	logger *zerolog.Logger,
-	filename string,
+	sbomPath string,
 ) ([]workflow.Data, error) {
 	bsc := bundlestore.NewClient(config, ictx.GetNetworkAccess().GetHttpClient, logger)
-	sbomBundleHash, err := bsc.UploadSBOM(ctx, filename)
+
+	sbomBundleHash, err := bsc.UploadSBOM(ctx, sbomPath)
 	if err != nil {
-		logger.Println("HERE", err)
+		logger.Error().Err(err).Str("sbomPath", sbomPath).Msg("Failed to upload SBOM")
 		return nil, err
 	}
-	logger.Println("BH", sbomBundleHash)
-	return nil, nil
+	logger.Println("sbomBundleHash", sbomBundleHash)
+
+	sourceCodePath := "." // TODO: pass in configurable source code dir to this func
+	sourceCodeBundleHash, err := bsc.UploadSourceCode(ctx, sourceCodePath)
+	if err != nil {
+		logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("Failed to upload SBOM")
+		return nil, err
+	}
+	logger.Println("sourceCodeBundleHash", sourceCodeBundleHash)
+
+	return nil, nil // TODO: return something meaningful once this function is complete
 }
 
 func workflowData(data []byte, contentType string) workflow.Data {

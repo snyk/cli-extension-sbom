@@ -8,11 +8,16 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 
+	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	codeclient "github.com/snyk/code-client-go"
 	codeclienthttp "github.com/snyk/code-client-go/http"
+	codeclientscan "github.com/snyk/code-client-go/scan"
 	"github.com/snyk/go-application-framework/pkg/configuration"
+
+	listsources "github.com/snyk/cli-extension-sbom/internal/files"
 )
 
 type Client struct {
@@ -37,6 +42,8 @@ type (
 	}
 )
 
+var CodeScanner codeclient.CodeScanner
+
 func NewClient(config configuration.Configuration, hc codeclienthttp.HTTPClientFactory, logger *zerolog.Logger) *Client {
 	codeScannerConfig := &codeClientConfig{
 		localConfiguration: config,
@@ -46,16 +53,19 @@ func NewClient(config configuration.Configuration, hc codeclienthttp.HTTPClientF
 		hc,
 		codeclienthttp.WithLogger(logger),
 	)
-	codeScanner := codeclient.NewCodeScanner(
-		codeScannerConfig,
-		httpClient,
-		codeclient.WithLogger(logger),
-	)
+
+	if CodeScanner == nil {
+		CodeScanner = codeclient.NewCodeScanner(
+			codeScannerConfig,
+			httpClient,
+			codeclient.WithLogger(logger),
+		)
+	}
 
 	return &Client{
 		hc(),
 		*codeScannerConfig,
-		codeScanner,
+		CodeScanner,
 		logger,
 	}
 }
@@ -184,6 +194,26 @@ func (c *Client) UploadSBOM(ctx context.Context, sbomPath string) (string, error
 	return bundleHash, nil
 }
 
-func (c *Client) UploadSourceCode(ctx context.Context, sourceCodePath string) {
-	panic("unimplemented")
+func (c *Client) UploadSourceCode(ctx context.Context, sourceCodePath string) (string, error) {
+	numThreads := runtime.NumCPU()
+	filesChan, err := listsources.ListSourcesForPath(sourceCodePath, c.logger, numThreads)
+	if err != nil {
+		c.logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("failed to list files in directory") //nolint:goconst // repeated sourceCodePath is fine
+		return "", err
+	}
+
+	target, err := codeclientscan.NewRepositoryTarget(sourceCodePath)
+	if err != nil {
+		c.logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("failed to initialize target")
+		return "", err
+	}
+
+	requestID := uuid.New().String()
+	bundle, err := c.codeScanner.Upload(ctx, requestID, target, filesChan, make(map[string]bool))
+	if err != nil {
+		c.logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("failed to upload source code")
+		return "", err
+	}
+
+	return bundle.GetBundleHash(), nil
 }

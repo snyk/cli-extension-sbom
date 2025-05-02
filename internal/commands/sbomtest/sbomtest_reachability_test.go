@@ -5,35 +5,39 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/snyk/go-application-framework/pkg/workflow"
+	gomock_deprecated "github.com/golang/mock/gomock"
+	"go.uber.org/mock/gomock"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	bundlemocks "github.com/snyk/code-client-go/bundle/mocks"
+	"github.com/snyk/go-application-framework/pkg/workflow"
 
 	"github.com/snyk/cli-extension-sbom/internal/bundlestore"
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
 	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
 )
 
+//go:generate go run go.uber.org/mock/mockgen -package=mocks -destination=../../mocks/mock_codescanner.go github.com/snyk/code-client-go CodeScanner
+
 func TestSBOMTestWorkflow_Reachability(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctrl_dep := gomock_deprecated.NewController(t)
+	defer ctrl_dep.Finish()
+
 	mockBundleHash := "mockHash123abc"
 
-	createBundleResponse := bundlestore.BundleResponse{
+	bundleRespJSON, err := json.Marshal(bundlestore.BundleResponse{
 		BundleHash:   mockBundleHash,
 		MissingFiles: []string{},
-	}
-	createBundleJSON, err := json.Marshal(createBundleResponse)
-	require.NoError(t, err)
-
-	extendBundleResponse := bundlestore.BundleResponse{
-		BundleHash:   mockBundleHash,
-		MissingFiles: []string{},
-	}
-	extendBundleJSON, err := json.Marshal(extendBundleResponse)
+	})
 	require.NoError(t, err)
 
 	responses := []svcmocks.MockResponse{
-		svcmocks.NewMockResponse("application/json", createBundleJSON, http.StatusOK),
-		svcmocks.NewMockResponse("application/json", extendBundleJSON, http.StatusOK),
+		svcmocks.NewMockResponse("application/json", bundleRespJSON, http.StatusOK),
+		svcmocks.NewMockResponse("application/json", bundleRespJSON, http.StatusOK),
 	}
 
 	var capturedRequests []*http.Request
@@ -48,6 +52,18 @@ func TestSBOMTestWorkflow_Reachability(t *testing.T) {
 	mockICTX.GetConfiguration().Set("json", true)
 
 	t.Setenv("INTERNAL_SNYK_DEV_REACHABILITY", "true")
+
+	mockBundle := bundlemocks.NewMockBundle(ctrl_dep)
+	mockBundle.EXPECT().
+		GetBundleHash().
+		Return(mockBundleHash).
+		Times(1)
+	mockCodeScanner := svcmocks.NewMockCodeScanner(ctrl)
+	mockCodeScanner.EXPECT().
+		Upload(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+		Return(mockBundle, nil).
+		Times(1)
+	bundlestore.CodeScanner = mockCodeScanner
 
 	_, err = sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 	require.NoError(t, err)
