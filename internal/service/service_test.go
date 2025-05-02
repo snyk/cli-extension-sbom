@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/http/httptest"
 	"net/url"
 	"testing"
 
@@ -146,9 +147,16 @@ func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
 	logger := log.New(&bytes.Buffer{}, "", 0)
 	errFactory := errors.NewErrorFactory(logger)
 
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Fatal("Server should not have been contacted")
+	}))
+	serverURL := ts.URL
+	// Immediately close the server to simulate connection refusal
+	ts.Close()
+
 	res, err := DepGraphsToSBOM(
 		http.DefaultClient,
-		"http://0.0.0.0",
+		serverURL,
 		orgID,
 		[]json.RawMessage{[]byte("{}")},
 		nil,
