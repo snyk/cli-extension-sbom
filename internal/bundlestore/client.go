@@ -20,12 +20,19 @@ import (
 	listsources "github.com/snyk/cli-extension-sbom/internal/files"
 )
 
-type Client struct {
+type Client interface {
+	UploadSourceCode(ctx context.Context, sourceCodePath string) (string, error)
+	UploadSBOM(ctx context.Context, sbomPath string) (string, error)
+}
+
+type client struct {
 	httpClient *http.Client
 	codeClientConfig
 	codeScanner codeclient.CodeScanner
 	logger      *zerolog.Logger
 }
+
+var _ Client = (*client)(nil)
 
 type (
 	BundleFile struct {
@@ -44,7 +51,7 @@ type (
 
 var CodeScanner codeclient.CodeScanner
 
-func NewClient(config configuration.Configuration, hc codeclienthttp.HTTPClientFactory, logger *zerolog.Logger) *Client {
+func NewClient(config configuration.Configuration, hc codeclienthttp.HTTPClientFactory, logger *zerolog.Logger) *client {
 	codeScannerConfig := &codeClientConfig{
 		localConfiguration: config,
 	}
@@ -62,7 +69,7 @@ func NewClient(config configuration.Configuration, hc codeclienthttp.HTTPClientF
 		)
 	}
 
-	return &Client{
+	return &client{
 		hc(),
 		*codeScannerConfig,
 		CodeScanner,
@@ -70,7 +77,7 @@ func NewClient(config configuration.Configuration, hc codeclienthttp.HTTPClientF
 	}
 }
 
-func (c *Client) request(
+func (c *client) request(
 	ctx context.Context,
 	method string,
 	path string,
@@ -119,7 +126,7 @@ func (c *Client) request(
 }
 
 //nolint:gocritic // Code copied verbatim from go-application-framework
-func (c *Client) createBundle(ctx context.Context, fileHashes map[string]string) (string, []string, error) {
+func (c *client) createBundle(ctx context.Context, fileHashes map[string]string) (string, []string, error) {
 	requestBody, err := json.Marshal(fileHashes)
 	if err != nil {
 		return "", nil, err
@@ -139,7 +146,7 @@ func (c *Client) createBundle(ctx context.Context, fileHashes map[string]string)
 }
 
 //nolint:gocritic // Code copied verbatim from go-application-framework
-func (c *Client) extendBundle(ctx context.Context, bundleHash string, files map[string]BundleFile, removedFiles []string) (string, []string, error) {
+func (c *client) extendBundle(ctx context.Context, bundleHash string, files map[string]BundleFile, removedFiles []string) (string, []string, error) {
 	requestBody, err := json.Marshal(ExtendBundleRequest{
 		Files:        files,
 		RemovedFiles: removedFiles,
@@ -161,7 +168,7 @@ func (c *Client) extendBundle(ctx context.Context, bundleHash string, files map[
 	return bundleResponse.BundleHash, bundleResponse.MissingFiles, err
 }
 
-func (c *Client) UploadSBOM(ctx context.Context, sbomPath string) (string, error) {
+func (c *client) UploadSBOM(ctx context.Context, sbomPath string) (string, error) {
 	var fileContent []byte
 	fileContent, err := os.ReadFile(sbomPath)
 	if err != nil {
@@ -194,7 +201,7 @@ func (c *Client) UploadSBOM(ctx context.Context, sbomPath string) (string, error
 	return bundleHash, nil
 }
 
-func (c *Client) UploadSourceCode(ctx context.Context, sourceCodePath string) (string, error) {
+func (c *client) UploadSourceCode(ctx context.Context, sourceCodePath string) (string, error) {
 	numThreads := runtime.NumCPU()
 	filesChan, err := listsources.ListSourcesForPath(sourceCodePath, c.logger, numThreads)
 	if err != nil {
