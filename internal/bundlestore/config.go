@@ -22,7 +22,7 @@ func (c *codeClientConfig) IsFedramp() bool {
 }
 
 func (c *codeClientConfig) SnykCodeApi() string {
-	//nolint:gocritic // Code copied verbatim from go-application-framework
+	//nolint:gocritic // Code copied verbatim from code-client-go
 	return strings.Replace(c.localConfiguration.GetString(configuration.API_URL), "api", "deeproxy", -1)
 }
 

@@ -27,11 +27,11 @@ func (ew *EncoderWriter) Write(b []byte) (int, error) {
 		return n, err
 	}
 
-	//nolint:gocritic // Code copied verbatim from go-application-framework
+	//nolint:gocritic // Code copied verbatim from code-client-go
 	if err = b64Writer.Close(); err != nil {
 		return n, err
 	}
-	//nolint:gocritic // Code copied verbatim from go-application-framework
+	//nolint:gocritic // Code copied verbatim from code-client-go
 	if err = zipWriter.Close(); err != nil {
 		return n, err
 	}
