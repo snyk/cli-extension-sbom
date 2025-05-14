@@ -77,6 +77,13 @@ func NewClient(config configuration.Configuration, hc codeclienthttp.HTTPClientF
 	}
 }
 
+func (c *client) host() string {
+	if c.codeClientConfig.IsFedramp() {
+		return c.SnykApi() + "/hidden/orgs/" + c.codeClientConfig.Organization() + "/code"
+	}
+	return c.SnykCodeApi()
+}
+
 func (c *client) request(
 	ctx context.Context,
 	method string,
@@ -88,7 +95,7 @@ func (c *client) request(
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, method, c.SnykCodeApi()+path, bodyBuffer)
+	req, err := http.NewRequestWithContext(ctx, method, c.host()+path, bodyBuffer)
 	if err != nil {
 		return nil, err
 	}
