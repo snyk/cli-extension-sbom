@@ -10,6 +10,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/snyk/go-application-framework/pkg/configuration"
+	"github.com/snyk/go-application-framework/pkg/local_workflows/config_utils"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
 	"github.com/snyk/cli-extension-sbom/internal/bundlestore"
@@ -23,6 +24,8 @@ var WorkflowID = workflow.NewWorkflowIdentifier("sbom.test")
 
 var BundlestoreClient bundlestore.Client
 
+const FeatureFlagSBOMTestReachability = "feature_flag_sbom_test_reachability"
+
 func RegisterWorkflows(e workflow.Engine) error {
 	sbomFlagset := flags.GetSBOMTestFlagSet()
 
@@ -31,6 +34,9 @@ func RegisterWorkflows(e workflow.Engine) error {
 	if _, err := e.Register(WorkflowID, c, TestWorkflow); err != nil {
 		return fmt.Errorf("error while registering %s workflow: %w", WorkflowID, err)
 	}
+
+	config_utils.AddFeatureFlagToConfig(e, FeatureFlagSBOMTestReachability, "sbomTestReachability")
+
 	return nil
 }
 
@@ -190,6 +196,11 @@ func sbomTestReachability(
 	sbomPath string,
 	sourceCodePath string,
 ) ([]workflow.Data, error) {
+	// Check if the feature can be used
+	if !config.GetBool(FeatureFlagSBOMTestReachability) {
+		return nil, errFactory.NewFeatureNotPermittedError(FeatureFlagSBOMTestReachability)
+	}
+
 	if sourceCodePath == "" {
 		sourceCodePath = "."
 	}

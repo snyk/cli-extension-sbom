@@ -56,6 +56,7 @@ func TestSBOMTestWorkflow_Reachability(t *testing.T) {
 	mockICTX.GetConfiguration().Set("experimental", true)
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set("json", true)
+	mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagSBOMTestReachability, true)
 
 	t.Setenv("INTERNAL_SNYK_DEV_REACHABILITY", "true")
 
@@ -96,6 +97,7 @@ func TestSBOMTestWorkflow_Reachability_DefaultPath(t *testing.T) {
 	mockICTX.GetConfiguration().Set("experimental", true)
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set("json", true)
+	mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagSBOMTestReachability, true)
 
 	t.Setenv("INTERNAL_SNYK_DEV_REACHABILITY", "true")
 
@@ -134,6 +136,7 @@ func TestSBOMTestWorkflow_Reachability_ExplicitPath_ContainsFiles(t *testing.T) 
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set("json", true)
 	mockICTX.GetConfiguration().Set("source-dir", sourceCodePath)
+	mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagSBOMTestReachability, true)
 
 	t.Setenv("INTERNAL_SNYK_DEV_REACHABILITY", "true")
 
@@ -170,6 +173,7 @@ func TestSBOMTestWorkflow_Reachability_ExplicitPath_DoesntExist(t *testing.T) {
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set("json", true)
 	mockICTX.GetConfiguration().Set("source-dir", sourceCodePath)
+	mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagSBOMTestReachability, true)
 
 	t.Setenv("INTERNAL_SNYK_DEV_REACHABILITY", "true")
 
@@ -207,6 +211,7 @@ func TestSBOMTestWorkflow_Reachability_ExplicitPath_Empty(t *testing.T) {
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set("json", true)
 	mockICTX.GetConfiguration().Set("source-dir", sourceCodePath)
+	mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagSBOMTestReachability, true)
 
 	t.Setenv("INTERNAL_SNYK_DEV_REACHABILITY", "true")
 
@@ -229,4 +234,40 @@ func TestSBOMTestWorkflow_Reachability_ExplicitPath_Empty(t *testing.T) {
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 	errFactory := errors.NewErrorFactory(&logger)
 	assert.Equal(t, errFactory.NewDirectoryIsEmptyError(sourceCodePath), err)
+}
+
+func TestSBOMTestWorkflow_Reachability_FeatureFlagMissing(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctrl_dep := gomock_deprecated.NewController(t)
+	defer ctrl_dep.Finish()
+
+	sourceCodePath := t.TempDir()
+
+	mockICTX := createMockICTXWithURL(t, "")
+	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	mockICTX.GetConfiguration().Set("json", true)
+
+	t.Setenv("INTERNAL_SNYK_DEV_REACHABILITY", "true")
+
+	mockBundlestoreClient := svcmocks.NewMockClient(ctrl)
+	mockBundlestoreClient.
+		EXPECT().
+		UploadSourceCode(gomock.Any(), sourceCodePath).
+		Return("source-code-hash", nil).
+		Times(0)
+	mockBundlestoreClient.
+		EXPECT().
+		UploadSBOM(gomock.Any(), gomock.Any()).
+		Return("sbom-hash", nil).
+		Times(0)
+
+	originalClient := sbomtest.BundlestoreClient
+	sbomtest.BundlestoreClient = mockBundlestoreClient
+	t.Cleanup(func() { sbomtest.BundlestoreClient = originalClient })
+
+	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+	errFactory := errors.NewErrorFactory(&logger)
+	assert.Equal(t, errFactory.NewFeatureNotPermittedError(sbomtest.FeatureFlagSBOMTestReachability), err)
 }
