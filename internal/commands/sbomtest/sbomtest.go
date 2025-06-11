@@ -17,7 +17,10 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
-var WorkflowID = workflow.NewWorkflowIdentifier("sbom.test")
+var (
+	WorkflowID            = workflow.NewWorkflowIdentifier("sbom.test")
+	OsFlowsTestWorkflowID = workflow.NewWorkflowIdentifier("test")
+)
 
 func RegisterWorkflows(e workflow.Engine) error {
 	sbomFlagset := flags.GetSBOMTestFlagSet()
@@ -36,6 +39,7 @@ func TestWorkflow(
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
 	logger := ictx.GetEnhancedLogger()
+	engine := ictx.GetEngine()
 	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
 	errFactory := errors.NewErrorFactory(logger)
@@ -62,8 +66,16 @@ func TestWorkflow(
 	logger.Println("Target SBOM document:", filename)
 
 	isReachabilityEnabled := config.GetBool("INTERNAL_SNYK_DEV_REACHABILITY")
+
 	if isReachabilityEnabled {
-		return nil, fmt.Errorf("not implemented")
+		sourceDir := config.GetString(flags.FlagSourceDir)
+		osFlowsTestConfig := config.Clone()
+
+		osFlowsTestConfig.Set("reachability", true)
+		osFlowsTestConfig.Set("sbom", filename)
+		osFlowsTestConfig.Set("source-dir", sourceDir)
+
+		return engine.InvokeWithConfig(OsFlowsTestWorkflowID, osFlowsTestConfig)
 	} else {
 		return sbomTest(ctx, filename, errFactory, ictx, config, orgID, logger)
 	}
