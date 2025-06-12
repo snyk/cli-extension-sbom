@@ -8,9 +8,7 @@ require (
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/charmbracelet/lipgloss v0.10.0
 	github.com/golang/mock v1.6.0
-	github.com/google/uuid v1.6.0
 	github.com/muesli/termenv v0.15.2
-	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.34.0
 	github.com/snyk/code-client-go v1.21.2
 	github.com/snyk/error-catalog-golang-public v0.0.0-20250218074309-307ad7b38a60
@@ -19,7 +17,6 @@ require (
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/mock v0.5.1
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
-	golang.org/x/net v0.39.0
 )
 
 require (
@@ -44,6 +41,7 @@ require (
 	github.com/go-openapi/swag v0.23.1 // indirect
 	github.com/gofrs/flock v0.12.1 // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -77,6 +75,7 @@ require (
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/pjbgf/sha1cd v0.3.2 // indirect
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/puzpuzpuz/xsync v1.5.2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
@@ -99,6 +98,7 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/mod v0.24.0 // indirect
+	golang.org/x/net v0.39.0 // indirect
 	golang.org/x/oauth2 v0.27.0 // indirect
 	golang.org/x/sync v0.13.0 // indirect
 	golang.org/x/sys v0.32.0 // indirect

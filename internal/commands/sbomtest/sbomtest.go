@@ -5,23 +5,24 @@ import (
 	"context"
 	stderrors "errors"
 	"fmt"
-	"os"
 
 	"github.com/rs/zerolog"
 	"github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
-	"github.com/snyk/cli-extension-sbom/internal/bundlestore"
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/sbom"
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
-var WorkflowID = workflow.NewWorkflowIdentifier("sbom.test")
+var (
+	WorkflowID            = workflow.NewWorkflowIdentifier("sbom.test")
+	OsFlowsTestWorkflowID = workflow.NewWorkflowIdentifier("test")
+)
 
-var BundlestoreClient bundlestore.Client
+const FlagOSFlowsSBOM = "sbom"
 
 func RegisterWorkflows(e workflow.Engine) error {
 	sbomFlagset := flags.GetSBOMTestFlagSet()
@@ -40,6 +41,7 @@ func TestWorkflow(
 ) ([]workflow.Data, error) {
 	config := ictx.GetConfiguration()
 	logger := ictx.GetEnhancedLogger()
+	engine := ictx.GetEngine()
 	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
 	errFactory := errors.NewErrorFactory(logger)
@@ -65,10 +67,17 @@ func TestWorkflow(
 
 	logger.Println("Target SBOM document:", filename)
 
-	isReachabilityEnabled := config.GetBool("INTERNAL_SNYK_DEV_REACHABILITY")
+	isReachabilityEnabled := config.GetBool(flags.FlagReachability)
+
 	if isReachabilityEnabled {
-		sourceCodePath := config.GetString(flags.FlagSourceDir)
-		return sbomTestReachability(ctx, config, errFactory, ictx, logger, filename, sourceCodePath)
+		sourceDir := config.GetString(flags.FlagSourceDir)
+		osFlowsTestConfig := config.Clone()
+
+		osFlowsTestConfig.Set(flags.FlagReachability, true)
+		osFlowsTestConfig.Set(FlagOSFlowsSBOM, filename)
+		osFlowsTestConfig.Set(flags.FlagSourceDir, sourceDir)
+
+		return engine.InvokeWithConfig(OsFlowsTestWorkflowID, osFlowsTestConfig)
 	} else {
 		return sbomTest(ctx, filename, errFactory, ictx, config, orgID, logger)
 	}
@@ -137,86 +146,6 @@ func sbomTest(
 	}
 
 	return []workflow.Data{workflowData(buf.Bytes(), ct), workflowData(summaryData, summaryContentType)}, err
-}
-
-func dirExists(path string) (bool, error) {
-	_, err := os.Stat(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return false, nil
-		}
-		return false, err
-	}
-
-	return true, nil
-}
-
-func dirContainsFiles(path string) (bool, error) {
-	entries, err := os.ReadDir(path)
-	if err != nil {
-		return false, err
-	}
-
-	return len(entries) > 0, nil
-}
-
-func validateDirectory(sourceCodePath string, logger *zerolog.Logger, errFactory *errors.ErrorFactory) error {
-	exists, err := dirExists(sourceCodePath)
-	if err != nil {
-		logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("Failed to check if directory exists") //nolint:goconst // repeated sourceCodePath is fine
-		return err
-	}
-	if !exists {
-		return errFactory.NewDirectoryDoesNotExistError(sourceCodePath)
-	}
-
-	containsFiles, err := dirContainsFiles(sourceCodePath)
-	if err != nil {
-		logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("Failed to read directory")
-		return err
-	}
-	if !containsFiles {
-		return errFactory.NewDirectoryIsEmptyError(sourceCodePath)
-	}
-	return nil
-}
-
-func sbomTestReachability(
-	ctx context.Context,
-	config configuration.Configuration,
-	errFactory *errors.ErrorFactory,
-	ictx workflow.InvocationContext,
-	logger *zerolog.Logger,
-	sbomPath string,
-	sourceCodePath string,
-) ([]workflow.Data, error) {
-	if sourceCodePath == "" {
-		sourceCodePath = "."
-	}
-
-	if err := validateDirectory(sourceCodePath, logger, errFactory); err != nil {
-		return nil, err
-	}
-
-	if BundlestoreClient == nil {
-		BundlestoreClient = bundlestore.NewClient(config, ictx.GetNetworkAccess().GetHttpClient, logger)
-	}
-
-	sbomBundleHash, err := BundlestoreClient.UploadSBOM(ctx, sbomPath)
-	if err != nil {
-		logger.Error().Err(err).Str("sbomPath", sbomPath).Msg("Failed to upload SBOM")
-		return nil, err
-	}
-	logger.Println("sbomBundleHash", sbomBundleHash)
-
-	sourceCodeBundleHash, err := BundlestoreClient.UploadSourceCode(ctx, sourceCodePath)
-	if err != nil {
-		logger.Error().Err(err).Str("sourceCodePath", sourceCodePath).Msg("Failed to upload SBOM")
-		return nil, err
-	}
-	logger.Println("sourceCodeBundleHash", sourceCodeBundleHash)
-
-	return nil, nil // TODO: return something meaningful once this function is complete
 }
 
 func workflowData(data []byte, contentType string) workflow.Data {

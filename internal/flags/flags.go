@@ -36,6 +36,7 @@ const (
 	FlagRemoteRepoURL                = "remote-repo-url"
 	FlagTargetReference              = "target-reference"
 	FlagSourceDir                    = "source-dir"
+	FlagReachability                 = "reachability"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
@@ -82,6 +83,7 @@ func GetSBOMTestFlagSet() *pflag.FlagSet {
 	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom test command.")
 	flagSet.String(FlagFile, "", "Specify an SBOM file.")
 	flagSet.String(FlagSourceDir, "", "Path of the directory containing the source code.")
+	flagSet.Bool(FlagReachability, false, "Enable reachability test.")
 
 	return flagSet
 }

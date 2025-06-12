@@ -18,6 +18,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
+	"github.com/snyk/cli-extension-sbom/internal/flags"
 	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
 )
 
@@ -116,6 +117,39 @@ func TestSBOMTestWorkflow_SuccessJSON(t *testing.T) {
 	payloadBytes, ok = summaryData.GetPayload().([]byte)
 	assert.True(t, ok)
 	snapshotter.SnapshotT(t, payloadBytes)
+}
+
+func TestSBOMTestWorkflow_ReachabilitySuccess(t *testing.T) {
+	responses := []svcmocks.MockResponse{
+		svcmocks.NewMockResponse("application/vnd.api+json", []byte(`{"data": {"id": "test-id"}}`), http.StatusCreated),
+		svcmocks.NewMockResponse("application/vnd.api+json", []byte("{}"), http.StatusSeeOther),
+		svcmocks.NewMockResponse("application/vnd.api+json", testResultMockResponse, http.StatusOK),
+	}
+
+	mockSBOMService := svcmocks.NewMockSBOMServiceMultiResponse(responses, func(r *http.Request) {})
+	defer mockSBOMService.Close()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, mockSBOMService.URL, mockEngine)
+	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	mockICTX.GetConfiguration().Set("reachability", true)
+
+	osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
+
+	osFlowsTestConfig.Set(flags.FlagReachability, true)
+	osFlowsTestConfig.Set(sbomtest.FlagOSFlowsSBOM, "testdata/bom.json")
+	osFlowsTestConfig.Set(flags.FlagSourceDir, "")
+
+	mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
+
+	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+
+	require.NoError(t, err)
+	require.NotNil(t, result)
 }
 
 // Helpers
