@@ -22,7 +22,7 @@ var (
 	OsFlowsTestWorkflowID = workflow.NewWorkflowIdentifier("test")
 )
 
-const flagOSFlowsSBOM = "sbom"
+const FlagOSFlowsSBOM = "sbom"
 
 func RegisterWorkflows(e workflow.Engine) error {
 	sbomFlagset := flags.GetSBOMTestFlagSet()
@@ -74,7 +74,7 @@ func TestWorkflow(
 		osFlowsTestConfig := config.Clone()
 
 		osFlowsTestConfig.Set(flags.FlagReachability, true)
-		osFlowsTestConfig.Set(flagOSFlowsSBOM, filename)
+		osFlowsTestConfig.Set(FlagOSFlowsSBOM, filename)
 		osFlowsTestConfig.Set(flags.FlagSourceDir, sourceDir)
 
 		return engine.InvokeWithConfig(OsFlowsTestWorkflowID, osFlowsTestConfig)
