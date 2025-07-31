@@ -31,7 +31,12 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 
 	depGraphConfig := config.Clone()
 	if config.GetBool(flags.FlagAllProjects) {
-		depGraphConfig.Set("fail-fast", true)
+		skipErrors := config.GetBool(flags.FlagSkipErrors)
+		if skipErrors {
+			// TODO: ensure that errors are clearly logged
+		} else {
+			depGraphConfig.Set("fail-fast", true)
+		}
 	}
 	depGraphs, err := engine.InvokeWithConfig(DepGraphWorkflowID, depGraphConfig)
 	if err != nil {

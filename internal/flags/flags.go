@@ -37,6 +37,7 @@ const (
 	FlagTargetReference              = "target-reference"
 	FlagSourceDir                    = "source-dir"
 	FlagReachability                 = "reachability"
+	FlagSkipErrors                   = "skip-errors"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
@@ -73,6 +74,7 @@ func GetSBOMCreateFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagPythonSkipUnresolved, "", "Skip Python packages that cannot be found in the environment.")
 	flagSet.String(FlagPythonPackageManager, "", `Add --package-manager=pip to your command if the file name is not "requirements.txt".`)
 	flagSet.Int(FlagUnmanagedMaxDepth, 0, "Specify the maximum level of archive extraction for unmanaged scanning.")
+	flagSet.Bool(FlagSkipErrors, false, "Ignore errors when parsing files. This may result in an incomplete SBOM if there are errors.")
 
 	return flagSet
 }
