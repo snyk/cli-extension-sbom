@@ -35,8 +35,13 @@ const (
 	FlagPolicyPath                   = "policy-path"
 	FlagRemoteRepoURL                = "remote-repo-url"
 	FlagTargetReference              = "target-reference"
-	FlagSourceDir                    = "source-dir"
-	FlagReachability                 = "reachability"
+
+	// OS Flows test flags.
+	FlagReachability       = "reachability"
+	FlagSBOM               = "sbom"
+	FlagSourceDir          = "source-dir"
+	FlagRiskScoreThreshold = "risk-score-threshold"
+	FlagSeverityThreshold  = "severity-threshold"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
@@ -82,8 +87,13 @@ func GetSBOMTestFlagSet() *pflag.FlagSet {
 
 	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom test command.")
 	flagSet.String(FlagFile, "", "Specify an SBOM file.")
+
+	// Flags being forwarded to the os flows test.
+	flagSet.Bool(FlagReachability, false, "Run reachability analysis on source code.")
+	flagSet.String(FlagSBOM, "", "Specify an SBOM file to be tested.")
 	flagSet.String(FlagSourceDir, "", "Path of the directory containing the source code.")
-	flagSet.Bool(FlagReachability, false, "Enable reachability test.")
+	flagSet.Int(FlagRiskScoreThreshold, -1, "Include findings at or over this risk score threshold.")
+	flagSet.String(FlagSeverityThreshold, "", "Report only findings at the specified level or higher.")
 
 	return flagSet
 }

@@ -136,13 +136,11 @@ func TestSBOMTestWorkflow_ReachabilitySuccess(t *testing.T) {
 	mockICTX := mockInvocationContext(t, ctrl, mockSBOMService.URL, mockEngine)
 	mockICTX.GetConfiguration().Set("experimental", true)
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
-	mockICTX.GetConfiguration().Set("reachability", true)
+	mockICTX.GetConfiguration().Set(flags.FlagReachability, true)
 
 	osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
-
 	osFlowsTestConfig.Set(flags.FlagReachability, true)
-	osFlowsTestConfig.Set(sbomtest.FlagOSFlowsSBOM, "testdata/bom.json")
-	osFlowsTestConfig.Set(flags.FlagSourceDir, "")
+	osFlowsTestConfig.Set(flags.FlagSBOM, "testdata/bom.json")
 
 	mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
 
