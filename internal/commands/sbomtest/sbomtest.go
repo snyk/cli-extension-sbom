@@ -22,8 +22,6 @@ var (
 	OsFlowsTestWorkflowID = workflow.NewWorkflowIdentifier("test")
 )
 
-const FlagOSFlowsSBOM = "sbom"
-
 func RegisterWorkflows(e workflow.Engine) error {
 	sbomFlagset := flags.GetSBOMTestFlagSet()
 
@@ -70,12 +68,8 @@ func TestWorkflow(
 	isReachabilityEnabled := config.GetBool(flags.FlagReachability)
 
 	if isReachabilityEnabled {
-		sourceDir := config.GetString(flags.FlagSourceDir)
 		osFlowsTestConfig := config.Clone()
-
-		osFlowsTestConfig.Set(flags.FlagReachability, true)
-		osFlowsTestConfig.Set(FlagOSFlowsSBOM, filename)
-		osFlowsTestConfig.Set(flags.FlagSourceDir, sourceDir)
+		osFlowsTestConfig.Set(flags.FlagSBOM, filename)
 
 		return engine.InvokeWithConfig(OsFlowsTestWorkflowID, osFlowsTestConfig)
 	} else {
