@@ -101,6 +101,11 @@ func TestGetSBOMExportFlagSet(t *testing.T) {
 			isBool:   false,
 			expected: "",
 		},
+		{
+			flagName: FlagIncludeProvenance,
+			isBool:   true,
+			expected: false,
+		},
 	}
 
 	for _, tt := range tc {
