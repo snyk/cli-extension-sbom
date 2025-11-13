@@ -124,3 +124,64 @@ func TestGetSBOMExportFlagSet(t *testing.T) {
 		})
 	}
 }
+
+func TestGetSBOMTestFlagSet(t *testing.T) {
+	flagSet := GetSBOMTestFlagSet()
+
+	tc := []struct {
+		flagName string
+		isBool   bool
+		isInt    bool
+		expected interface{}
+	}{
+		{
+			flagName: FlagFile,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagReachability,
+			isBool:   true,
+			expected: false,
+		},
+		{
+			flagName: FlagReachabilityFilter,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagSourceDir,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagRiskScoreThreshold,
+			isInt:    true,
+			expected: -1,
+		},
+		{
+			flagName: FlagSeverityThreshold,
+			isBool:   false,
+			expected: "",
+		},
+	}
+
+	for _, tt := range tc {
+		t.Run(tt.flagName, func(t *testing.T) {
+			var val interface{}
+			var err error
+
+			switch {
+			case tt.isBool:
+				val, err = flagSet.GetBool(tt.flagName)
+			case tt.isInt:
+				val, err = flagSet.GetInt(tt.flagName)
+			default:
+				val, err = flagSet.GetString(tt.flagName)
+			}
+
+			assert.NoError(t, err)
+			assert.Equal(t, tt.expected, val)
+		})
+	}
+}
