@@ -39,6 +39,7 @@ const (
 
 	// OS Flows test flags.
 	FlagReachability       = "reachability"
+	FlagReachabilityFilter = "reachability-filter"
 	FlagSBOM               = "sbom"
 	FlagSourceDir          = "source-dir"
 	FlagRiskScoreThreshold = "risk-score-threshold"
@@ -92,6 +93,7 @@ func GetSBOMTestFlagSet() *pflag.FlagSet {
 
 	// Flags being forwarded to the os flows test.
 	flagSet.Bool(FlagReachability, false, "Run reachability analysis on source code.")
+	flagSet.String(FlagReachabilityFilter, "", "Report only findings with the specific reachability outcome e.g. 'reachable', 'no-path-found' or 'not-applicable'")
 	flagSet.String(FlagSBOM, "", "Specify an SBOM file to be tested.")
 	flagSet.String(FlagSourceDir, "", "Path of the directory containing the source code.")
 	flagSet.Int(FlagRiskScoreThreshold, -1, "Include findings at or over this risk score threshold.")
