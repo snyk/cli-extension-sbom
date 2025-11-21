@@ -18,8 +18,9 @@ import (
 )
 
 var (
-	WorkflowID            = workflow.NewWorkflowIdentifier("sbom.test")
-	OsFlowsTestWorkflowID = workflow.NewWorkflowIdentifier("test")
+	WorkflowID                         = workflow.NewWorkflowIdentifier("sbom.test")
+	OsFlowsTestWorkflowID              = workflow.NewWorkflowIdentifier("test")
+	FlagForceSbomTestViaFlowsExtension = "SNYK_FORCE_SBOM_TEST_VIA_OSF"
 )
 
 func RegisterWorkflows(e workflow.Engine) error {
@@ -66,8 +67,9 @@ func TestWorkflow(
 	logger.Println("Target SBOM document:", filename)
 
 	isReachabilityEnabled := config.GetBool(flags.FlagReachability)
+	forceSBOMTest := config.GetBool(FlagForceSbomTestViaFlowsExtension)
 
-	if isReachabilityEnabled {
+	if isReachabilityEnabled || forceSBOMTest {
 		osFlowsTestConfig := config.Clone()
 		osFlowsTestConfig.Set(flags.FlagSBOM, filename)
 

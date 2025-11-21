@@ -150,6 +150,28 @@ func TestSBOMTestWorkflow_ReachabilitySuccess(t *testing.T) {
 	require.NotNil(t, result)
 }
 
+func TestSBOMTestWorkflow_ForceViaOSF(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, "", mockEngine)
+	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	mockICTX.GetConfiguration().Set(flags.FlagReachability, false)
+	mockICTX.GetConfiguration().Set(sbomtest.FlagForceSbomTestViaFlowsExtension, true)
+
+	osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
+	osFlowsTestConfig.Set(flags.FlagSBOM, "testdata/bom.json")
+
+	mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
+
+	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+
+	require.NoError(t, err)
+	require.NotNil(t, result)
+}
+
 // Helpers
 
 func createMockICTX(t *testing.T) workflow.InvocationContext {
