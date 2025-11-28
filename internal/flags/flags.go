@@ -36,6 +36,7 @@ const (
 	FlagRemoteRepoURL                = "remote-repo-url"
 	FlagTargetReference              = "target-reference"
 	FlagIncludeProvenance            = "include-provenance"
+	FlagFailFast                     = "fail-fast"
 
 	// OS Flows test flags.
 	FlagReachability       = "reachability"
@@ -81,6 +82,7 @@ func GetSBOMCreateFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagPythonPackageManager, "", `Add --package-manager=pip to your command if the file name is not "requirements.txt".`)
 	flagSet.Int(FlagUnmanagedMaxDepth, 0, "Specify the maximum level of archive extraction for unmanaged scanning.")
 	flagSet.Bool(FlagIncludeProvenance, false, "Include checksums in purl to support package provenance.")
+	flagSet.Bool(FlagFailFast, true, "Use with --all-projects to control whether SBOM generation continues when errors occur. Default: true (fail-fast behavior).")
 
 	return flagSet
 }
