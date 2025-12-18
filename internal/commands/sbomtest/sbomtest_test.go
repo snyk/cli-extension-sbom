@@ -1,15 +1,12 @@
 package sbomtest_test
 
 import (
-	_ "embed"
 	"io"
-	"net/http"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/rs/zerolog"
 	"github.com/snyk/go-application-framework/pkg/configuration"
-	"github.com/snyk/go-application-framework/pkg/local_workflows/content_type"
 	"github.com/snyk/go-application-framework/pkg/mocks"
 	"github.com/snyk/go-application-framework/pkg/networking"
 	"github.com/snyk/go-application-framework/pkg/runtimeinfo"
@@ -19,32 +16,26 @@ import (
 
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
-	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
 )
 
-//go:embed testdata/sbom-test-result.response.json
-var testResultMockResponse []byte
-
-func TestSBOMTestWorkflow_NoExperimentalFlag(t *testing.T) {
-	mockICTX := createMockICTX(t)
-
-	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
-
-	assert.ErrorContains(t, err, "Flag `--experimental` is required to execute this command.")
-}
-
 func TestSBOMTestWorkflow_NoFileFlag(t *testing.T) {
-	mockICTX := createMockICTX(t)
-	mockICTX.GetConfiguration().Set("experimental", true)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
 	assert.ErrorContains(t, err, "Flag `--file` is required to execute this command. Value should point to a valid SBOM document.")
 }
 
-func TestSBOMTestWorkflow_SupplyMissingFile(t *testing.T) {
-	mockICTX := createMockICTX(t)
-	mockICTX.GetConfiguration().Set("experimental", true)
+func TestSBOMTestWorkflow_InvalidFilePath(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
 	mockICTX.GetConfiguration().Set("file", "missing-file.txt")
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
@@ -52,89 +43,31 @@ func TestSBOMTestWorkflow_SupplyMissingFile(t *testing.T) {
 	assert.ErrorContains(t, err, "The given filepath \"missing-file.txt\" does not exist.")
 }
 
-func TestSBOMTestWorkflow_SuccessPretty(t *testing.T) {
-	responses := []svcmocks.MockResponse{
-		svcmocks.NewMockResponse("application/vnd.api+json", []byte(`{"data": {"id": "test-id"}}`), http.StatusCreated),
-		svcmocks.NewMockResponse("application/vnd.api+json", []byte("{}"), http.StatusSeeOther),
-		svcmocks.NewMockResponse("application/vnd.api+json", testResultMockResponse, http.StatusOK),
-	}
-
-	mockSBOMService := svcmocks.NewMockSBOMServiceMultiResponse(responses, func(r *http.Request) {})
-	defer mockSBOMService.Close()
-	mockICTX := createMockICTXWithURL(t, mockSBOMService.URL)
-	mockICTX.GetConfiguration().Set("experimental", true)
-	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
-
-	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
-
-	require.NoError(t, err)
-
-	require.NotNil(t, result)
-	assert.Equal(t, len(result), 2)
-	data := result[0]
-	assert.Equal(t, data.GetContentType(), "text/plain")
-
-	_, ok := data.GetPayload().([]byte)
-	assert.True(t, ok)
-
-	summaryData := result[1]
-	assert.Equal(t, summaryData.GetContentType(), content_type.TEST_SUMMARY)
-
-	payloadBytes, ok := summaryData.GetPayload().([]byte)
-	assert.True(t, ok)
-	snapshotter.SnapshotT(t, payloadBytes)
-}
-
-func TestSBOMTestWorkflow_SuccessJSON(t *testing.T) {
-	responses := []svcmocks.MockResponse{
-		svcmocks.NewMockResponse("application/vnd.api+json", []byte(`{"data": {"id": "test-id"}}`), http.StatusCreated),
-		svcmocks.NewMockResponse("application/vnd.api+json", []byte("{}"), http.StatusSeeOther),
-		svcmocks.NewMockResponse("application/vnd.api+json", testResultMockResponse, http.StatusOK),
-	}
-
-	mockSBOMService := svcmocks.NewMockSBOMServiceMultiResponse(responses, func(r *http.Request) {})
-	defer mockSBOMService.Close()
-	mockICTX := createMockICTXWithURL(t, mockSBOMService.URL)
-	mockICTX.GetConfiguration().Set("experimental", true)
-	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
-	mockICTX.GetConfiguration().Set("json", true)
-
-	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
-
-	require.NoError(t, err)
-
-	require.NotNil(t, result)
-	assert.Equal(t, len(result), 2)
-	data := result[0]
-	assert.Equal(t, data.GetContentType(), "application/json")
-
-	payloadBytes, ok := data.GetPayload().([]byte)
-	assert.True(t, ok)
-	assert.Contains(t, string(payloadBytes), `"Found 141 issues"`)
-	summaryData := result[1]
-	assert.Equal(t, summaryData.GetContentType(), content_type.TEST_SUMMARY)
-
-	payloadBytes, ok = summaryData.GetPayload().([]byte)
-	assert.True(t, ok)
-	snapshotter.SnapshotT(t, payloadBytes)
-}
-
-func TestSBOMTestWorkflow_ReachabilitySuccess(t *testing.T) {
-	responses := []svcmocks.MockResponse{
-		svcmocks.NewMockResponse("application/vnd.api+json", []byte(`{"data": {"id": "test-id"}}`), http.StatusCreated),
-		svcmocks.NewMockResponse("application/vnd.api+json", []byte("{}"), http.StatusSeeOther),
-		svcmocks.NewMockResponse("application/vnd.api+json", testResultMockResponse, http.StatusOK),
-	}
-
-	mockSBOMService := svcmocks.NewMockSBOMServiceMultiResponse(responses, func(r *http.Request) {})
-	defer mockSBOMService.Close()
-
+func TestSBOMTestWorkflow_DelegatesToOSF(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	mockEngine := mocks.NewMockEngine(ctrl)
 
-	mockICTX := mockInvocationContext(t, ctrl, mockSBOMService.URL, mockEngine)
-	mockICTX.GetConfiguration().Set("experimental", true)
+	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+
+	osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
+	osFlowsTestConfig.Set(flags.FlagSBOM, "testdata/bom.json")
+
+	mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
+
+	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+
+	require.NoError(t, err)
+	require.NotNil(t, result)
+}
+
+func TestSBOMTestWorkflow_PassesConfigToOSF(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set(flags.FlagReachability, true)
 
@@ -150,48 +83,11 @@ func TestSBOMTestWorkflow_ReachabilitySuccess(t *testing.T) {
 	require.NotNil(t, result)
 }
 
-func TestSBOMTestWorkflow_ForceViaOSF(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	mockEngine := mocks.NewMockEngine(ctrl)
-
-	mockICTX := mockInvocationContext(t, ctrl, "", mockEngine)
-	mockICTX.GetConfiguration().Set("experimental", true)
-	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
-	mockICTX.GetConfiguration().Set(flags.FlagReachability, false)
-	mockICTX.GetConfiguration().Set(sbomtest.FlagForceSbomTestViaFlowsExtension, true)
-
-	osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
-	osFlowsTestConfig.Set(flags.FlagSBOM, "testdata/bom.json")
-
-	mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
-
-	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
-
-	require.NoError(t, err)
-	require.NotNil(t, result)
-}
-
 // Helpers
-
-func createMockICTX(t *testing.T) workflow.InvocationContext {
-	t.Helper()
-
-	return createMockICTXWithURL(t, "")
-}
-
-func createMockICTXWithURL(t *testing.T, sbomServiceURL string) workflow.InvocationContext {
-	t.Helper()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	return mockInvocationContext(t, ctrl, sbomServiceURL, nil)
-}
 
 func mockInvocationContext(
 	t *testing.T,
 	ctrl *gomock.Controller,
-	sbomServiceURL string,
 	mockEngine *mocks.MockEngine,
 ) workflow.InvocationContext {
 	t.Helper()
@@ -201,7 +97,7 @@ func mockInvocationContext(
 	mockConfig := configuration.New()
 	mockConfig.Set(configuration.AUTHENTICATION_TOKEN, "<SOME API TOKEN>")
 	mockConfig.Set(configuration.ORGANIZATION, "6277734c-fc84-4c74-9662-33d46ec66c53")
-	mockConfig.Set(configuration.API_URL, sbomServiceURL)
+	mockConfig.Set(configuration.API_URL, "")
 	mockConfig.Set("format", "cyclonedx1.4+json")
 	mockConfig.Set("name", "goof")
 	mockConfig.Set("version", "0.0.0")
