@@ -1,26 +1,19 @@
 package sbomtest
 
 import (
-	"bytes"
-	"context"
-	stderrors "errors"
 	"fmt"
 
-	"github.com/rs/zerolog"
-	"github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/sbom"
-	"github.com/snyk/cli-extension-sbom/internal/snykclient"
 )
 
 var (
-	WorkflowID                         = workflow.NewWorkflowIdentifier("sbom.test")
-	OsFlowsTestWorkflowID              = workflow.NewWorkflowIdentifier("test")
-	FlagForceSbomTestViaFlowsExtension = "SNYK_FORCE_SBOM_TEST_VIA_OSF"
+	WorkflowID            = workflow.NewWorkflowIdentifier("sbom.test")
+	OsFlowsTestWorkflowID = workflow.NewWorkflowIdentifier("test")
 )
 
 func RegisterWorkflows(e workflow.Engine) error {
@@ -41,19 +34,10 @@ func TestWorkflow(
 	config := ictx.GetConfiguration()
 	logger := ictx.GetEnhancedLogger()
 	engine := ictx.GetEngine()
-	experimental := config.GetBool(flags.FlagExperimental)
 	filename := config.GetString(flags.FlagFile)
 	errFactory := errors.NewErrorFactory(logger)
-	ctx := context.Background()
 
 	logger.Println("SBOM Test workflow start")
-
-	// As this is an experimental feature, we only want to continue if the experimental flag is set
-	if !experimental {
-		return nil, errFactory.NewMissingExperimentalFlagError()
-	}
-
-	logger.Println("Getting preferred organization ID")
 
 	orgID := config.GetString(configuration.ORGANIZATION)
 	if orgID == "" {
@@ -66,87 +50,12 @@ func TestWorkflow(
 
 	logger.Println("Target SBOM document:", filename)
 
-	isReachabilityEnabled := config.GetBool(flags.FlagReachability)
-	forceSBOMTest := config.GetBool(FlagForceSbomTestViaFlowsExtension)
-
-	if isReachabilityEnabled || forceSBOMTest {
-		osFlowsTestConfig := config.Clone()
-		osFlowsTestConfig.Set(flags.FlagSBOM, filename)
-
-		return engine.InvokeWithConfig(OsFlowsTestWorkflowID, osFlowsTestConfig)
-	} else {
-		return sbomTest(ctx, filename, errFactory, ictx, config, orgID, logger)
-	}
-}
-
-func sbomTest(
-	ctx context.Context,
-	filename string,
-	errFactory *errors.ErrorFactory,
-	ictx workflow.InvocationContext,
-	config configuration.Configuration,
-	orgID string,
-	logger *zerolog.Logger,
-) ([]workflow.Data, error) {
-	bts, err := sbom.ReadSBOMFile(filename, errFactory)
-	if err != nil {
+	if _, err := sbom.ReadSBOMFile(filename, errFactory); err != nil {
 		return nil, err
 	}
 
-	client := snykclient.NewSnykClient(
-		ictx.GetNetworkAccess().GetHttpClient(),
-		config.GetString(configuration.API_URL),
-		orgID,
-	)
-	sbomTest, err := client.CreateSBOMTest(ctx, bts, errFactory)
-	if err != nil {
-		return nil, err
-	}
+	osFlowsTestConfig := config.Clone()
+	osFlowsTestConfig.Set(flags.FlagSBOM, filename)
 
-	logger.Printf("Created SBOM test (ID %s), waiting for results...\n", sbomTest.ID)
-
-	err = sbomTest.WaitUntilComplete(ctx, errFactory)
-	if err != nil {
-		var snykErr snyk_errors.Error
-		if stderrors.As(err, &snykErr) {
-			return nil, snykErr
-		}
-		return nil, err
-	}
-
-	logger.Print("Test complete, fetching results")
-
-	results, err := sbomTest.GetResult(ctx, errFactory)
-	if err != nil {
-		return nil, err
-	}
-
-	var ct string
-	var buf bytes.Buffer
-
-	if ictx.GetConfiguration().GetBool("json") {
-		if err := RenderJSONResult(&buf, results); err != nil { //nolint:govet // Shadowing err symbol not an issue.
-			return nil, errFactory.NewFatalSBOMTestError(err)
-		}
-		ct = MIMETypeJSON
-	} else {
-		if err := RenderPrettyResult(&buf, orgID, filename, results); err != nil { //nolint:govet // Shadowing err symbol not an issue.
-			return nil, errFactory.NewFatalSBOMTestError(err)
-		}
-		ct = MIMETypeText
-	}
-
-	summaryData, summaryContentType, err := BuildTestSummary(results.Summary)
-	if err != nil {
-		return nil, errFactory.NewFatalSBOMTestError(err)
-	}
-
-	return []workflow.Data{workflowData(buf.Bytes(), ct), workflowData(summaryData, summaryContentType)}, err
-}
-
-func workflowData(data []byte, contentType string) workflow.Data {
-	id := workflow.NewTypeIdentifier(WorkflowID, "sbom.test")
-	// TODO: refactor to workflow.NewData()
-	//nolint:staticcheck // Silencing since we are only upgrading the GAF to remediate a vuln.
-	return workflow.NewDataFromInput(nil, id, contentType, data)
+	return engine.InvokeWithConfig(OsFlowsTestWorkflowID, osFlowsTestConfig)
 }
