@@ -190,6 +190,16 @@ func (ef *ErrorFactory) NewInvalidJSONError() error {
 	)
 }
 
+func (ef *ErrorFactory) NewInvalidFileSuffixError(suffix string) error {
+	return snyk_cli_errors.NewInvalidFlagOptionError(
+		fmt.Sprintf(
+			"The file provided by the `--file` flag has an unsupported extension %q. "+
+				"Please ensure the file has a .json extension.",
+			suffix,
+		),
+	)
+}
+
 func (ef *ErrorFactory) NewFailedToTestSBOMError() *SBOMExtensionError {
 	return ef.NewFatalSBOMTestError(fmt.Errorf("failed to test SBOM"))
 }

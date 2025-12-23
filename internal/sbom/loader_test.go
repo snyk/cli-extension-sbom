@@ -129,6 +129,54 @@ func TestReadSBOMFile_FileSizeExceedsLimit(t *testing.T) {
 	require.Nil(t, sbomContent)
 }
 
+func TestReadSBOMFile_InvalidFileSuffix(t *testing.T) {
+	t.Run("wrong extension", func(t *testing.T) {
+		// Create a temporary file with an invalid extension
+		tmpFile, err := os.CreateTemp("", "sbom-*.xml")
+		require.NoError(t, err)
+		defer os.Remove(tmpFile.Name())
+
+		// Write valid JSON content but with wrong extension
+		_, err = tmpFile.WriteString(`{"foo":"bar"}`)
+		require.NoError(t, err)
+		require.NoError(t, tmpFile.Close())
+
+		sbomContent, err := sbom.ReadSBOMFile(tmpFile.Name(), errFactory)
+
+		require.Error(t, err)
+		var snykErr snyk_errors.Error
+		require.True(t, errors.As(err, &snykErr))
+		require.Equal(t, "Invalid flag option", snykErr.Title)
+		expectedDetail := "The file provided by the `--file` flag has an unsupported extension " +
+			`".xml". Please ensure the file has a .json extension.`
+		require.Equal(t, expectedDetail, snykErr.Detail)
+		require.Nil(t, sbomContent)
+	})
+
+	t.Run("no extension", func(t *testing.T) {
+		// Create a temporary file without any extension
+		tmpFile, err := os.CreateTemp("", "sbom-no-ext")
+		require.NoError(t, err)
+		defer os.Remove(tmpFile.Name())
+
+		// Write valid JSON content but with no extension
+		_, err = tmpFile.WriteString(`{"foo":"bar"}`)
+		require.NoError(t, err)
+		require.NoError(t, tmpFile.Close())
+
+		sbomContent, err := sbom.ReadSBOMFile(tmpFile.Name(), errFactory)
+
+		require.Error(t, err)
+		var snykErr snyk_errors.Error
+		require.True(t, errors.As(err, &snykErr))
+		require.Equal(t, "Invalid flag option", snykErr.Title)
+		expectedDetail := "The file provided by the `--file` flag has an unsupported extension " +
+			`"". Please ensure the file has a .json extension.`
+		require.Equal(t, expectedDetail, snykErr.Detail)
+		require.Nil(t, sbomContent)
+	})
+}
+
 func TestReadSBOMFile_InvalidJSON(t *testing.T) {
 	// Create a temporary file with invalid JSON content
 	tmpFile, err := os.CreateTemp("", "invalid-json-*.json")
