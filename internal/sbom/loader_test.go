@@ -129,6 +129,27 @@ func TestReadSBOMFile_FileSizeExceedsLimit(t *testing.T) {
 	require.Nil(t, sbomContent)
 }
 
+func TestReadSBOMFile_InvalidJSON(t *testing.T) {
+	// Create a temporary file with invalid JSON content
+	tmpFile, err := os.CreateTemp("", "invalid-json-*.json")
+	require.NoError(t, err)
+	defer os.Remove(tmpFile.Name())
+
+	// Write invalid JSON content
+	_, err = tmpFile.WriteString("this is not valid json")
+	require.NoError(t, err)
+	require.NoError(t, tmpFile.Close())
+
+	sbomContent, err := sbom.ReadSBOMFile(tmpFile.Name(), errFactory)
+
+	require.Error(t, err)
+	var snykErr snyk_errors.Error
+	require.True(t, errors.As(err, &snykErr))
+	require.Equal(t, "Invalid flag option", snykErr.Title)
+	require.Equal(t, "The file provided by the `--file` flag is not valid JSON.", snykErr.Detail)
+	require.Nil(t, sbomContent)
+}
+
 func TestReadSBOMSuccessfully(t *testing.T) {
 	sbomContent, err := sbom.ReadSBOMFile("testdata/bom.json", errFactory)
 

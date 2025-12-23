@@ -184,9 +184,8 @@ func (ef *ErrorFactory) NewFileIsDirectoryError() error {
 	)
 }
 
-func (ef *ErrorFactory) NewInvalidJSONError() *SBOMExtensionError {
-	return ef.newErr(
-		fmt.Errorf("file is not valid JSON"),
+func (ef *ErrorFactory) NewInvalidJSONError() error {
+	return snyk_cli_errors.NewInvalidFlagOptionError(
 		"The file provided by the `--file` flag is not valid JSON.",
 	)
 }
