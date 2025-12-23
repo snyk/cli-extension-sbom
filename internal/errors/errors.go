@@ -178,9 +178,8 @@ func (ef *ErrorFactory) NewFailedToOpenFileError(err error) *SBOMExtensionError 
 	)
 }
 
-func (ef *ErrorFactory) NewFileIsDirectoryError() *SBOMExtensionError {
-	return ef.newErr(
-		fmt.Errorf("file is a directory"),
+func (ef *ErrorFactory) NewFileIsDirectoryError() error {
+	return snyk_cli_errors.NewInvalidFlagOptionError(
 		"The path provided points to a directory. Please ensure the `--file` flag value is pointing to a file.",
 	)
 }

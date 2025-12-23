@@ -98,7 +98,11 @@ func TestReadSBOMFile_FileIsDirectory(t *testing.T) {
 	sbomContent, err := sbom.ReadSBOMFile(folder, errFactory)
 
 	require.Error(t, err)
-	require.Equal(t, "The path provided points to a directory. Please ensure the `--file` flag value is pointing to a file.", err.Error())
+	var snykErr snyk_errors.Error
+	require.True(t, errors.As(err, &snykErr))
+	require.Equal(t, "Invalid flag option", snykErr.Title)
+	require.Equal(t, "The path provided points to a directory. Please ensure the `--file` flag value is pointing to a file.", snykErr.Detail)
+
 	require.Nil(t, sbomContent)
 }
 
