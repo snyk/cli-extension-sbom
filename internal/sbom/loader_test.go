@@ -3,12 +3,14 @@ package sbom_test
 import (
 	"bytes"
 	_ "embed"
+	"errors"
 	"testing"
 
 	"github.com/rs/zerolog"
+	snyk_errors "github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/stretchr/testify/require"
 
-	"github.com/snyk/cli-extension-sbom/internal/errors"
+	errs "github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/sbom"
 )
 
@@ -16,7 +18,7 @@ import (
 var sbomJson string
 
 var logger = zerolog.New(&bytes.Buffer{})
-var errFactory = errors.NewErrorFactory(&logger)
+var errFactory = errs.NewErrorFactory(&logger)
 
 func TestIsSBOMJSON(t *testing.T) {
 	testCases := []struct {
@@ -83,7 +85,10 @@ func TestReadSBOMFile_FileDoesNotExist(t *testing.T) {
 	sbomContent, err := sbom.ReadSBOMFile(filename, errFactory)
 
 	require.Error(t, err)
-	require.Equal(t, "The given filepath \"testdata/this-file-does-not-exist.txt\" does not exist.", err.Error())
+	var snykErr snyk_errors.Error
+	require.True(t, errors.As(err, &snykErr))
+	require.Equal(t, "Invalid flag option", snykErr.Title)
+	require.Equal(t, `The given filepath "testdata/this-file-does-not-exist.txt" does not exist.`, snykErr.Detail)
 	require.Nil(t, sbomContent)
 }
 

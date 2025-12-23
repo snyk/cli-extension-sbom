@@ -1,11 +1,13 @@
 package sbomtest_test
 
 import (
+	"errors"
 	"io"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/rs/zerolog"
+	snyk_errors "github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/mocks"
 	"github.com/snyk/go-application-framework/pkg/networking"
@@ -40,7 +42,10 @@ func TestSBOMTestWorkflow_InvalidFilePath(t *testing.T) {
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
-	assert.ErrorContains(t, err, "The given filepath \"missing-file.txt\" does not exist.")
+	var snykErr snyk_errors.Error
+	require.True(t, errors.As(err, &snykErr))
+	assert.Equal(t, "Invalid flag option", snykErr.Title)
+	assert.Equal(t, `The given filepath "missing-file.txt" does not exist.`, snykErr.Detail)
 }
 
 func TestSBOMTestWorkflow_DelegatesToOSF(t *testing.T) {

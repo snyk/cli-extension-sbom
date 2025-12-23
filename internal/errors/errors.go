@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
+	snyk_cli_errors "github.com/snyk/error-catalog-golang-public/cli"
+	snyk_errors "github.com/snyk/error-catalog-golang-public/snyk_errors"
 )
 
 // SBOMExtensionError represents something gone wrong during the
@@ -202,8 +204,11 @@ func (ef *ErrorFactory) NewFatalSBOMTestError(err error) *SBOMExtensionError {
 	)
 }
 
-func (ef *ErrorFactory) NewInvalidFilePathError(err error, path string) *SBOMExtensionError {
-	return ef.newErr(err, fmt.Sprintf("The given filepath %q does not exist.", path))
+func (ef *ErrorFactory) NewInvalidFilePathError(err error, path string) error {
+	return snyk_cli_errors.NewInvalidFlagOptionError(
+		fmt.Sprintf("The given filepath %q does not exist.", path),
+		snyk_errors.WithCause(err),
+	)
 }
 
 func (ef *ErrorFactory) NewRenderError(err error) *SBOMExtensionError {
