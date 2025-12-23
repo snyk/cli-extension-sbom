@@ -210,6 +210,12 @@ func (ef *ErrorFactory) NewInvalidFilePathError(err error, path string) error {
 	)
 }
 
+func (ef *ErrorFactory) NewFileSizeExceedsLimitError() error {
+	return snyk_cli_errors.NewInvalidFlagOptionError(
+		"The provided file is too large. The maximum supported file size is 50 MB.",
+	)
+}
+
 func (ef *ErrorFactory) NewRenderError(err error) *SBOMExtensionError {
 	return ef.newErr(
 		err,

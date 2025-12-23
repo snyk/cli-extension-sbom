@@ -7,6 +7,11 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
 
+const (
+	// FileSizeLimit is the maximum supported file size (50 MB) for the file upload API in bytes.
+	FileSizeLimit = 50_000_000
+)
+
 func IsSBOMJSON(b []byte) bool {
 	var sbom map[string]interface{}
 	err := json.Unmarshal(b, &sbom)
@@ -26,6 +31,11 @@ func ReadSBOMFile(filename string, errFactory *errors.ErrorFactory) ([]byte, err
 	// Check if it's a directory
 	if info.IsDir() {
 		return nil, errFactory.NewFileIsDirectoryError()
+	}
+
+	// Check if file size exceeds limit
+	if info.Size() > FileSizeLimit {
+		return nil, errFactory.NewFileSizeExceedsLimitError()
 	}
 
 	// Open file and read it

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	_ "embed"
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/rs/zerolog"
@@ -103,6 +104,28 @@ func TestReadSBOMFile_FileIsDirectory(t *testing.T) {
 	require.Equal(t, "Invalid flag option", snykErr.Title)
 	require.Equal(t, "The path provided points to a directory. Please ensure the `--file` flag value is pointing to a file.", snykErr.Detail)
 
+	require.Nil(t, sbomContent)
+}
+
+func TestReadSBOMFile_FileSizeExceedsLimit(t *testing.T) {
+	// Create a temporary file that exceeds the size limit
+	tmpFile, err := os.CreateTemp("", "large-sbom-*.json")
+	require.NoError(t, err)
+	defer os.Remove(tmpFile.Name())
+
+	// Write data slightly larger than the limit
+	data := make([]byte, sbom.FileSizeLimit+1)
+	_, err = tmpFile.Write(data)
+	require.NoError(t, err)
+	require.NoError(t, tmpFile.Close())
+
+	sbomContent, err := sbom.ReadSBOMFile(tmpFile.Name(), errFactory)
+
+	require.Error(t, err)
+	var snykErr snyk_errors.Error
+	require.True(t, errors.As(err, &snykErr))
+	require.Equal(t, "Invalid flag option", snykErr.Title)
+	require.Equal(t, "The provided file is too large. The maximum supported file size is 50 MB.", snykErr.Detail)
 	require.Nil(t, sbomContent)
 }
 
