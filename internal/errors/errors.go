@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
+	snyk_cli_errors "github.com/snyk/error-catalog-golang-public/cli"
+	snyk_errors "github.com/snyk/error-catalog-golang-public/snyk_errors"
 )
 
 // SBOMExtensionError represents something gone wrong during the
@@ -176,16 +178,14 @@ func (ef *ErrorFactory) NewFailedToOpenFileError(err error) *SBOMExtensionError 
 	)
 }
 
-func (ef *ErrorFactory) NewFileIsDirectoryError() *SBOMExtensionError {
-	return ef.newErr(
-		fmt.Errorf("file is a directory"),
+func (ef *ErrorFactory) NewFileIsDirectoryError() error {
+	return snyk_cli_errors.NewInvalidFlagOptionError(
 		"The path provided points to a directory. Please ensure the `--file` flag value is pointing to a file.",
 	)
 }
 
-func (ef *ErrorFactory) NewInvalidJSONError() *SBOMExtensionError {
-	return ef.newErr(
-		fmt.Errorf("file is not valid JSON"),
+func (ef *ErrorFactory) NewInvalidJSONError() error {
+	return snyk_cli_errors.NewInvalidFlagOptionError(
 		"The file provided by the `--file` flag is not valid JSON.",
 	)
 }
@@ -202,8 +202,17 @@ func (ef *ErrorFactory) NewFatalSBOMTestError(err error) *SBOMExtensionError {
 	)
 }
 
-func (ef *ErrorFactory) NewInvalidFilePathError(err error, path string) *SBOMExtensionError {
-	return ef.newErr(err, fmt.Sprintf("The given filepath %q does not exist.", path))
+func (ef *ErrorFactory) NewInvalidFilePathError(err error, path string) error {
+	return snyk_cli_errors.NewInvalidFlagOptionError(
+		fmt.Sprintf("The given filepath %q does not exist.", path),
+		snyk_errors.WithCause(err),
+	)
+}
+
+func (ef *ErrorFactory) NewFileSizeExceedsLimitError() error {
+	return snyk_cli_errors.NewInvalidFlagOptionError(
+		"The provided file is too large. The maximum supported file size is 50 MB.",
+	)
 }
 
 func (ef *ErrorFactory) NewRenderError(err error) *SBOMExtensionError {

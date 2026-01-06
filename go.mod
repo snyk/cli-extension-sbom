@@ -11,7 +11,7 @@ require (
 	github.com/muesli/termenv v0.15.2
 	github.com/rs/zerolog v1.34.0
 	github.com/snyk/code-client-go v1.21.2
-	github.com/snyk/error-catalog-golang-public v0.0.0-20250218074309-307ad7b38a60
+	github.com/snyk/error-catalog-golang-public v0.0.0-20251222142433-dbdc288a6e98
 	github.com/snyk/go-application-framework v0.0.0-20250403123644-f23723bf9378
 	github.com/spf13/pflag v1.0.6
 	github.com/stretchr/testify v1.10.0

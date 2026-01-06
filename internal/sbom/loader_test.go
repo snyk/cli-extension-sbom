@@ -3,20 +3,25 @@ package sbom_test
 import (
 	"bytes"
 	_ "embed"
+	"errors"
+	"os"
 	"testing"
 
 	"github.com/rs/zerolog"
+	snyk_errors "github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/stretchr/testify/require"
 
-	"github.com/snyk/cli-extension-sbom/internal/errors"
+	errs "github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/sbom"
 )
 
 //go:embed testdata/bom.json
 var sbomJson string
 
-var logger = zerolog.New(&bytes.Buffer{})
-var errFactory = errors.NewErrorFactory(&logger)
+var (
+	logger     = zerolog.New(&bytes.Buffer{})
+	errFactory = errs.NewErrorFactory(&logger)
+)
 
 func TestIsSBOMJSON(t *testing.T) {
 	testCases := []struct {
@@ -83,7 +88,10 @@ func TestReadSBOMFile_FileDoesNotExist(t *testing.T) {
 	sbomContent, err := sbom.ReadSBOMFile(filename, errFactory)
 
 	require.Error(t, err)
-	require.Equal(t, "The given filepath \"testdata/this-file-does-not-exist.txt\" does not exist.", err.Error())
+	var snykErr snyk_errors.Error
+	require.True(t, errors.As(err, &snykErr))
+	require.Equal(t, "Invalid flag option", snykErr.Title)
+	require.Equal(t, `The given filepath "testdata/this-file-does-not-exist.txt" does not exist.`, snykErr.Detail)
 	require.Nil(t, sbomContent)
 }
 
@@ -93,7 +101,54 @@ func TestReadSBOMFile_FileIsDirectory(t *testing.T) {
 	sbomContent, err := sbom.ReadSBOMFile(folder, errFactory)
 
 	require.Error(t, err)
-	require.Equal(t, "The path provided points to a directory. Please ensure the `--file` flag value is pointing to a file.", err.Error())
+	var snykErr snyk_errors.Error
+	require.True(t, errors.As(err, &snykErr))
+	require.Equal(t, "Invalid flag option", snykErr.Title)
+	require.Equal(t, "The path provided points to a directory. Please ensure the `--file` flag value is pointing to a file.", snykErr.Detail)
+
+	require.Nil(t, sbomContent)
+}
+
+func TestReadSBOMFile_FileSizeExceedsLimit(t *testing.T) {
+	// Create a temporary file that exceeds the size limit
+	tmpFile, err := os.CreateTemp("", "large-sbom-*.json")
+	require.NoError(t, err)
+	defer os.Remove(tmpFile.Name())
+
+	// Write data slightly larger than the limit
+	data := make([]byte, sbom.FileSizeLimit+1)
+	_, err = tmpFile.Write(data)
+	require.NoError(t, err)
+	require.NoError(t, tmpFile.Close())
+
+	sbomContent, err := sbom.ReadSBOMFile(tmpFile.Name(), errFactory)
+
+	require.Error(t, err)
+	var snykErr snyk_errors.Error
+	require.True(t, errors.As(err, &snykErr))
+	require.Equal(t, "Invalid flag option", snykErr.Title)
+	require.Equal(t, "The provided file is too large. The maximum supported file size is 50 MB.", snykErr.Detail)
+	require.Nil(t, sbomContent)
+}
+
+func TestReadSBOMFile_InvalidJSON(t *testing.T) {
+	// Create a temporary file with invalid JSON content
+	tmpFile, err := os.CreateTemp("", "invalid-json-*.json")
+	require.NoError(t, err)
+	defer os.Remove(tmpFile.Name())
+
+	// Write invalid JSON content
+	_, err = tmpFile.WriteString("this is not valid json")
+	require.NoError(t, err)
+	require.NoError(t, tmpFile.Close())
+
+	sbomContent, err := sbom.ReadSBOMFile(tmpFile.Name(), errFactory)
+
+	require.Error(t, err)
+	var snykErr snyk_errors.Error
+	require.True(t, errors.As(err, &snykErr))
+	require.Equal(t, "Invalid flag option", snykErr.Title)
+	require.Equal(t, "The file provided by the `--file` flag is not valid JSON.", snykErr.Detail)
 	require.Nil(t, sbomContent)
 }
 
