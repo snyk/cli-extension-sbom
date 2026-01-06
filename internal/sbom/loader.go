@@ -3,8 +3,6 @@ package sbom
 import (
 	"encoding/json"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 )
@@ -33,12 +31,6 @@ func ReadSBOMFile(filename string, errFactory *errors.ErrorFactory) ([]byte, err
 	// Check if it's a directory
 	if info.IsDir() {
 		return nil, errFactory.NewFileIsDirectoryError()
-	}
-
-	// Check if file has a valid JSON extension
-	ext := strings.ToLower(filepath.Ext(filename))
-	if ext != ".json" {
-		return nil, errFactory.NewInvalidFileSuffixError(ext)
 	}
 
 	// Check if file size exceeds limit
