@@ -55,7 +55,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 			if err != nil {
 				return nil, errFactory.IndeterminateWorkingDirectory(err)
 			}
-			name = filepath.Base(wd)
+			name = ResolveSubjectNameFromPath(wd)
 		}
 		logger.Printf("Document subject: { Name: %q, Version: %q }\n", name, version)
 	}
@@ -64,6 +64,24 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 		Name:          name,
 		DepGraphBytes: depGraphsBytes,
 	}, nil
+}
+
+func nameIsInvalid(name string) bool {
+	return name == "" || name == "\\" || name == "." || name == "/"
+}
+
+func ResolveSubjectNameFromPath(path string) string {
+	name := filepath.Base(path)
+	// On Windows, filepath.Base("G:\\") returns "\\" which is invalid: fall back to volume name instead
+	if nameIsInvalid(name) {
+		name = filepath.VolumeName(path)
+
+		// If still invalid, use a default name
+		if nameIsInvalid(name) {
+			name = "project"
+		}
+	}
+	return name
 }
 
 func getPayloadBytes(data workflow.Data) ([]byte, error) {
