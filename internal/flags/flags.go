@@ -88,6 +88,7 @@ func GetSBOMCreateFlagSet() *pflag.FlagSet {
 func GetSBOMTestFlagSet() *pflag.FlagSet {
 	flagSet := pflag.NewFlagSet("snyk-cli-extension-sbom-test", pflag.ExitOnError)
 
+	flagSet.Bool(FlagExperimental, false, "Deprecated. Will be ignored.")
 	flagSet.String(FlagFile, "", "Specify an SBOM file.")
 
 	// Flags being forwarded to the os flows test.

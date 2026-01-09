@@ -135,6 +135,11 @@ func TestGetSBOMTestFlagSet(t *testing.T) {
 		expected interface{}
 	}{
 		{
+			flagName: FlagExperimental,
+			isBool:   true,
+			expected: false,
+		},
+		{
 			flagName: FlagFile,
 			isBool:   false,
 			expected: "",

@@ -88,6 +88,26 @@ func TestSBOMTestWorkflow_PassesConfigToOSF(t *testing.T) {
 	require.NotNil(t, result)
 }
 
+func TestSBOMTestWorkflow_ExperimentalFlagIgnored(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	mockICTX.GetConfiguration().Set(flags.FlagExperimental, true)
+
+	osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
+	osFlowsTestConfig.Set(flags.FlagSBOM, "testdata/bom.json")
+
+	mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
+
+	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+
+	require.NoError(t, err)
+	require.NotNil(t, result)
+}
+
 // Helpers
 
 func mockInvocationContext(
