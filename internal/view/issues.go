@@ -38,7 +38,7 @@ type issuesComponent struct {
 	str string
 }
 
-func renderSeverity(style lipgloss.Style, severity string) string {
+func renderSeverity(style *lipgloss.Style, severity string) string {
 	return style.Render(
 		fmt.Sprintf("× [%s]", severity),
 	)
@@ -78,7 +78,7 @@ func generateIssues(issues ...OpenIssue) (*issuesComponent, error) {
 		}
 
 		result.issues[i] = openIssue{
-			Severity:    renderSeverity(style, issues[i].Severity.String()),
+			Severity:    renderSeverity(&style, issues[i].Severity.String()),
 			Description: sectionStyle.Render(issues[i].Description),
 			SnykRef:     issues[i].SnykRef,
 		}
