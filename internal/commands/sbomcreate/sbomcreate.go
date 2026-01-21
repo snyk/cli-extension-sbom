@@ -4,8 +4,10 @@ import (
 	"fmt"
 
 	"github.com/snyk/go-application-framework/pkg/configuration"
+	"github.com/snyk/go-application-framework/pkg/local_workflows/config_utils"
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
+	"github.com/snyk/cli-extension-sbom/internal/constants"
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	"github.com/snyk/cli-extension-sbom/internal/service"
@@ -21,6 +23,8 @@ func RegisterWorkflows(e workflow.Engine) error {
 	if _, err := e.Register(WorkflowID, c, SBOMWorkflow); err != nil {
 		return fmt.Errorf("error while registering SBOM workflow: %w", err)
 	}
+
+	config_utils.AddFeatureFlagToConfig(e, constants.FeatureFlagUvCLI, "enableUvCLI")
 
 	return nil
 }
