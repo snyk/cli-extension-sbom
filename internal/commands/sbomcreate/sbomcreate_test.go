@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -20,6 +22,7 @@ import (
 
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomcreate"
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
+	"github.com/snyk/cli-extension-sbom/internal/constants"
 	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
 	"github.com/snyk/cli-extension-sbom/pkg/sbom"
 )
@@ -272,4 +275,83 @@ func assertWorkflowExists(t *testing.T, e workflow.Engine, id *url.URL) {
 	wflw, ok := e.GetWorkflow(id)
 	assert.True(t, ok)
 	assert.NotNil(t, wflw)
+}
+
+func TestGetDepGraph_uvSupport(t *testing.T) {
+	tests := []struct {
+		name                string
+		createUvLockFile    bool
+		enableUvFeatureFlag bool
+
+		expectSBOMResolution bool
+	}{
+		{
+			name:                "uv enabled with uv.lock should use SBOM resolution",
+			createUvLockFile:    true,
+			enableUvFeatureFlag: true,
+
+			expectSBOMResolution: true,
+		},
+		{
+			name:                "uv enabled without uv.lock should not use SBOM resolution",
+			createUvLockFile:    false,
+			enableUvFeatureFlag: true,
+
+			expectSBOMResolution: false,
+		},
+		{
+			name:                "uv disabled with uv.lock should not use SBOM resolution",
+			createUvLockFile:    true,
+			enableUvFeatureFlag: false,
+
+			expectSBOMResolution: false,
+		},
+		{
+			name:                "uv disabled without uv.lock should not use SBOM resolution",
+			createUvLockFile:    false,
+			enableUvFeatureFlag: false,
+
+			expectSBOMResolution: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			tempDir := t.TempDir()
+			// Create uv.lock if required
+			if tt.createUvLockFile {
+				uvLockPath := filepath.Join(tempDir, "uv.lock")
+				err := os.WriteFile(uvLockPath, []byte("# uv.lock test file\n"), 0o600)
+				require.NoError(t, err)
+			}
+
+			mockEngine := mocks.NewMockEngine(ctrl)
+			mockEngine.EXPECT().
+				InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
+				DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
+					actualSBOMResolution := cfg.GetBool("use-sbom-resolution")
+					// Verify that flag was passed into depgraph workflow as expected
+					assert.Equal(t, tt.expectSBOMResolution, actualSBOMResolution, "use-sbom-resolution flag should match expected value")
+					return []workflow.Data{newDepGraphData(t, depGraphData)}, nil
+				}).
+				Times(1)
+
+			mockLogger := zerolog.New(io.Discard)
+			mockConfig := configuration.New()
+			mockConfig.Set(configuration.INPUT_DIRECTORY, []string{tempDir})
+			mockConfig.Set(constants.FeatureFlagUvCLI, tt.enableUvFeatureFlag)
+
+			mockICTX := mocks.NewMockInvocationContext(ctrl)
+			mockICTX.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
+			mockICTX.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
+			mockICTX.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
+
+			result, err := sbomcreate.GetDepGraph(mockICTX)
+			require.NoError(t, err)
+			assert.NotNil(t, result)
+		})
+	}
 }
