@@ -29,11 +29,12 @@ func HasUvLockFile(dir, targetFile string, allProjects bool, logger *zerolog.Log
 	return HasUvLockFileSingle(dir, targetFile, logger)
 }
 
-// HasUvLockFileSingle checks if the specified directory contains a uv.lock file or the target file if provided.
-// If targetFile is an absolute path, it will be used directly; otherwise, it will be joined with dir.
+// HasUvLockFileSingle checks if the specified directory contains a uv.lock file.
+// If targetFile is provided and is a uv.lock file (by name), it will be checked;
+// otherwise, the function looks for uv.lock in the directory.
 func HasUvLockFileSingle(dir, targetFile string, logger *zerolog.Logger) bool {
 	var uvLockPath string
-	if targetFile != "" {
+	if targetFile != "" && filepath.Base(targetFile) == constants.UvLockFileName {
 		if filepath.IsAbs(targetFile) {
 			uvLockPath = targetFile
 		} else {

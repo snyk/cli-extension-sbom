@@ -99,6 +99,18 @@ func TestHasUvLockFileSingle(t *testing.T) {
 		assert.False(t, result)
 	})
 
+	t.Run("returns false when target file is not uv.lock even if it exists", func(t *testing.T) {
+		t.Parallel()
+
+		tmpDir := t.TempDir()
+		otherFile := filepath.Join(tmpDir, "pom.xml")
+		err := os.WriteFile(otherFile, []byte("<project></project>"), 0o600)
+		require.NoError(t, err)
+
+		result := util.HasUvLockFileSingle(tmpDir, "pom.xml", &nopLogger)
+		assert.False(t, result)
+	})
+
 	t.Run("works with nil logger", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
