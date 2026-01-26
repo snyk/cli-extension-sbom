@@ -33,7 +33,10 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 
 	depGraphConfig := config.Clone()
 	if config.GetBool(flags.FlagAllProjects) {
-		depGraphConfig.Set("fail-fast", true)
+		// Use fail-fast flag from config, default to true for backward compatibility
+		// pflag sets the default value to true in the flag registration, so GetBool will return true if not explicitly set to false
+		failFast := config.GetBool(flags.FlagFailFast)
+		depGraphConfig.Set("fail-fast", failFast)
 	}
 	useSCAPlugins, err := shouldUseSCAPlugins(config, logger)
 	if err != nil {
