@@ -37,6 +37,7 @@ func SBOMWorkflow(
 	logger := ictx.GetEnhancedLogger()
 	format := config.GetString(flags.FlagFormat)
 	version := config.GetString(flags.FlagVersion)
+	goModuleLevel := config.GetBool(flags.FlagGoModuleLevel)
 	errFactory := errors.NewErrorFactory(logger)
 
 	logger.Println("SBOM workflow start")
@@ -67,6 +68,7 @@ func SBOMWorkflow(
 		service.NewSubject(depGraphResult.Name, version),
 		&service.Tool{Vendor: "Snyk", Name: ri.GetName(), Version: ri.GetVersion()},
 		format,
+		goModuleLevel,
 		logger,
 		errFactory,
 	)

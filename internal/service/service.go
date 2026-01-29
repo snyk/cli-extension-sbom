@@ -57,6 +57,7 @@ func DepGraphsToSBOM(
 	subject *Subject,
 	t *Tool,
 	format string,
+	goModuleLevel bool,
 	logger *zerolog.Logger,
 	errFactory *errors.ErrorFactory,
 ) (result *SBOMResult, err error) {
@@ -68,7 +69,7 @@ func DepGraphsToSBOM(
 	req, err := http.NewRequestWithContext(
 		context.Background(),
 		http.MethodPost,
-		buildURL(apiURL, orgID, format),
+		buildURL(apiURL, orgID, format, goModuleLevel),
 		bytes.NewBuffer(payload),
 	)
 	if err != nil {
@@ -98,10 +99,17 @@ func DepGraphsToSBOM(
 	return &SBOMResult{Doc: doc, MIMEType: resp.Header.Get("Content-Type")}, nil
 }
 
-func buildURL(apiURL, orgID, format string) string {
+func buildURL(apiURL, orgID, format string, goModuleLevel bool) string {
+	values := url.Values{}
+	values.Set("version", apiVersion)
+	values.Set("format", format)
+	if goModuleLevel {
+		values.Set("go_module_level", "true")
+	}
+
 	return fmt.Sprintf(
-		"%s/hidden/orgs/%s/sbom?version=%s&format=%s",
-		apiURL, orgID, apiVersion, url.QueryEscape(format),
+		"%s/hidden/orgs/%s/sbom?%s",
+		apiURL, orgID, values.Encode(),
 	)
 }
 
