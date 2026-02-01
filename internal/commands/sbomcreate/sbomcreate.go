@@ -25,6 +25,10 @@ func RegisterWorkflows(e workflow.Engine) error {
 	}
 
 	config_utils.AddFeatureFlagToConfig(e, constants.FeatureFlagUvCLI, "enableUvCLI")
+	config_utils.AddFeatureFlagsToConfig(e, map[string]string{
+		constants.FeatureFlagShowMavenBuildScope: constants.ShowMavenBuildScope,
+		constants.FeatureFlagShowNpmBuildScope:   constants.ShowNpmBuildScope,
+	})
 
 	return nil
 }
@@ -76,6 +80,9 @@ func SBOMWorkflow(
 
 	sbomDoc := []workflow.Data{newWorkflowData(nil, result.MIMEType, result.Doc)}
 
+	ai := ictx.GetAnalytics()
+	ai.AddExtensionBoolValue(constants.ShowMavenBuildScope, config.GetBool(constants.FeatureFlagShowMavenBuildScope))
+	ai.AddExtensionBoolValue(constants.ShowNpmBuildScope, config.GetBool(constants.FeatureFlagShowNpmBuildScope))
 	logger.Print("Successfully generated SBOM document.\n")
 
 	return sbomDoc, nil
