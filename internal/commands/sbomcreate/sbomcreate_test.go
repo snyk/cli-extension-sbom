@@ -12,7 +12,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/rs/zerolog"
-	"github.com/snyk/go-application-framework/pkg/analytics"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/mocks"
 	"github.com/snyk/go-application-framework/pkg/networking"
@@ -262,7 +261,6 @@ func mockInvocationContext(
 	ictx.EXPECT().GetNetworkAccess().Return(networking.NewNetworkAccess(mockConfig)).AnyTimes()
 	ictx.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
 	ictx.EXPECT().GetRuntimeInfo().Return(mockRuntimeInfo).AnyTimes()
-	ictx.EXPECT().GetAnalytics().Return(analytics.New()).AnyTimes()
 
 	return ictx
 }
