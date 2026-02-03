@@ -24,6 +24,7 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomcreate"
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
 	"github.com/snyk/cli-extension-sbom/internal/constants"
+	"github.com/snyk/cli-extension-sbom/internal/flags"
 	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
 	"github.com/snyk/cli-extension-sbom/pkg/sbom"
 )
@@ -65,6 +66,23 @@ func TestSBOMWorkflow_Success(t *testing.T) {
 	sbomBytes, ok := results[0].GetPayload().([]byte)
 	assert.True(t, ok)
 	assert.Equal(t, string(expectedSBOM), string(sbomBytes))
+}
+
+func TestSBOMWorkflow_GoModuleLevel(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", expectedSBOM, http.StatusOK)
+	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse, func(r *http.Request) {
+		assert.Equal(t, "true", r.URL.Query().Get("go_module_level"))
+	})
+	defer mockSBOMService.Close()
+	mockICTX := mockInvocationContext(t, ctrl, mockSBOMService.URL, nil)
+	mockICTX.GetConfiguration().Set(flags.FlagGoModuleLevel, true)
+
+	_, err := sbomcreate.SBOMWorkflow(mockICTX, []workflow.Data{})
+
+	assert.NoError(t, err)
 }
 
 func TestSBOMWorkflow_EmptyFormat(t *testing.T) {

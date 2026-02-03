@@ -3,11 +3,9 @@ package service_test
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"testing"
 
 	"github.com/rs/zerolog"
@@ -50,11 +48,11 @@ func TestDepGraphsToSBOM(t *testing.T) {
 			mockSBOMService := mocks.NewMockSBOMService(response, func(r *http.Request) {
 				assert.Equal(t, http.MethodPost, r.Method)
 				assert.Equal(t, MimeTypeJSON, r.Header.Get("Content-Type"))
-				assert.Equal(
-					t,
-					fmt.Sprintf("/hidden/orgs/c32727e4-2d6c-4780-aa1a-a89bcd16fe6f/sbom?version=2022-03-31~experimental&format=%s", url.QueryEscape(tt.format)),
-					r.RequestURI,
-				)
+				assert.Equal(t, "/hidden/orgs/c32727e4-2d6c-4780-aa1a-a89bcd16fe6f/sbom", r.URL.Path)
+				query := r.URL.Query()
+				assert.Equal(t, tt.format, query.Get("format"))
+				assert.Equal(t, "2022-03-31~experimental", query.Get("version"))
+				assert.Empty(t, query.Get("go_module_level"))
 			})
 			logger := zerolog.New(&bytes.Buffer{})
 			errFactory := errors.NewErrorFactory(&logger)
@@ -67,6 +65,7 @@ func TestDepGraphsToSBOM(t *testing.T) {
 				nil,
 				nil,
 				tt.format,
+				false,
 				&logger,
 				errFactory,
 			)
@@ -75,6 +74,39 @@ func TestDepGraphsToSBOM(t *testing.T) {
 			assert.Equal(t, tt.expectedContentType, res.MIMEType)
 		})
 	}
+}
+
+func TestDepGraphsToSBOM_GoModuleLevel(t *testing.T) {
+	format := "cyclonedx1.4+json"
+	expectedContentType := "application/vnd.cyclonedx+json"
+	mockBody := []byte("{}")
+	response := mocks.NewMockResponse(expectedContentType, mockBody, http.StatusOK)
+	mockSBOMService := mocks.NewMockSBOMService(response, func(r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method)
+		assert.Equal(t, "/hidden/orgs/c32727e4-2d6c-4780-aa1a-a89bcd16fe6f/sbom", r.URL.Path)
+		query := r.URL.Query()
+		assert.Equal(t, "true", query.Get("go_module_level"))
+		assert.Equal(t, format, query.Get("format"))
+		assert.Equal(t, "2022-03-31~experimental", query.Get("version"))
+	})
+	logger := zerolog.New(&bytes.Buffer{})
+	errFactory := errors.NewErrorFactory(&logger)
+
+	res, err := DepGraphsToSBOM(
+		http.DefaultClient,
+		mockSBOMService.URL,
+		orgID,
+		[]json.RawMessage{[]byte("{}")},
+		nil,
+		nil,
+		format,
+		true,
+		&logger,
+		errFactory,
+	)
+	assert.NoError(t, err)
+	assert.Equal(t, mockBody, res.Doc)
+	assert.Equal(t, expectedContentType, res.MIMEType)
 }
 
 func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
@@ -104,6 +136,7 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 		subject,
 		tool,
 		format,
+		false,
 		&logger,
 		errFactory,
 	)
@@ -137,6 +170,7 @@ func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
 		subject,
 		tool,
 		format,
+		false,
 		&logger,
 		errFactory,
 	)
@@ -162,6 +196,7 @@ func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
 		nil,
 		nil,
 		"cyclonedx1.4+json",
+		false,
 		&logger,
 		errFactory,
 	)
@@ -214,6 +249,7 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 				nil,
 				nil,
 				"cyclonedx1.4+json",
+				false,
 				&logger,
 				errFactory,
 			)

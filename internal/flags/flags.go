@@ -44,6 +44,7 @@ const (
 	FlagSourceDir          = "source-dir"
 	FlagRiskScoreThreshold = "risk-score-threshold"
 	FlagSeverityThreshold  = "severity-threshold"
+	FlagGoModuleLevel      = "go-module-level"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
@@ -81,6 +82,7 @@ func GetSBOMCreateFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagPythonPackageManager, "", `Add --package-manager=pip to your command if the file name is not "requirements.txt".`)
 	flagSet.Int(FlagUnmanagedMaxDepth, 0, "Specify the maximum level of archive extraction for unmanaged scanning.")
 	flagSet.Bool(FlagIncludeProvenance, false, "Include checksums in purl to support package provenance.")
+	flagSet.Bool(FlagGoModuleLevel, false, "Emit Go dependencies at the module level instead of per package.")
 
 	return flagSet
 }
