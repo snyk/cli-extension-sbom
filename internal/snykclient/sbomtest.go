@@ -89,7 +89,7 @@ func (t *SBOMTest) GetStatus(ctx context.Context, errFactory *errors.ErrorFactor
 		return SBOMTestStatusIndeterminate, err
 	}
 
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck // Body already read, so can safely ignore
 
 	if resp.StatusCode == http.StatusSeeOther {
 		return SBOMTestStatusFinished, nil

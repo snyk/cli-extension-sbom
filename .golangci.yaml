@@ -54,6 +54,7 @@ linters:
     - unconvert
     - unparam
     - usestdlibvars
+    - usetesting
     - wastedassign
     - whitespace
   settings:
@@ -97,10 +98,19 @@ linters:
     promlinter:
       strict: true
     staticcheck:
-      checks: ["all"]
+      checks: ["all", "-ST1003", "-ST1000"]
   exclusions:
     paths:
       - internal/mocks
+    rules:
+      - path: _test\.go
+        linters:
+          - bodyclose
+          - goconst
+          - ireturn
+      - path: internal/view/(.+)_test\.go
+        linters:
+          - testpackage
 
 formatters:
   enable:
@@ -108,14 +118,3 @@ formatters:
   settings:
     goimports:
       local-prefixes: github.com/snyk/cli-extension-sbom
-
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - bodyclose
-        - goconst
-        - ireturn
-    - path: internal/view/(.+)_test\.go
-      linters:
-        - testpackage

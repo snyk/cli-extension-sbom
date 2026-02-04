@@ -116,7 +116,7 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 	response := mocks.NewMockResponse(expectedContentType, mockBody, http.StatusOK)
 	mockSBOMService := mocks.NewMockSBOMService(response, func(r *http.Request) {
 		body, err := io.ReadAll(r.Body)
-		defer r.Body.Close()
+		defer r.Body.Close() //nolint:errcheck // Test cleanup, error can be safely ignored
 		require.NoError(t, err)
 		assert.JSONEq(t, `{"depGraphs":[{},{}],"subject":{"name":"goof","version":"0.0.0"},`+
 			`"tools":[{"name":"snyk-cli","vendor":"Snyk","version":"1.2.3"}]}`,
@@ -150,7 +150,7 @@ func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
 	response := mocks.NewMockResponse(expectedContentType, mockBody, http.StatusOK)
 	mockSBOMService := mocks.NewMockSBOMService(response, func(r *http.Request) {
 		body, err := io.ReadAll(r.Body)
-		defer r.Body.Close()
+		defer r.Body.Close() //nolint:errcheck // Test cleanup, error can be safely ignored
 		require.NoError(t, err)
 		assert.JSONEq(t, `{"depGraphs":[{}],"subject":{"name":"goof","version":"0.0.0"},`+
 			`"tools":[{"name":"snyk-cli","vendor":"Snyk","version":"1.2.3"}]}`,

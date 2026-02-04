@@ -153,7 +153,7 @@ func TestSBOMWorkflow_MultipleDepGraphs(t *testing.T) {
 	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", []byte("{}"), http.StatusOK)
 	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse, func(r *http.Request) {
 		body, err := io.ReadAll(r.Body)
-		defer r.Body.Close()
+		defer r.Body.Close() //nolint:errcheck // Test cleanup, error can be safely ignored
 		require.NoError(t, err)
 		assert.JSONEq(t, `{"depGraphs":[{"pkgManager":{"name":"npm"}},{"pkgManager":{"name":"nuget"}}],`+
 			`"subject":{"name":"goof","version":"0.0.0"},`+
@@ -185,7 +185,7 @@ func TestSBOMWorkflow_MergeSubject_DefaultNameToCurrentFolder(t *testing.T) {
 	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", []byte("{}"), http.StatusOK)
 	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse, func(r *http.Request) {
 		body, err := io.ReadAll(r.Body)
-		defer r.Body.Close()
+		defer r.Body.Close() //nolint:errcheck // Test cleanup, error can be safely ignored
 		require.NoError(t, err)
 		assert.JSONEq(t, `{"depGraphs":[{},{}],"subject":{"name":"`+expectedFolderName+`","version":""},`+
 			`"tools":[{"name":"test-app","vendor":"Snyk","version":"1.2.3"}]}`,
@@ -209,7 +209,7 @@ func TestSBOMWorkflow_MergeSubject(t *testing.T) {
 	mockResponse := svcmocks.NewMockResponse("application/vnd.cyclonedx+json", []byte("{}"), http.StatusOK)
 	mockSBOMService := svcmocks.NewMockSBOMService(mockResponse, func(r *http.Request) {
 		body, err := io.ReadAll(r.Body)
-		defer r.Body.Close()
+		defer r.Body.Close() //nolint:errcheck // Test cleanup, error can be safely ignored
 		require.NoError(t, err)
 		assert.JSONEq(t, `{"depGraphs":[{},{}],"subject":{"name":"myDepGraph","version":""},`+
 			`"tools":[{"name":"test-app","vendor":"Snyk","version":"1.2.3"}]}`,

@@ -10,7 +10,7 @@ import (
 
 func parseResponse(rsp *http.Response, expectedStatusCode int, expectedDocument interface{}) error {
 	body, err := io.ReadAll(rsp.Body)
-	defer rsp.Body.Close()
+	defer rsp.Body.Close() //nolint:errcheck // Body already read, so can safely ignore
 	if err != nil {
 		return err
 	}
