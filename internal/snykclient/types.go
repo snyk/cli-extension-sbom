@@ -260,12 +260,9 @@ func (doc *SBOMTestResultResourceDocument) extractIncludedResources(r *SBOMTestR
 			var cvssV3 string
 
 			for i := range res.Attributes.Severities {
-				switch res.Attributes.Severities[i].Source {
-				case "Snyk":
+				if res.Attributes.Severities[i].Source == "Snyk" {
 					cvssScore = res.Attributes.Severities[i].Score
 					cvssV3 = res.Attributes.Severities[i].Vector
-				default:
-					break
 				}
 			}
 
