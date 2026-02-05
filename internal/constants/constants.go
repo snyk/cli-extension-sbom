@@ -12,8 +12,8 @@ const FeatureFlagShowMavenBuildScope = "internal_snyk_show_maven_scope_enabled"
 // ShowMavenBuildScope is the feature flag name for the maven build scope feature.
 const ShowMavenBuildScope = "show-maven-build-scope"
 
-// FeatureFlagShowNpmBuildScope is to gate the npm build scope feature.
-const FeatureFlagShowNpmBuildScope = "internal_snyk_show_npm_scope_enabled"
+// FeatureFlagShowNpmScope is to gate the npm build scope feature.
+const FeatureFlagShowNpmScope = "internal_snyk_show_npm_scope_enabled"
 
-// ShowNpmBuildScope is the feature flag name for the npm build scope feature.
-const ShowNpmBuildScope = "show-npm-scope"
+// ShowNpmScope is the feature flag name for the npm build scope feature.
+const ShowNpmScope = "show-npm-scope"
