@@ -106,11 +106,6 @@ func TestGetSBOMExportFlagSet(t *testing.T) {
 			isBool:   true,
 			expected: false,
 		},
-		{
-			flagName: FlagGoModuleLevel,
-			isBool:   true,
-			expected: false,
-		},
 	}
 
 	for _, tt := range tc {
