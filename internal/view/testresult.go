@@ -15,7 +15,7 @@ type testResult struct {
 	str string
 }
 
-// GenerateTestResult constructs a summary and generates its string representation
+// GenerateSummary constructs a summary and generates it's string representation
 // intended for human readable output.
 //
 // Function returns an error if generation of string representation fails.

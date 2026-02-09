@@ -88,7 +88,7 @@ func DepGraphsToSBOM(
 		return nil, errorFromResponse(resp, errFactory, orgID)
 	}
 
-	defer resp.Body.Close() //nolint:errcheck // Body already read, so can safely ignore
+	defer resp.Body.Close()
 	doc, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, errFactory.NewFatalSBOMGenerationError(fmt.Errorf("could not read response body: %w", err))

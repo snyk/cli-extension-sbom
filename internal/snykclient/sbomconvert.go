@@ -34,9 +34,7 @@ func (t *SnykClient) SBOMConvert(
 	if err != nil {
 		return nil, nil, errFactory.NewSCAError(err)
 	}
-	if err = writer.Close(); err != nil {
-		return nil, nil, errFactory.NewSCAError(err)
-	}
+	writer.Close()
 
 	req, err := http.NewRequestWithContext(
 		ctx,
@@ -55,7 +53,7 @@ func (t *SnykClient) SBOMConvert(
 	if err != nil {
 		return nil, nil, errFactory.NewSCAError(err)
 	}
-	defer resp.Body.Close() //nolint:errcheck // Body already read, so can safely ignore
+	defer resp.Body.Close()
 
 	if resp.StatusCode > 399 && resp.StatusCode < 500 {
 		return nil, nil, errFactory.NewSCAError(errorWithRequestID("request to analyze SBOM document was rejected", resp))

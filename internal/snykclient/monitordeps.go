@@ -49,7 +49,7 @@ func (t *SnykClient) MonitorDependencies(
 	if err != nil {
 		return nil, fmt.Errorf("failed to send request: %w", err)
 	}
-	defer resp.Body.Close() //nolint:errcheck // Body already read, so can safely ignore
+	defer resp.Body.Close()
 
 	// Check for an unsuccessful response from the v1 API
 	if err = getErrorFromV1Response(resp); err != nil { //nolint:gocritic // ok to reuse err variable.

@@ -39,7 +39,7 @@ func ReadSBOMFile(filename string, errFactory *errors.ErrorFactory) ([]byte, err
 	}
 
 	// Open file and read it
-	b, err := os.ReadFile(filename) //nolint:gosec // G304 - filename is user-provided input, intentional
+	b, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, errFactory.NewFailedToReadFileError(err)
 	}
