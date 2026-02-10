@@ -111,8 +111,9 @@ func TestReadSBOMFile_FileIsDirectory(t *testing.T) {
 
 func TestReadSBOMFile_FileSizeExceedsLimit(t *testing.T) {
 	// Create a temporary file that exceeds the size limit
-	tmpFile, err := os.CreateTemp(t.TempDir(), "large-sbom-*.json")
+	tmpFile, err := os.CreateTemp("", "large-sbom-*.json")
 	require.NoError(t, err)
+	defer os.Remove(tmpFile.Name())
 
 	// Write data slightly larger than the limit
 	data := make([]byte, sbom.FileSizeLimit+1)
@@ -132,8 +133,9 @@ func TestReadSBOMFile_FileSizeExceedsLimit(t *testing.T) {
 
 func TestReadSBOMFile_InvalidJSON(t *testing.T) {
 	// Create a temporary file with invalid JSON content
-	tmpFile, err := os.CreateTemp(t.TempDir(), "invalid-json-*.json")
+	tmpFile, err := os.CreateTemp("", "invalid-json-*.json")
 	require.NoError(t, err)
+	defer os.Remove(tmpFile.Name())
 
 	// Write invalid JSON content
 	_, err = tmpFile.WriteString("this is not valid json")

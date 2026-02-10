@@ -37,7 +37,7 @@ type cmdExecutor interface {
 type cliCmdExecutor struct{}
 
 func (g *cliCmdExecutor) Exec(name string, args ...string) (string, error) {
-	output, err := exec.Command(name, args...).Output() //nolint:noctx // No need for context
+	output, err := exec.Command(name, args...).Output()
 	if err != nil {
 		return "", err
 	}

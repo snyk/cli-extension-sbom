@@ -77,15 +77,14 @@ func generateIssues(issues ...OpenIssue) (*issuesComponent, error) {
 			style = criticalStyle
 		}
 
-		//nolint:gosec // G602 false positive - i is bounded by loop over issues
 		result.issues[i] = openIssue{
 			Severity:    renderSeverity(&style, issues[i].Severity.String()),
 			Description: sectionStyle.Render(issues[i].Description),
 			SnykRef:     issues[i].SnykRef,
 		}
 
-		result.issues[i].IntroducedBy = make([]IntroducedBy, len(issues[i].IntroducedBy)) //nolint:gosec // G602 - i bounded by loop
-		copy(result.issues[i].IntroducedBy, issues[i].IntroducedBy)                       //nolint:gosec // G602 - i bounded by loop
+		result.issues[i].IntroducedBy = make([]IntroducedBy, len(issues[i].IntroducedBy))
+		copy(result.issues[i].IntroducedBy, issues[i].IntroducedBy)
 	}
 
 	if err := result.computeString(); err != nil {
