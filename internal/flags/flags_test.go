@@ -106,6 +106,11 @@ func TestGetSBOMExportFlagSet(t *testing.T) {
 			isBool:   true,
 			expected: false,
 		},
+		{
+			flagName: FlagFailFast,
+			isBool:   true,
+			expected: true, // Default value is true
+		},
 	}
 
 	for _, tt := range tc {
