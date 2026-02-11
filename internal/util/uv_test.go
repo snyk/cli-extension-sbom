@@ -266,7 +266,7 @@ func createUvLockFile(t *testing.T, rootDir string, subFolders ...string) {
 	t.Helper()
 
 	uvLockDir := filepath.Join(append([]string{rootDir}, subFolders...)...)
-	err := os.MkdirAll(uvLockDir, 0o755)
+	err := os.MkdirAll(uvLockDir, 0o755) //nolint:gosec // G301 - test helper, 0o755 is acceptable
 	require.NoError(t, err)
 
 	uvLockPath := filepath.Join(uvLockDir, constants.UvLockFileName)

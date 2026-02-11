@@ -14,7 +14,7 @@ func LoadPolicyFile(policyPath, sbomFilePath string) []byte {
 		policyFilePath = filepath.Join(filepath.Dir(sbomFilePath), ".snyk")
 	}
 
-	policy, err := os.ReadFile(policyFilePath)
+	policy, err := os.ReadFile(policyFilePath) //nolint:gosec // G304 - path is user-provided input, intentional
 	if err != nil {
 		return nil
 	}

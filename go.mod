@@ -1,8 +1,6 @@
 module github.com/snyk/cli-extension-sbom
 
-go 1.24.0
-
-toolchain go1.24.1
+go 1.25.6
 
 require (
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0

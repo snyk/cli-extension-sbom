@@ -93,11 +93,11 @@ func MonitorWorkflowWithDI(
 
 	logger.Println("Remote repo URL:", remoteRepoURL)
 
-	fd, err := os.Open(filename)
+	fd, err := os.Open(filename) //nolint:gosec // G304 - filename is user-provided input, intentional
 	if err != nil {
 		return nil, errFactory.NewFailedToOpenFileError(err)
 	}
-	defer fd.Close()
+	defer fd.Close() //nolint:errcheck // File already read successfully, and OS will cleanup on exit
 
 	c := snykclient.NewSnykClient(
 		ictx.GetNetworkAccess().GetHttpClient(),
