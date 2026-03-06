@@ -62,14 +62,6 @@ func (ef *ErrorFactory) NewRemoteGenerationError(err error) *SBOMExtensionError 
 	)
 }
 
-func (ef *ErrorFactory) NewEmptyOrgError() *SBOMExtensionError {
-	return ef.newErr(
-		fmt.Errorf("failed to determine org id"),
-		"Snyk failed to infer an organization ID. Please make sure to authenticate using `snyk auth`. "+
-			"Should the issue persist, explicitly set an organization ID via the `--org` flag.",
-	)
-}
-
 func (ef *ErrorFactory) NewFeatureNotPermittedError(featureFlag string) *SBOMExtensionError {
 	return ef.newErr(
 		fmt.Errorf("feature %q not permitted", featureFlag),

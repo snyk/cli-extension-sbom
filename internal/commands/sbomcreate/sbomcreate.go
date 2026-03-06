@@ -51,10 +51,9 @@ func SBOMWorkflow(
 	}
 
 	logger.Println("Getting preferred organization ID")
-
-	orgID := config.GetString(configuration.ORGANIZATION)
-	if orgID == "" {
-		return nil, errFactory.NewEmptyOrgError()
+	orgID, err := config.GetStringWithError(configuration.ORGANIZATION)
+	if err != nil {
+		return nil, err
 	}
 
 	ai := ictx.GetAnalytics()
