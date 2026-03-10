@@ -62,8 +62,9 @@ func TestDepGraphsToSBOM(t *testing.T) {
 				mockSBOMService.URL,
 				orgID,
 				[]json.RawMessage{[]byte("{}")},
-				nil,
-				nil,
+				nil, // scanFailures
+				nil, // subject
+				nil, // tool
 				tt.format,
 				false,
 				&logger,
@@ -97,8 +98,9 @@ func TestDepGraphsToSBOM_GoModuleLevel(t *testing.T) {
 		mockSBOMService.URL,
 		orgID,
 		[]json.RawMessage{[]byte("{}")},
-		nil,
-		nil,
+		nil, // scanFailures
+		nil, // subject
+		nil, // tool
 		format,
 		true,
 		&logger,
@@ -133,6 +135,7 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 		mockSBOMService.URL,
 		orgID,
 		depGraphs,
+		nil, // scanFailures
 		subject,
 		tool,
 		format,
@@ -167,6 +170,7 @@ func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
 		mockSBOMService.URL,
 		orgID,
 		depGraphs,
+		nil, // scanFailures
 		subject,
 		tool,
 		format,
@@ -193,8 +197,9 @@ func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
 		serverURL,
 		orgID,
 		[]json.RawMessage{[]byte("{}")},
-		nil,
-		nil,
+		nil, // scanFailures
+		nil, // subject
+		nil, // tool
 		"cyclonedx1.4+json",
 		false,
 		&logger,
@@ -246,8 +251,9 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 				mockSBOMService.URL,
 				orgID,
 				[]json.RawMessage{[]byte("{}")},
-				nil,
-				nil,
+				nil, // scanFailures
+				nil, // subject
+				nil, // tool
 				"cyclonedx1.4+json",
 				false,
 				&logger,

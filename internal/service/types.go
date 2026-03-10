@@ -14,7 +14,8 @@ type payloadSingleDepGraph struct {
 }
 
 type payloadMultipleDepGraphs struct {
-	Tools     []*Tool           `json:"tools,omitempty"`
-	DepGraphs []json.RawMessage `json:"depGraphs"`
-	Subject   *Subject          `json:"subject"`
+	Tools        []*Tool           `json:"tools,omitempty"`
+	DepGraphs    []json.RawMessage `json:"depGraphs"`
+	Subject      *Subject          `json:"subject"`
+	ScanFailures []string          `json:"scanFailures,omitempty"`
 }

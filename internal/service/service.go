@@ -54,6 +54,7 @@ func DepGraphsToSBOM(
 	apiURL string,
 	orgID string,
 	depGraphs []json.RawMessage,
+	scanFailures []string,
 	subject *Subject,
 	t *Tool,
 	format string,
@@ -61,7 +62,7 @@ func DepGraphsToSBOM(
 	logger *zerolog.Logger,
 	errFactory *errors.ErrorFactory,
 ) (result *SBOMResult, err error) {
-	payload, err := preparePayload(depGraphs, subject, t)
+	payload, err := preparePayload(depGraphs, scanFailures, subject, t)
 	if err != nil {
 		return nil, errFactory.NewFatalSBOMGenerationError(err)
 	}
@@ -141,7 +142,7 @@ func ValidateSBOMFormat(errFactory *errors.ErrorFactory, candidate string) error
 	return errFactory.NewInvalidFormatError(candidate, sbomFormats[:])
 }
 
-func preparePayload(depGraphs []json.RawMessage, subject *Subject, t *Tool) ([]byte, error) {
+func preparePayload(depGraphs []json.RawMessage, scanFailures []string, subject *Subject, t *Tool) ([]byte, error) {
 	// by using json.RawMessage everywhere we expect a json-encoded []byte, we can embed this
 	// directly in Go types and call `json.Marshal` on it to embed the JSON directly.
 
@@ -160,8 +161,9 @@ func preparePayload(depGraphs []json.RawMessage, subject *Subject, t *Tool) ([]b
 	}
 
 	return json.Marshal(&payloadMultipleDepGraphs{
-		Tools:     []*Tool{t},
-		DepGraphs: depGraphs,
-		Subject:   subject,
+		Tools:        []*Tool{t},
+		DepGraphs:    depGraphs,
+		ScanFailures: scanFailures,
+		Subject:      subject,
 	})
 }
