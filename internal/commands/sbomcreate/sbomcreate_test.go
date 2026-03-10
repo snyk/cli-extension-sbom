@@ -12,6 +12,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/rs/zerolog"
+	"github.com/snyk/error-catalog-golang-public/snyk"
 	"github.com/snyk/go-application-framework/pkg/analytics"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/mocks"
@@ -111,13 +112,23 @@ func TestSBOMWorkflow_InvalidFormat(t *testing.T) {
 func TestSBOMWorkflow_NoOrgID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	mockICTX := mockInvocationContext(t, ctrl, "", nil)
-	mockICTX.GetConfiguration().Set(configuration.ORGANIZATION, "")
+
+	mockLogger := zerolog.New(io.Discard)
+	expectedErr := snyk.NewUnauthorisedError("failed to determine org")
+
+	mockConfig := mocks.NewMockConfiguration(ctrl)
+	mockConfig.EXPECT().GetString(flags.FlagFormat).Return("cyclonedx1.4+json")
+	mockConfig.EXPECT().GetString(flags.FlagVersion).Return("0.0.0")
+	mockConfig.EXPECT().GetBool(flags.FlagGoModuleLevel).Return(false)
+	mockConfig.EXPECT().GetStringWithError(configuration.ORGANIZATION).Return("", expectedErr)
+
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
+	mockICTX.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
 
 	_, err := sbomcreate.SBOMWorkflow(mockICTX, []workflow.Data{})
 
-	assert.ErrorContains(t, err, "Snyk failed to infer an organization ID. Please make sure to authenticate using `snyk auth`. "+
-		"Should the issue persist, explicitly set an organization ID via the `--org` flag.")
+	assert.Equal(t, expectedErr, err, "expected error from GetStringWithError to be propagated")
 }
 
 func TestSBOMWorkflow_InvalidPayload(t *testing.T) {

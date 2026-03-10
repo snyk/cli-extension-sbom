@@ -38,10 +38,9 @@ func TestWorkflow(
 	errFactory := errors.NewErrorFactory(logger)
 
 	logger.Println("SBOM Test workflow start")
-
-	orgID := config.GetString(configuration.ORGANIZATION)
-	if orgID == "" {
-		return nil, errFactory.NewEmptyOrgError()
+	_, err := config.GetStringWithError(configuration.ORGANIZATION)
+	if err != nil {
+		return nil, err
 	}
 
 	if filename == "" {
