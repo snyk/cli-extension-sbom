@@ -32,6 +32,11 @@ func TestGetSBOMExportFlagSet(t *testing.T) {
 			expected: false,
 		},
 		{
+			flagName: FlagAllowIncompleteSBOM,
+			isBool:   true,
+			expected: false,
+		},
+		{
 			flagName: FlagExclude,
 			isBool:   false,
 			expected: "",

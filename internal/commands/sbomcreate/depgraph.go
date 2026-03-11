@@ -58,10 +58,10 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	for _, dg := range depGraphs {
 		if errList := dg.GetErrorList(); len(errList) > 0 {
 			path := dg.GetContentLocation()
-			for _, e := range errList {
-				msg := e.Detail
+			for i := range errList {
+				msg := errList[i].Detail
 				if msg == "" {
-					msg = e.Title
+					msg = errList[i].Title
 				}
 				if path != "" {
 					scanFailures = append(scanFailures, fmt.Sprintf("%s: %s", path, msg))
