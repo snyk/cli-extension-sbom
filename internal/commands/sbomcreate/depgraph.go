@@ -79,7 +79,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	}
 	numGraphs := len(depGraphsBytes)
 	logger.Printf("Generating documents for %d depgraph(s)\n", numGraphs)
-	if numGraphs != 1 {
+	if numGraphs != 1 || len(scanFailures) > 0 {
 		if name == "" {
 			// Fall back to current working directory
 			wd, err := os.Getwd()
