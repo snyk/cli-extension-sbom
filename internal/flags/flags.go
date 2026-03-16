@@ -55,7 +55,7 @@ func GetSBOMCreateFlagSet() *pflag.FlagSet {
 	flagSet.Bool(FlagExperimental, false, "Deprecated. Will be ignored.")
 	flagSet.Bool(FlagUnmanaged, false, "For C/C++ only, scan all files for known open source dependencies and build an SBOM.")
 	flagSet.Bool(FlagAllProjects, false, "Auto-detect all projects in the working directory (including Yarn workspaces).")
-	flagSet.Bool(FlagAllowIncompleteSBOM, false, "When used with --all-projects, continue generating the SBOM even if some projects fail to resolve.")
+	flagSet.Bool(FlagAllowIncompleteSBOM, false, "An option to generate a partial/empty SBOM with error annotations if package manifest broken")
 	flagSet.Bool(FlagYarnWorkspaces, false, "Detect and scan Yarn Workspaces only when a lockfile is in the root.")
 	flagSet.String(FlagExclude, "", "Can be used with --all-projects to indicate directory names and file names to exclude. Must be comma separated.")
 	flagSet.String(FlagDetectionDepth, "", "Use with --all-projects to indicate how many subdirectories to search. "+
