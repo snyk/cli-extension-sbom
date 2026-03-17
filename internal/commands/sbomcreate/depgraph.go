@@ -13,6 +13,7 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/constants"
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
+	"github.com/snyk/cli-extension-sbom/internal/service"
 	"github.com/snyk/cli-extension-sbom/internal/util"
 )
 
@@ -21,7 +22,7 @@ var DepGraphWorkflowID = workflow.NewWorkflowIdentifier("depgraph")
 type DepGraphResult struct {
 	Name          string
 	DepGraphBytes []json.RawMessage
-	ScanFailures  []string
+	ScanErrors    []service.ScanError
 }
 
 func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
@@ -54,20 +55,16 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	}
 
 	depGraphsBytes := make([]json.RawMessage, 0, len(depGraphs))
-	var scanFailures []string
+	var scanErrors []service.ScanError
 	for _, dg := range depGraphs {
 		if errList := dg.GetErrorList(); len(errList) > 0 {
-			path := dg.GetContentLocation()
+			subject := dg.GetContentLocation()
 			for i := range errList {
 				msg := errList[i].Detail
 				if msg == "" {
 					msg = errList[i].Title
 				}
-				if path != "" {
-					scanFailures = append(scanFailures, fmt.Sprintf("%s: %s", path, msg))
-				} else {
-					scanFailures = append(scanFailures, msg)
-				}
+				scanErrors = append(scanErrors, service.ScanError{Subject: subject, Text: msg})
 			}
 			continue
 		}
@@ -79,7 +76,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	}
 	numGraphs := len(depGraphsBytes)
 	logger.Printf("Generating documents for %d depgraph(s)\n", numGraphs)
-	if numGraphs != 1 || len(scanFailures) > 0 {
+	if numGraphs != 1 || len(scanErrors) > 0 {
 		if name == "" {
 			// Fall back to current working directory
 			wd, err := os.Getwd()
@@ -94,7 +91,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	return &DepGraphResult{
 		Name:          name,
 		DepGraphBytes: depGraphsBytes,
-		ScanFailures:  scanFailures,
+		ScanErrors:    scanErrors,
 	}, nil
 }
 
