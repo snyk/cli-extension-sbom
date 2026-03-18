@@ -15,6 +15,7 @@ const (
 	FlagVersion                      = "version"
 	FlagDev                          = "dev"
 	FlagMavenAggregateProject        = "maven-aggregate-project"
+	FlagMavenSkipWrapper             = "maven-skip-wrapper" //nolint:gosec // Not a credential, this is a CLI flag name
 	FlagScanUnmanaged                = "scan-unmanaged"
 	FlagScanAllUnmanaged             = "scan-all-unmanaged"
 	FlagSubProject                   = "sub-project"
@@ -64,6 +65,7 @@ func GetSBOMCreateFlagSet() *pflag.FlagSet {
 	flagSet.StringP(FlagFormat, "f", "", "Specify the SBOM output format. (cyclonedx1.4+json, cyclonedx1.4+xml, spdx2.3+json)")
 	flagSet.Bool(FlagDev, false, "Include development-only dependencies. Applicable only for some package managers.")
 	flagSet.Bool(FlagMavenAggregateProject, false, "Ensure all modules are resolvable by the Maven reactor.")
+	flagSet.Bool(FlagMavenSkipWrapper, false, "Use system Maven instead of the Maven wrapper.")
 	flagSet.Bool(FlagScanUnmanaged, false, "Specify an individual JAR, WAR, or AAR file.")
 	flagSet.Bool(FlagScanAllUnmanaged, false, "Auto-detect Maven, JAR, WAR, and AAR files recursively from the current folder.")
 	flagSet.String(FlagSubProject, "", "Name of Gradle sub-project to test.")
