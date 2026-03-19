@@ -34,9 +34,13 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 
 	depGraphConfig := config.Clone()
 	allowIncomplete := config.GetBool(flags.FlagAllowIncompleteSBOM)
-	depGraphConfig.Set("fail-fast", !allowIncomplete)
+
+	if config.GetBool(flags.FlagAllProjects) {
+		depGraphConfig.Set("fail-fast", !allowIncomplete)
+	}
 	if allowIncomplete {
 		depGraphConfig.Set("effective-graph-with-errors", true)
+		depGraphConfig.Set("fail-fast", !allowIncomplete)
 	}
 	useSCAPlugins, err := shouldUseSCAPlugins(config, logger)
 	if err != nil {
