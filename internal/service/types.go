@@ -25,10 +25,3 @@ type payloadMultipleDepGraphs struct {
 	ScanErrors []ScanError       `json:"scanErrors,omitempty"`
 }
 
-// payloadScanErrorsOnly is used when all projects failed to scan —
-// no dep-graphs are available, only scan errors and the root subject.
-type payloadScanErrorsOnly struct {
-	Tools      []*Tool     `json:"tools,omitempty"`
-	Subject    *Subject    `json:"subject"`
-	ScanErrors []ScanError `json:"scanErrors"`
-}

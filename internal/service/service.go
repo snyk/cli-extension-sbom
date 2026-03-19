@@ -67,8 +67,6 @@ func DepGraphsToSBOM(
 		return nil, errFactory.NewFatalSBOMGenerationError(err)
 	}
 
-	apiURL = "http://localhost:8080"
-
 	req, err := http.NewRequestWithContext(
 		context.Background(),
 		http.MethodPost,
@@ -147,15 +145,6 @@ func ValidateSBOMFormat(errFactory *errors.ErrorFactory, candidate string) error
 func preparePayload(depGraphs []json.RawMessage, scanErrors []ScanError, subject *Subject, t *Tool) ([]byte, error) {
 	// by using json.RawMessage everywhere we expect a json-encoded []byte, we can embed this
 	// directly in Go types and call `json.Marshal` on it to embed the JSON directly.
-
-	// All projects failed — send only subject + scanErrors, no dep-graphs field at all.
-	if len(depGraphs) == 0 && len(scanErrors) > 0 {
-		return json.Marshal(&payloadScanErrorsOnly{
-			Tools:      []*Tool{t},
-			Subject:    subject,
-			ScanErrors: scanErrors,
-		})
-	}
 
 	// only send the request with a single depGraph if there's no subject. If there is a subject, we
 	// want to use the multi-depgraph-endpoint so that we can overwrite the depGraph's name &
