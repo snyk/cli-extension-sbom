@@ -27,6 +27,7 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/constants"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
+	"github.com/snyk/cli-extension-sbom/internal/service"
 	"github.com/snyk/cli-extension-sbom/pkg/sbom"
 )
 
@@ -340,8 +341,8 @@ func TestGetDepGraph_PartialSuccess(t *testing.T) {
 	result, err := sbomcreate.GetDepGraph(mockICTX)
 	require.NoError(t, err)
 	assert.Len(t, result.DepGraphBytes, 1, "should have one successful depGraph")
-	assert.Len(t, result.ScanFailures, 1, "should have one scan failure")
-	assert.Equal(t, "project2/pom.xml: missing lockfile", result.ScanFailures[0])
+	assert.Len(t, result.ScanErrors, 1, "should have one scan failure")
+	assert.Equal(t, service.ScanError{Subject: "project2/pom.xml", Text: "missing lockfile"}, result.ScanErrors[0])
 }
 
 func TestGetDepGraph_AllErrors_EmptySBOM(t *testing.T) {
@@ -375,9 +376,9 @@ func TestGetDepGraph_AllErrors_EmptySBOM(t *testing.T) {
 	result, err := sbomcreate.GetDepGraph(mockICTX)
 	require.NoError(t, err)
 	assert.Empty(t, result.DepGraphBytes, "should have zero depGraphs")
-	assert.Len(t, result.ScanFailures, 2, "should have two scan failures")
-	assert.Equal(t, "project1/package.json: missing lockfile", result.ScanFailures[0])
-	assert.Equal(t, "project2/pom.xml: invalid POM", result.ScanFailures[1], "should fall back to Title when Detail is empty")
+	assert.Len(t, result.ScanErrors, 2, "should have two scan failures")
+	assert.Equal(t, service.ScanError{Subject: "project1/package.json", Text: "missing lockfile"}, result.ScanErrors[0])
+	assert.Equal(t, service.ScanError{Subject: "project2/pom.xml", Text: "invalid POM"}, result.ScanErrors[1], "should fall back to Title when Detail is empty")
 	assert.NotEmpty(t, result.Name, "should default name from working directory")
 }
 
@@ -412,8 +413,8 @@ func TestGetDepGraph_ErrorWithoutPath(t *testing.T) {
 	result, err := sbomcreate.GetDepGraph(mockICTX)
 	require.NoError(t, err)
 	assert.Empty(t, result.DepGraphBytes)
-	assert.Len(t, result.ScanFailures, 1)
-	assert.Equal(t, "no supported files found", result.ScanFailures[0], "should use message only when no path")
+	assert.Len(t, result.ScanErrors, 1)
+	assert.Equal(t, service.ScanError{Subject: "", Text: "no supported files found"}, result.ScanErrors[0], "should use message only when no path")
 }
 
 func TestGetDepGraph_uvSupport(t *testing.T) {
