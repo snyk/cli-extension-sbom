@@ -107,6 +107,11 @@ func TestGetSBOMExportFlagSet(t *testing.T) {
 			expected: false,
 		},
 		{
+			flagName: FlagMavenSkipWrapper,
+			isBool:   true,
+			expected: false,
+		},
+		{
 			flagName: FlagGoModuleLevel,
 			isBool:   true,
 			expected: false,
