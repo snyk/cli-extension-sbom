@@ -310,16 +310,17 @@ func assertWorkflowExists(t *testing.T, e workflow.Engine, id *url.URL) {
 	assert.NotNil(t, wflw)
 }
 
-func newDepGraphDataWithError(t *testing.T, path string, err snyk_errors.Error) workflow.Data {
+func newDepGraphDataWithError(t *testing.T, path string, err *snyk_errors.Error) workflow.Data {
 	t.Helper()
 	d := workflow.NewData(
 		workflow.NewTypeIdentifier(sbomcreate.DepGraphWorkflowID, "cyclonedx"),
 		"application/json",
 		[]byte(`{}`),
 	)
-	impl := d.(*workflow.DataImpl)
+	impl, ok := d.(*workflow.DataImpl)
+	require.True(t, ok)
 	impl.SetContentLocation(path)
-	impl.AddError(err)
+	impl.AddError(*err)
 	return d
 }
 
@@ -328,7 +329,7 @@ func TestGetDepGraph_PartialSuccess(t *testing.T) {
 	defer ctrl.Finish()
 
 	successData := newDepGraphData(t, []byte(`{"pkgManager":{"name":"npm"}}`))
-	errorData := newDepGraphDataWithError(t, "project2/pom.xml", snyk_errors.Error{
+	errorData := newDepGraphDataWithError(t, "project2/pom.xml", &snyk_errors.Error{
 		Title:  "failed to resolve",
 		Detail: "missing lockfile",
 	})
@@ -359,11 +360,11 @@ func TestGetDepGraph_AllErrors_EmptySBOM(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	errorData1 := newDepGraphDataWithError(t, "project1/package.json", snyk_errors.Error{
+	errorData1 := newDepGraphDataWithError(t, "project1/package.json", &snyk_errors.Error{
 		Title:  "scan failed",
 		Detail: "missing lockfile",
 	})
-	errorData2 := newDepGraphDataWithError(t, "project2/pom.xml", snyk_errors.Error{
+	errorData2 := newDepGraphDataWithError(t, "project2/pom.xml", &snyk_errors.Error{
 		Title:  "invalid POM",
 		Detail: "",
 	})
@@ -401,7 +402,8 @@ func TestGetDepGraph_ErrorWithoutPath(t *testing.T) {
 		"application/json",
 		[]byte(`{}`),
 	)
-	impl := d.(*workflow.DataImpl)
+	impl, ok := d.(*workflow.DataImpl)
+	require.True(t, ok)
 	impl.AddError(snyk_errors.Error{Title: "no supported files found"})
 
 	mockEngine := mocks.NewMockEngine(ctrl)
