@@ -13,6 +13,7 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/constants"
 	"github.com/snyk/cli-extension-sbom/internal/errors"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
+	"github.com/snyk/cli-extension-sbom/internal/service"
 	"github.com/snyk/cli-extension-sbom/internal/util"
 )
 
@@ -21,6 +22,7 @@ var DepGraphWorkflowID = workflow.NewWorkflowIdentifier("depgraph")
 type DepGraphResult struct {
 	Name          string
 	DepGraphBytes []json.RawMessage
+	ScanErrors    []service.ScanError
 }
 
 func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
@@ -32,7 +34,12 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	version := config.GetString(flags.FlagVersion)
 
 	depGraphConfig := config.Clone()
-	if config.GetBool(flags.FlagAllProjects) {
+	allowIncomplete := config.GetBool(flags.FlagAllowIncompleteSBOM)
+
+	if allowIncomplete {
+		depGraphConfig.Set("fail-fast", false)
+		depGraphConfig.Set("effective-graph-with-errors", true)
+	} else if config.GetBool(flags.FlagAllProjects) {
 		depGraphConfig.Set("fail-fast", true)
 	}
 	useSCAPlugins, err := shouldUseSCAPlugins(config, logger)
@@ -48,17 +55,29 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 		return nil, errFactory.NewDepGraphWorkflowError(err)
 	}
 
-	numGraphs := len(depGraphs)
-	logger.Printf("Generating documents for %d depgraph(s)\n", numGraphs)
-	depGraphsBytes := make([]json.RawMessage, numGraphs)
-	for i, depGraph := range depGraphs {
-		depGraphBytes, err := getPayloadBytes(depGraph)
+	depGraphsBytes := make([]json.RawMessage, 0, len(depGraphs))
+	var scanErrors []service.ScanError
+	for _, dg := range depGraphs {
+		if errList := dg.GetErrorList(); len(errList) > 0 {
+			subject := dg.GetContentLocation()
+			for i := range errList {
+				msg := errList[i].Detail
+				if msg == "" {
+					msg = errList[i].Title
+				}
+				scanErrors = append(scanErrors, service.ScanError{Subject: subject, Text: msg})
+			}
+			continue
+		}
+		depGraphBytes, err := getPayloadBytes(dg)
 		if err != nil {
 			return nil, errFactory.NewDepGraphWorkflowError(err)
 		}
-		depGraphsBytes[i] = depGraphBytes
+		depGraphsBytes = append(depGraphsBytes, depGraphBytes)
 	}
-	if numGraphs > 1 {
+	numGraphs := len(depGraphsBytes)
+	logger.Printf("Generating documents for %d depgraph(s)\n", numGraphs)
+	if numGraphs != 1 || len(scanErrors) > 0 {
 		if name == "" {
 			// Fall back to current working directory
 			wd, err := os.Getwd()
@@ -73,6 +92,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	return &DepGraphResult{
 		Name:          name,
 		DepGraphBytes: depGraphsBytes,
+		ScanErrors:    scanErrors,
 	}, nil
 }
 

@@ -72,6 +72,7 @@ func SBOMWorkflow(
 		config.GetString(configuration.API_URL),
 		orgID,
 		depGraphResult.DepGraphBytes,
+		depGraphResult.ScanErrors,
 		service.NewSubject(depGraphResult.Name, version),
 		&service.Tool{Vendor: "Snyk", Name: ri.GetName(), Version: ri.GetVersion()},
 		format,
