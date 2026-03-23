@@ -24,4 +24,3 @@ type payloadMultipleDepGraphs struct {
 	Subject    *Subject          `json:"subject"`
 	ScanErrors []ScanError       `json:"scanErrors,omitempty"`
 }
-
