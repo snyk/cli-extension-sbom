@@ -308,7 +308,7 @@ func assertWorkflowExists(t *testing.T, e workflow.Engine, id *url.URL) {
 	assert.NotNil(t, wflw)
 }
 
-func TestGetDepGraph_unsetsDotnetRuntimeResolutionWhenSet(t *testing.T) {
+func TestGetDepGraph_disablesDotnetRuntimeResolutionWhenPreviouslyEnabled(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -316,7 +316,7 @@ func TestGetDepGraph_unsetsDotnetRuntimeResolutionWhenSet(t *testing.T) {
 	mockEngine.EXPECT().
 		InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
 		DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
-			assert.False(t, cfg.GetBool("dotnet-runtime-resolution"), "dotnet-runtime-resolution should be effectively disabled after Unset")
+			assert.False(t, cfg.GetBool("dotnet-runtime-resolution"), "dotnet-runtime-resolution should be disabled")
 			return []workflow.Data{newDepGraphData(t, depGraphData)}, nil
 		}).
 		Times(1)
@@ -335,7 +335,7 @@ func TestGetDepGraph_unsetsDotnetRuntimeResolutionWhenSet(t *testing.T) {
 	assert.NotNil(t, result)
 }
 
-func TestGetDepGraph_doesNotUnsetDotnetRuntimeResolutionWhenNotSet(t *testing.T) {
+func TestGetDepGraph_disablesDotnetRuntimeResolutionWhenNotPreviouslySet(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -343,7 +343,7 @@ func TestGetDepGraph_doesNotUnsetDotnetRuntimeResolutionWhenNotSet(t *testing.T)
 	mockEngine.EXPECT().
 		InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
 		DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
-			assert.False(t, cfg.IsSet("dotnet-runtime-resolution"), "dotnet-runtime-resolution should remain unset")
+			assert.False(t, cfg.GetBool("dotnet-runtime-resolution"), "dotnet-runtime-resolution should be disabled")
 			return []workflow.Data{newDepGraphData(t, depGraphData)}, nil
 		}).
 		Times(1)
