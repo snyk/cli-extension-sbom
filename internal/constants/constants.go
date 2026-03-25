@@ -17,3 +17,6 @@ const FeatureFlagShowNpmScope = "internal_snyk_show_npm_scope_enabled"
 
 // ShowNpmScope is the feature flag name for the npm build scope feature.
 const ShowNpmScope = "show-npm-scope"
+
+// AllowIncompleteSBOM is the analytics key for the allow-incomplete-sbom CLI flag.
+const AllowIncompleteSBOM = "allow-incomplete-sbom"
