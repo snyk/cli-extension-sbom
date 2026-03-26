@@ -49,6 +49,7 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	}
 	if useSCAPlugins {
 		depGraphConfig.Set("use-sbom-resolution", true)
+		depGraphConfig.Set("force-single-graph", true)
 	}
 
 	depGraphs, err := engine.InvokeWithConfig(DepGraphWorkflowID, depGraphConfig)
