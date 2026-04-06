@@ -38,6 +38,11 @@ const (
 	FlagRemoteRepoURL                = "remote-repo-url"
 	FlagTargetReference              = "target-reference"
 	FlagIncludeProvenance            = "include-provenance"
+	FlagPrintGraph                   = "print-graph"
+	FlagJSONLOutput                  = "jsonl-output"
+	FlagEffectiveGraph               = "effective-graph"
+	FlagPrintErrors                  = "print-errors"
+	FlagEffectiveGraphWithErrors     = "effective-graph-with-errors"
 
 	// OS Flows test flags.
 	FlagReachability       = "reachability"

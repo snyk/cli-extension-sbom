@@ -35,10 +35,12 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 
 	depGraphConfig := config.Clone()
 	allowIncomplete := config.GetBool(flags.FlagAllowIncompleteSBOM)
+	depGraphConfig.Set(flags.FlagPrintGraph, true)
 
 	if allowIncomplete {
 		depGraphConfig.Set("fail-fast", false)
-		depGraphConfig.Set("effective-graph-with-errors", true)
+		depGraphConfig.Set(flags.FlagPrintErrors, true)
+		depGraphConfig.Set(flags.FlagJSONLOutput, true)
 	} else if config.GetBool(flags.FlagAllProjects) {
 		depGraphConfig.Set("fail-fast", true)
 	}
