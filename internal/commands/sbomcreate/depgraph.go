@@ -42,12 +42,18 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	} else if config.GetBool(flags.FlagAllProjects) {
 		depGraphConfig.Set("fail-fast", true)
 	}
+
+	// Currently, we don't support dotnet runtime resolution for SBOMs.
+	// This will come in a future release.
+	depGraphConfig.Set("dotnet-runtime-resolution", false)
+
 	useSCAPlugins, err := shouldUseSCAPlugins(config, logger)
 	if err != nil {
 		return nil, err
 	}
 	if useSCAPlugins {
 		depGraphConfig.Set("use-sbom-resolution", true)
+		depGraphConfig.Set("force-single-graph", true)
 	}
 
 	depGraphs, err := engine.InvokeWithConfig(DepGraphWorkflowID, depGraphConfig)

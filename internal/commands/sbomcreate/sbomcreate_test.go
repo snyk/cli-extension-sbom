@@ -428,6 +428,59 @@ func TestGetDepGraph_ErrorWithoutPath(t *testing.T) {
 	assert.Equal(t, service.ScanError{Subject: "", Text: "no supported files found"}, result.ScanErrors[0], "should use message only when no path")
 }
 
+func TestGetDepGraph_disablesDotnetRuntimeResolutionWhenPreviouslyEnabled(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockEngine.EXPECT().
+		InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
+		DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
+			assert.False(t, cfg.GetBool("dotnet-runtime-resolution"), "dotnet-runtime-resolution should be disabled")
+			return []workflow.Data{newDepGraphData(t, depGraphData)}, nil
+		}).
+		Times(1)
+
+	mockLogger := zerolog.New(io.Discard)
+	mockConfig := configuration.New()
+	mockConfig.Set("dotnet-runtime-resolution", true)
+
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
+	mockICTX.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
+
+	result, err := sbomcreate.GetDepGraph(mockICTX)
+	require.NoError(t, err)
+	assert.NotNil(t, result)
+}
+
+func TestGetDepGraph_disablesDotnetRuntimeResolutionWhenNotPreviouslySet(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockEngine.EXPECT().
+		InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
+		DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
+			assert.False(t, cfg.GetBool("dotnet-runtime-resolution"), "dotnet-runtime-resolution should be disabled")
+			return []workflow.Data{newDepGraphData(t, depGraphData)}, nil
+		}).
+		Times(1)
+
+	mockLogger := zerolog.New(io.Discard)
+	mockConfig := configuration.New()
+
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
+	mockICTX.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
+
+	result, err := sbomcreate.GetDepGraph(mockICTX)
+	require.NoError(t, err)
+	assert.NotNil(t, result)
+}
+
 func TestGetDepGraph_uvSupport(t *testing.T) {
 	tests := []struct {
 		name                string
