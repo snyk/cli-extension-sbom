@@ -62,8 +62,9 @@ func TestDepGraphsToSBOM(t *testing.T) {
 				mockSBOMService.URL,
 				orgID,
 				[]json.RawMessage{[]byte("{}")},
-				nil,
-				nil,
+				nil, // scanErrors
+				nil, // subject
+				nil, // tool
 				tt.format,
 				false,
 				&logger,
@@ -97,8 +98,9 @@ func TestDepGraphsToSBOM_GoModuleLevel(t *testing.T) {
 		mockSBOMService.URL,
 		orgID,
 		[]json.RawMessage{[]byte("{}")},
-		nil,
-		nil,
+		nil, // scanErrors
+		nil, // subject
+		nil, // tool
 		format,
 		true,
 		&logger,
@@ -133,6 +135,7 @@ func TestDepGraphsToSBOM_MultipleDepGraphs(t *testing.T) {
 		mockSBOMService.URL,
 		orgID,
 		depGraphs,
+		nil, // scanErrors
 		subject,
 		tool,
 		format,
@@ -167,6 +170,7 @@ func TestDepGraphsToSBOM_SingleDepGraph_WithSubject(t *testing.T) {
 		mockSBOMService.URL,
 		orgID,
 		depGraphs,
+		nil, // scanErrors
 		subject,
 		tool,
 		format,
@@ -193,8 +197,9 @@ func TestDepGraphsToSBOM_FailedRequest(t *testing.T) {
 		serverURL,
 		orgID,
 		[]json.RawMessage{[]byte("{}")},
-		nil,
-		nil,
+		nil, // scanErrors
+		nil, // subject
+		nil, // tool
 		"cyclonedx1.4+json",
 		false,
 		&logger,
@@ -246,8 +251,9 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 				mockSBOMService.URL,
 				orgID,
 				[]json.RawMessage{[]byte("{}")},
-				nil,
-				nil,
+				nil, // scanErrors
+				nil, // subject
+				nil, // tool
 				"cyclonedx1.4+json",
 				false,
 				&logger,
@@ -257,6 +263,94 @@ func TestDepGraphsToSBOM_UnsuccessfulResponse(t *testing.T) {
 			assert.ErrorContains(t, err, tt.expectedErr)
 		})
 	}
+}
+
+func TestDepGraphsToSBOM_WithScanErrors_PartialSuccess(t *testing.T) {
+	format := "cyclonedx1.4+json"
+	expectedContentType := "application/vnd.cyclonedx+json"
+	mockBody := []byte("{}")
+	response := mocks.NewMockResponse(expectedContentType, mockBody, http.StatusOK)
+	mockSBOMService := mocks.NewMockSBOMService(response, func(r *http.Request) {
+		body, err := io.ReadAll(r.Body)
+		defer r.Body.Close() //nolint:errcheck // Test cleanup, error can be safely ignored
+		require.NoError(t, err)
+		assert.JSONEq(t,
+			`{"depGraphs":[{"pkgManager":{"name":"npm"}}],`+
+				`"scanErrors":[{"subject":"project2/pom.xml","text":"missing lockfile"}],`+
+				`"subject":{"name":"my-repo","version":"1.0.0"},`+
+				`"tools":[{"name":"snyk-cli","vendor":"Snyk","version":"1.2.3"}]}`,
+			string(body))
+	})
+	logger := zerolog.New(&bytes.Buffer{})
+	errFactory := errors.NewErrorFactory(&logger)
+	depGraphs := []json.RawMessage{[]byte(`{"pkgManager":{"name":"npm"}}`)}
+	scanErrors := []ScanError{{Subject: "project2/pom.xml", Text: "missing lockfile"}}
+	subject := NewSubject("my-repo", "1.0.0")
+	tool := &Tool{Vendor: "Snyk", Name: "snyk-cli", Version: "1.2.3"}
+
+	res, err := DepGraphsToSBOM(
+		http.DefaultClient,
+		mockSBOMService.URL,
+		orgID,
+		depGraphs,
+		scanErrors,
+		subject,
+		tool,
+		format,
+		false,
+		&logger,
+		errFactory,
+	)
+	assert.NoError(t, err)
+	assert.Equal(t, mockBody, res.Doc)
+	assert.Equal(t, expectedContentType, res.MIMEType)
+}
+
+func TestDepGraphsToSBOM_WithScanErrors_AllErrors(t *testing.T) {
+	format := "cyclonedx1.4+json"
+	expectedContentType := "application/vnd.cyclonedx+json"
+	mockBody := []byte("{}")
+	response := mocks.NewMockResponse(expectedContentType, mockBody, http.StatusOK)
+	mockSBOMService := mocks.NewMockSBOMService(response, func(r *http.Request) {
+		body, err := io.ReadAll(r.Body)
+		defer r.Body.Close() //nolint:errcheck // Test cleanup, error can be safely ignored
+		require.NoError(t, err)
+		assert.JSONEq(t,
+			`{"depGraphs":[],`+
+				`"scanErrors":[`+
+				`{"subject":"project1/package.json","text":"missing lockfile"},`+
+				`{"subject":"project2/pom.xml","text":"invalid POM"}`+
+				`],`+
+				`"subject":{"name":"my-repo","version":"1.0.0"},`+
+				`"tools":[{"name":"snyk-cli","vendor":"Snyk","version":"1.2.3"}]}`,
+			string(body))
+	})
+	logger := zerolog.New(&bytes.Buffer{})
+	errFactory := errors.NewErrorFactory(&logger)
+	depGraphs := []json.RawMessage{}
+	scanErrors := []ScanError{
+		{Subject: "project1/package.json", Text: "missing lockfile"},
+		{Subject: "project2/pom.xml", Text: "invalid POM"},
+	}
+	subject := NewSubject("my-repo", "1.0.0")
+	tool := &Tool{Vendor: "Snyk", Name: "snyk-cli", Version: "1.2.3"}
+
+	res, err := DepGraphsToSBOM(
+		http.DefaultClient,
+		mockSBOMService.URL,
+		orgID,
+		depGraphs,
+		scanErrors,
+		subject,
+		tool,
+		format,
+		false,
+		&logger,
+		errFactory,
+	)
+	assert.NoError(t, err)
+	assert.Equal(t, mockBody, res.Doc)
+	assert.Equal(t, expectedContentType, res.MIMEType)
 }
 
 func TestValidateSBOMFormat_EmptyFormat(t *testing.T) {
