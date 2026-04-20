@@ -35,13 +35,13 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 
 	depGraphConfig := config.Clone()
 	if config.GetBool(flags.FlagAllProjects) {
-		allowIncomplete := config.GetBool(flags.FlagAllowIncompleteSBOM)
-		if allowIncomplete {
-			depGraphConfig.Set("fail-fast", false)
-			depGraphConfig.Set("print-output-jsonl-with-errors", true)
-		} else {
-			depGraphConfig.Set("fail-fast", true)
-		}
+		depGraphConfig.Set("fail-fast", true)
+	}
+
+	allowIncomplete := config.GetBool(flags.FlagAllowIncompleteSBOM)
+	if allowIncomplete {
+		depGraphConfig.Set("fail-fast", false)
+		depGraphConfig.Set("print-output-jsonl-with-errors", true)
 	}
 
 	// Currently, we don't support dotnet runtime resolution for SBOMs.
