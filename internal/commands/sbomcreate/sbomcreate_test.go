@@ -13,6 +13,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/rs/zerolog"
 	"github.com/snyk/error-catalog-golang-public/snyk"
+	"github.com/snyk/error-catalog-golang-public/snyk_errors"
 	"github.com/snyk/go-application-framework/pkg/analytics"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/mocks"
@@ -27,6 +28,7 @@ import (
 	"github.com/snyk/cli-extension-sbom/internal/constants"
 	"github.com/snyk/cli-extension-sbom/internal/flags"
 	svcmocks "github.com/snyk/cli-extension-sbom/internal/mocks"
+	"github.com/snyk/cli-extension-sbom/internal/service"
 	"github.com/snyk/cli-extension-sbom/pkg/sbom"
 )
 
@@ -306,6 +308,124 @@ func assertWorkflowExists(t *testing.T, e workflow.Engine, id *url.URL) {
 	wflw, ok := e.GetWorkflow(id)
 	assert.True(t, ok)
 	assert.NotNil(t, wflw)
+}
+
+func newDepGraphDataWithError(t *testing.T, path string, err *snyk_errors.Error) workflow.Data {
+	t.Helper()
+	d := workflow.NewData(
+		workflow.NewTypeIdentifier(sbomcreate.DepGraphWorkflowID, "cyclonedx"),
+		"application/json",
+		[]byte(`{}`),
+	)
+	impl, ok := d.(*workflow.DataImpl)
+	require.True(t, ok)
+	impl.SetContentLocation(path)
+	impl.AddError(*err)
+	return d
+}
+
+func TestGetDepGraph_PartialSuccess(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	successData := newDepGraphData(t, []byte(`{"pkgManager":{"name":"npm"}}`))
+	errorData := newDepGraphDataWithError(t, "project2/pom.xml", &snyk_errors.Error{
+		Title:  "failed to resolve",
+		Detail: "missing lockfile",
+	})
+
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockEngine.EXPECT().
+		InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
+		Return([]workflow.Data{successData, errorData}, nil).
+		Times(1)
+
+	mockLogger := zerolog.New(io.Discard)
+	mockConfig := configuration.New()
+	mockConfig.Set("name", "my-repo")
+
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
+	mockICTX.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
+
+	result, err := sbomcreate.GetDepGraph(mockICTX)
+	require.NoError(t, err)
+	assert.Len(t, result.DepGraphBytes, 1, "should have one successful depGraph")
+	assert.Len(t, result.ScanErrors, 1, "should have one scan failure")
+	assert.Equal(t, service.ScanError{Subject: "project2/pom.xml", Text: "missing lockfile"}, result.ScanErrors[0])
+}
+
+func TestGetDepGraph_AllErrors_EmptySBOM(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	errorData1 := newDepGraphDataWithError(t, "project1/package.json", &snyk_errors.Error{
+		Title:  "scan failed",
+		Detail: "missing lockfile",
+	})
+	errorData2 := newDepGraphDataWithError(t, "project2/pom.xml", &snyk_errors.Error{
+		Title:  "invalid POM",
+		Detail: "",
+	})
+
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockEngine.EXPECT().
+		InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
+		Return([]workflow.Data{errorData1, errorData2}, nil).
+		Times(1)
+
+	mockLogger := zerolog.New(io.Discard)
+	mockConfig := configuration.New()
+	mockConfig.Set("name", "")
+
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
+	mockICTX.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
+
+	result, err := sbomcreate.GetDepGraph(mockICTX)
+	require.NoError(t, err)
+	assert.Empty(t, result.DepGraphBytes, "should have zero depGraphs")
+	assert.Len(t, result.ScanErrors, 2, "should have two scan failures")
+	assert.Equal(t, service.ScanError{Subject: "project1/package.json", Text: "missing lockfile"}, result.ScanErrors[0])
+	assert.Equal(t, service.ScanError{Subject: "project2/pom.xml", Text: "invalid POM"}, result.ScanErrors[1], "should fall back to Title when Detail is empty")
+	assert.NotEmpty(t, result.Name, "should default name from working directory")
+}
+
+func TestGetDepGraph_ErrorWithoutPath(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	d := workflow.NewData(
+		workflow.NewTypeIdentifier(sbomcreate.DepGraphWorkflowID, "cyclonedx"),
+		"application/json",
+		[]byte(`{}`),
+	)
+	impl, ok := d.(*workflow.DataImpl)
+	require.True(t, ok)
+	impl.AddError(snyk_errors.Error{Title: "no supported files found"})
+
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockEngine.EXPECT().
+		InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
+		Return([]workflow.Data{d}, nil).
+		Times(1)
+
+	mockLogger := zerolog.New(io.Discard)
+	mockConfig := configuration.New()
+	mockConfig.Set("name", "my-repo")
+
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
+	mockICTX.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
+	mockICTX.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
+
+	result, err := sbomcreate.GetDepGraph(mockICTX)
+	require.NoError(t, err)
+	assert.Empty(t, result.DepGraphBytes)
+	assert.Len(t, result.ScanErrors, 1)
+	assert.Equal(t, service.ScanError{Subject: "", Text: "no supported files found"}, result.ScanErrors[0], "should use message only when no path")
 }
 
 func TestGetDepGraph_disablesDotnetRuntimeResolutionWhenPreviouslyEnabled(t *testing.T) {
