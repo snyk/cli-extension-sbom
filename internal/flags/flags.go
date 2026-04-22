@@ -38,14 +38,20 @@ const (
 	FlagTargetReference              = "target-reference"
 	FlagIncludeProvenance            = "include-provenance"
 
-	// OS Flows test flags.
-	FlagReachability       = "reachability"
-	FlagReachabilityFilter = "reachability-filter"
-	FlagSBOM               = "sbom"
-	FlagSourceDir          = "source-dir"
-	FlagRiskScoreThreshold = "risk-score-threshold"
-	FlagSeverityThreshold  = "severity-threshold"
-	FlagGoModuleLevel      = "go-module-level"
+	// OS Flows flags.
+	FlagReachability               = "reachability"
+	FlagReachabilityFilter         = "reachability-filter"
+	FlagSBOM                       = "sbom"
+	FlagSourceDir                  = "source-dir"
+	FlagRiskScoreThreshold         = "risk-score-threshold"
+	FlagSeverityThreshold          = "severity-threshold"
+	FlagGoModuleLevel              = "go-module-level"
+	FlagProjectName                = "project-name"
+	FlagProjectEnvironment         = "project-environment"
+	FlagProjectLifecycle           = "project-lifecycle"
+	FlagProjectBusinessCriticality = "project-business-criticality"
+	FlagProjectTags                = "project-tags"
+	FlagTags                       = "tags"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
@@ -114,6 +120,15 @@ func GetSBOMMonitorFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagPolicyPath, "", "Manually pass a path to a .snyk policy file.")
 	flagSet.String(FlagRemoteRepoURL, "", "Set or override the remote URL for the repository that you would like to monitor.")
 	flagSet.String(FlagTargetReference, "", "Specify a reference that differentiates this project, for example, a branch name or version.")
+
+	// Flags forwarded to the os-flows monitor workflow when dragonfly is enabled.
+	flagSet.String(FlagSBOM, "", "Specify an SBOM file to be monitored.")
+	flagSet.String(FlagProjectName, "", "Specify a name for the project.")
+	flagSet.String(FlagProjectEnvironment, "", "Set the project environment project attribute to one or more values (comma-separated).")
+	flagSet.String(FlagProjectLifecycle, "", "Set the project lifecycle project attribute to one or more values (comma-separated).")
+	flagSet.String(FlagProjectBusinessCriticality, "", "Set the project business criticality project attribute to one or more values (comma-separated).")
+	flagSet.String(FlagProjectTags, "", `Set the project tags to one or more values (comma-separated key value pairs with an "=" separator).`)
+	flagSet.String(FlagTags, "", "This is an alias for --project-tags.")
 
 	return flagSet
 }

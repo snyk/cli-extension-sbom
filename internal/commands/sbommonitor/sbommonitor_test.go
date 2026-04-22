@@ -49,6 +49,76 @@ func TestSBOMMonitorWorkflow_NoExperimentalFlag(t *testing.T) {
 	assert.ErrorContains(t, err, "Flag `--experimental` is required to execute this command.")
 }
 
+func TestSBOMMonitorWorkflow_DflyRollout_DelegatesToOSFlows(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, "", mockEngine)
+	mockICTX.GetConfiguration().Set(flags.FlagExperimental, true)
+	mockICTX.GetConfiguration().Set(sbommonitor.FeatureFlagSBOMMonitor, true)
+	mockICTX.GetConfiguration().Set(sbommonitor.FeatureFlagDflySbomMonitor, true)
+	mockICTX.GetConfiguration().Set(flags.FlagFile, "testdata/bom.json")
+	mockICTX.GetConfiguration().Set(flags.FlagTargetReference, "main")
+
+	osFlowsConfig := mockICTX.GetConfiguration().Clone()
+	osFlowsConfig.Set(flags.FlagSBOM, "testdata/bom.json")
+
+	mockEngine.EXPECT().InvokeWithConfig(sbommonitor.OsFlowsMonitorWorkflowID, osFlowsConfig).Return([]workflow.Data{}, nil).Times(1)
+
+	result, err := sbommonitor.MonitorWorkflow(mockICTX, []workflow.Data{})
+
+	require.NoError(t, err)
+	require.NotNil(t, result)
+}
+
+func TestSBOMMonitorWorkflow_DflyRollout_ForwardsProjectAttributes(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, "", mockEngine)
+	mockICTX.GetConfiguration().Set(flags.FlagExperimental, true)
+	mockICTX.GetConfiguration().Set(sbommonitor.FeatureFlagSBOMMonitor, true)
+	mockICTX.GetConfiguration().Set(sbommonitor.FeatureFlagDflySbomMonitor, true)
+	mockICTX.GetConfiguration().Set(flags.FlagFile, "testdata/bom.json")
+	mockICTX.GetConfiguration().Set(flags.FlagProjectBusinessCriticality, "critical")
+	mockICTX.GetConfiguration().Set(flags.FlagProjectEnvironment, "production")
+	mockICTX.GetConfiguration().Set(flags.FlagProjectLifecycle, "production")
+	mockICTX.GetConfiguration().Set(flags.FlagProjectTags, "team=backend")
+	mockICTX.GetConfiguration().Set(flags.FlagProjectName, "my-sbom-project")
+
+	osFlowsConfig := mockICTX.GetConfiguration().Clone()
+	osFlowsConfig.Set(flags.FlagSBOM, "testdata/bom.json")
+
+	mockEngine.EXPECT().InvokeWithConfig(sbommonitor.OsFlowsMonitorWorkflowID, osFlowsConfig).
+		DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
+			assert.Equal(t, "critical", cfg.GetString(flags.FlagProjectBusinessCriticality))
+			assert.Equal(t, "production", cfg.GetString(flags.FlagProjectEnvironment))
+			assert.Equal(t, "production", cfg.GetString(flags.FlagProjectLifecycle))
+			assert.Equal(t, "team=backend", cfg.GetString(flags.FlagProjectTags))
+			assert.Equal(t, "my-sbom-project", cfg.GetString(flags.FlagProjectName))
+			return []workflow.Data{}, nil
+		}).Times(1)
+
+	result, err := sbommonitor.MonitorWorkflow(mockICTX, []workflow.Data{})
+
+	require.NoError(t, err)
+	require.NotNil(t, result)
+}
+
+func TestSBOMMonitorWorkflow_DflyRollout_NoFileFlag(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, "", mockEngine)
+	mockICTX.GetConfiguration().Set(flags.FlagExperimental, true)
+	mockICTX.GetConfiguration().Set(sbommonitor.FeatureFlagSBOMMonitor, true)
+	mockICTX.GetConfiguration().Set(sbommonitor.FeatureFlagDflySbomMonitor, true)
+
+	_, err := sbommonitor.MonitorWorkflow(mockICTX, []workflow.Data{})
+
+	assert.ErrorContains(t, err, "Flag `--file` is required to execute this command.")
+}
+
 func TestSBOMMonitorWorkflow_NoRemoteRepoURL(t *testing.T) {
 	mockICTX := createMockICTX(t)
 	mockICTX.GetConfiguration().Set("experimental", true)
