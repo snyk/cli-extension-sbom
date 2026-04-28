@@ -59,6 +59,7 @@ func SBOMWorkflow(
 	ai := ictx.GetAnalytics()
 	ai.AddExtensionBoolValue(constants.ShowMavenBuildScope, config.GetBool(constants.FeatureFlagShowMavenBuildScope))
 	ai.AddExtensionBoolValue(constants.ShowNpmScope, config.GetBool(constants.FeatureFlagShowNpmScope))
+	ai.AddExtensionBoolValue(constants.AllowIncompleteSBOM, config.GetBool(flags.FlagAllowIncompleteSBOM))
 
 	depGraphResult, err := GetDepGraph(ictx)
 	if err != nil {
@@ -72,6 +73,7 @@ func SBOMWorkflow(
 		config.GetString(configuration.API_URL),
 		orgID,
 		depGraphResult.DepGraphBytes,
+		depGraphResult.ScanErrors,
 		service.NewSubject(depGraphResult.Name, version),
 		&service.Tool{Vendor: "Snyk", Name: ri.GetName(), Version: ri.GetVersion()},
 		format,
