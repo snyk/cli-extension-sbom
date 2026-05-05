@@ -34,15 +34,16 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	version := config.GetString(flags.FlagVersion)
 
 	depGraphConfig := config.Clone()
-	if config.GetBool(flags.FlagAllProjects) {
+	if config.GetBool(flags.FlagAllowIncompleteSBOM) {
+		depGraphConfig.Set("fail-fast", false)
+	} else if config.GetBool(flags.FlagAllProjects) {
 		depGraphConfig.Set("fail-fast", true)
 	}
 
-	allowIncomplete := config.GetBool(flags.FlagAllowIncompleteSBOM)
-	if allowIncomplete {
-		depGraphConfig.Set("fail-fast", false)
-		depGraphConfig.Set("print-output-jsonl-with-errors", true)
-	}
+	// New model: SBOM always wants complete (unpruned) JSONL with errors.
+	// PHASE 2: Once the dep-graph router handles unpruned output natively,
+	// this flag will no longer be needed (--jsonl will be removed from the CLI).
+	depGraphConfig.Set("prune", false)
 
 	// Currently, we don't support dotnet runtime resolution for SBOMs.
 	// This will come in a future release.
