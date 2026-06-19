@@ -34,9 +34,6 @@ const (
 	FlagNugetAssetsProjectName       = "assets-project-name"
 	FlagNugetPkgsFolder              = "packages-folder"
 	FlagUnmanagedMaxDepth            = "max-depth"
-	FlagPolicyPath                   = "policy-path"
-	FlagRemoteRepoURL                = "remote-repo-url"
-	FlagTargetReference              = "target-reference"
 	FlagIncludeProvenance            = "include-provenance"
 
 	// OS Flows flags.
@@ -47,12 +44,19 @@ const (
 	FlagRiskScoreThreshold         = "risk-score-threshold"
 	FlagSeverityThreshold          = "severity-threshold"
 	FlagGoModuleLevel              = "go-module-level"
+	FlagPolicyPath                 = "policy-path"
+	FlagRemoteRepoURL              = "remote-repo-url"
+	FlagTargetReference            = "target-reference"
+	FlagAssetName                  = "asset-name"
 	FlagProjectName                = "project-name"
 	FlagProjectEnvironment         = "project-environment"
 	FlagProjectLifecycle           = "project-lifecycle"
 	FlagProjectBusinessCriticality = "project-business-criticality"
 	FlagProjectTags                = "project-tags"
 	FlagTags                       = "tags"
+
+	// FlagReport persists the test result as a monitored project (replaces `sbom monitor`).
+	FlagReport = "report"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
@@ -111,20 +115,13 @@ func GetSBOMTestFlagSet() *pflag.FlagSet {
 	flagSet.Int(FlagRiskScoreThreshold, -1, "Include findings at or over this risk score threshold.")
 	flagSet.String(FlagSeverityThreshold, "", "Report only findings at the specified level or higher.")
 
-	return flagSet
-}
-
-func GetSBOMMonitorFlagSet() *pflag.FlagSet {
-	flagSet := pflag.NewFlagSet("snyk-cli-extension-sbom-monitor", pflag.ExitOnError)
-
-	flagSet.Bool(FlagExperimental, false, "Enable experimental sbom monitor command.")
-	flagSet.String(FlagFile, "", "Specify a SBOM file.")
+	// `--report` and the project-attribute flags that accompany it. When `--report` is set,
+	// the test result is persisted as a monitored project (this replaces `snyk sbom monitor`).
+	flagSet.Bool(FlagReport, false, "Share results with the Snyk Web UI, persisting them as a monitored project.")
 	flagSet.String(FlagPolicyPath, "", "Manually pass a path to a .snyk policy file.")
 	flagSet.String(FlagRemoteRepoURL, "", "Set or override the remote URL for the repository that you would like to monitor.")
 	flagSet.String(FlagTargetReference, "", "Specify a reference that differentiates this project, for example, a branch name or version.")
-
-	// Flags forwarded to the os-flows monitor workflow when dragonfly is enabled.
-	flagSet.String(FlagSBOM, "", "Specify an SBOM file to be monitored.")
+	flagSet.String(FlagAssetName, "", "Set or override the asset (target) name when persisting results via --report.")
 	flagSet.String(FlagProjectName, "", "Specify a name for the project.")
 	flagSet.String(FlagProjectEnvironment, "", "Set the project environment project attribute to one or more values (comma-separated).")
 	flagSet.String(FlagProjectLifecycle, "", "Set the project lifecycle project attribute to one or more values (comma-separated).")

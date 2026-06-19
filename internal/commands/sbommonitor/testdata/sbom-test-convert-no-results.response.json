@@ -1,9 +1,0 @@
-{
-  "scanResults": [],
-  "warnings": [
-    {
-      "type": "NoComponents",
-      "msg":"This is a warning"
-    }
-  ]
-}
