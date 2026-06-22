@@ -184,6 +184,61 @@ func TestGetSBOMTestFlagSet(t *testing.T) {
 			isBool:   false,
 			expected: "",
 		},
+		{
+			flagName: FlagReport,
+			isBool:   true,
+			expected: false,
+		},
+		{
+			flagName: FlagPolicyPath,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagRemoteRepoURL,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagTargetReference,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagAssetName,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagProjectName,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagProjectEnvironment,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagProjectLifecycle,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagProjectBusinessCriticality,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagProjectTags,
+			isBool:   false,
+			expected: "",
+		},
+		{
+			flagName: FlagTags,
+			isBool:   false,
+			expected: "",
+		},
 	}
 
 	for _, tt := range tc {

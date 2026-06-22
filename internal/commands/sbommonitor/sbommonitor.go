@@ -18,16 +18,10 @@ import (
 	view "github.com/snyk/cli-extension-sbom/internal/view/sbommonitor"
 )
 
-var (
-	WorkflowID               = workflow.NewWorkflowIdentifier("sbom.monitor")
-	WorkflowDataID           = workflow.NewTypeIdentifier(WorkflowID, "sbom.monitor")
-	OsFlowsMonitorWorkflowID = workflow.NewWorkflowIdentifier("monitor")
-)
+var WorkflowID = workflow.NewWorkflowIdentifier("sbom.monitor")
+var WorkflowDataID = workflow.NewTypeIdentifier(WorkflowID, "sbom.monitor")
 
-const (
-	FeatureFlagSBOMMonitor     = "feature_flag_sbom_monitor"
-	FeatureFlagDflySbomMonitor = "internal_snyk_cli_rollout_dfly_sbom_monitor"
-)
+const FeatureFlagSBOMMonitor = "feature_flag_sbom_monitor"
 
 func RegisterWorkflows(e workflow.Engine) error {
 	sbomFlagset := flags.GetSBOMMonitorFlagSet()
@@ -39,10 +33,6 @@ func RegisterWorkflows(e workflow.Engine) error {
 	}
 
 	config_utils.AddFeatureFlagToConfig(e, FeatureFlagSBOMMonitor, "sbomMonitorBeta")
-
-	config_utils.AddFeatureFlagsToConfig(e, map[string]string{
-		FeatureFlagDflySbomMonitor: "rollout-dfly-sbom-monitor",
-	})
 
 	return nil
 }
@@ -75,20 +65,6 @@ func MonitorWorkflowWithDI(
 		return nil, errFactory.NewMissingExperimentalFlagError()
 	}
 
-	if filename == "" {
-		return nil, errFactory.NewMissingFilenameFlagError()
-	}
-
-	if config.GetBool(FeatureFlagDflySbomMonitor) {
-		logger.Println("Dragonfly SBOM monitor rollout enabled, delegating to os-flows monitor workflow")
-
-		engine := ictx.GetEngine()
-		osFlowsMonitorConfig := config.Clone()
-		osFlowsMonitorConfig.Set(flags.FlagSBOM, filename)
-
-		return engine.InvokeWithConfig(OsFlowsMonitorWorkflowID, osFlowsMonitorConfig)
-	}
-
 	// Check if the feature can be used
 	if !config.GetBool(FeatureFlagSBOMMonitor) {
 		return nil, errFactory.NewFeatureNotPermittedError(FeatureFlagSBOMMonitor)
@@ -102,6 +78,10 @@ func MonitorWorkflowWithDI(
 
 	if remoteRepoURL == "" {
 		remoteRepoURL = remoteRepoUrlGetter.GetRemoteOriginURL()
+	}
+
+	if filename == "" {
+		return nil, errFactory.NewMissingFilenameFlagError()
 	}
 
 	logger.Println("Target file:", filename)

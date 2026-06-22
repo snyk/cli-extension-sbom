@@ -14,7 +14,8 @@ func Init(e workflow.Engine) error {
 		return err
 	}
 
-	// Register the "sbom test" command
+	// Register the "sbom test" command (also handles persisting test results
+	// to the Snyk Web UI via `sbom test --report`).
 	if err := sbomtest.RegisterWorkflows(e); err != nil {
 		return err
 	}
