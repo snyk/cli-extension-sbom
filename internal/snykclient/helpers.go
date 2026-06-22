@@ -47,3 +47,13 @@ func errorDocumentToString(err errorDocument) string {
 func errorObjectToString(err *errorObject) string {
 	return fmt.Sprintf("%s %s: %s", err.Status, err.Title, err.Detail)
 }
+
+func errorWithRequestID(message string, r *http.Response) error {
+	requestID := r.Header.Get("snyk-request-id")
+
+	if requestID == "" {
+		return fmt.Errorf("%s (%s)", message, r.Status)
+	}
+
+	return fmt.Errorf("%s (%s - requestId: %s)", message, r.Status, requestID)
+}

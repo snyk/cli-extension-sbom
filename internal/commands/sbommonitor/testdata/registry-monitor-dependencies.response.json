@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "id": "abc-123",
+  "isMonitored": true,
+  "uri": "https://app.snyk.io/foo-bar",
+  "projectName": "myProjectName"
+}

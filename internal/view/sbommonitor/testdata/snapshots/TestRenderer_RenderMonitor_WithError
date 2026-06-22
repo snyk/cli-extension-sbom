@@ -1,0 +1,15 @@
+[1mMonitoring 'Test Project'...[0m
+
+Explore this snapshot at https://example.com/test_project
+
+Notifications about newly disclosed issues related to these dependencies will be emailed to you.
+
+─────────────────────────────────────────────────────
+
+[1mError[0m
+
+An error occurred while attempting to monitor parts of the SBOM document.
+
+Details:
+	something is very wrong!
+

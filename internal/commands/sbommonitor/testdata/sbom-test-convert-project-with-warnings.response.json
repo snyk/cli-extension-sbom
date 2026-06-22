@@ -1,0 +1,39 @@
+{
+  "scanResults": [
+    {
+      "name": "alice",
+      "policy": "",
+      "target": {
+        "name": "alice-target"
+      },
+      "identity": {
+        "type": "npm"
+      }
+    },
+    {
+      "name": "bob",
+      "policy": "",
+      "target": {
+        "name": "bob-target"
+      },
+      "identity": {
+        "type": "golang"
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "NoComponents",
+      "msg": "This is a warning"
+    },
+    {
+      "type": "NoRootNode",
+      "msg": "No root node warning"
+    },
+    {
+      "type": "UnsupportedComponent",
+      "msg": "component must have a PackageURL",
+      "bom_ref": "a-bom-ref"
+    }
+  ]
+}

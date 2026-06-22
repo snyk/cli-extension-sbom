@@ -4,6 +4,7 @@ import (
 	"github.com/snyk/go-application-framework/pkg/workflow"
 
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomcreate"
+	"github.com/snyk/cli-extension-sbom/internal/commands/sbommonitor"
 	"github.com/snyk/cli-extension-sbom/internal/commands/sbomtest"
 )
 
@@ -13,9 +14,14 @@ func Init(e workflow.Engine) error {
 		return err
 	}
 
-	// Register the "sbom test" command (also handles the legacy
-	// "sbom monitor" use case via `sbom test --report`).
+	// Register the "sbom test" command (also handles persisting test results
+	// to the Snyk Web UI via `sbom test --report`).
 	if err := sbomtest.RegisterWorkflows(e); err != nil {
+		return err
+	}
+
+	// Register the "sbom monitor" command
+	if err := sbommonitor.RegisterWorkflows(e); err != nil {
 		return err
 	}
 
