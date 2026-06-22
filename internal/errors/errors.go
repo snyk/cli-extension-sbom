@@ -149,6 +149,14 @@ func (ef *ErrorFactory) NewMissingFilenameFlagError() *SBOMExtensionError {
 	)
 }
 
+func (ef *ErrorFactory) NewMissingAssetNameFlagError() *SBOMExtensionError {
+	return ef.newErr(
+		fmt.Errorf("asset-name flag not set"),
+		"Flag `--asset-name` is required when using `--report`. "+
+			"Value should be a name that identifies the asset being monitored.",
+	)
+}
+
 func (ef *ErrorFactory) NewMissingRemoteRepoUrlError() *SBOMExtensionError {
 	return ef.newErr(
 		fmt.Errorf("remote repo URL not found"),
