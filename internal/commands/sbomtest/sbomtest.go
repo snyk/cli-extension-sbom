@@ -67,8 +67,14 @@ func TestWorkflow(
 	// `--report` is the successor to the (removed) `sbom monitor` command;
 	// keep it behind the same rollout FF so that we don't widen access
 	// during the migration.
-	if config.GetBool(flags.FlagReport) && !config.GetBool(FeatureFlagDflySbomMonitor) {
-		return nil, errFactory.NewFeatureNotPermittedError(FeatureFlagDflySbomMonitor)
+	if config.GetBool(flags.FlagReport) {
+		if !config.GetBool(FeatureFlagDflySbomMonitor) {
+			return nil, errFactory.NewFeatureNotPermittedError(FeatureFlagDflySbomMonitor)
+		}
+
+		if config.GetString(flags.FlagAssetName) == "" {
+			return nil, errFactory.NewMissingAssetNameFlagError()
+		}
 	}
 
 	osFlowsTestConfig := config.Clone()
