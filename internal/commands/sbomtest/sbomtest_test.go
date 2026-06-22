@@ -151,15 +151,22 @@ func TestSBOMTestWorkflow_AssetName_CarriedThroughToOSF(t *testing.T) {
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set(flags.FlagAssetName, "my-asset")
 
-	osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
-	osFlowsTestConfig.Set(flags.FlagSBOM, "testdata/bom.json")
-
-	mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
+	var forwardedConfig configuration.Configuration
+	mockEngine.EXPECT().
+		InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, gomock.Any()).
+		DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
+			forwardedConfig = cfg
+			return []workflow.Data{}, nil
+		}).
+		Times(1)
 
 	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
 	require.NoError(t, err)
 	require.NotNil(t, result)
+	require.NotNil(t, forwardedConfig, "expected the workflow to forward a config to the os-flows test workflow")
+	assert.Equal(t, "my-asset", forwardedConfig.GetString(flags.FlagAssetName), "--asset-name should be forwarded to the os-flows test workflow")
+	assert.Equal(t, "testdata/bom.json", forwardedConfig.GetString(flags.FlagSBOM), "--sbom should be derived from --file when forwarding")
 }
 
 func TestSBOMTestWorkflow_ExperimentalFlagIgnored(t *testing.T) {
