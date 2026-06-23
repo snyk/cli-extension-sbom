@@ -481,6 +481,46 @@ func TestGetDepGraph_disablesDotnetRuntimeResolutionWhenNotPreviouslySet(t *test
 	assert.NotNil(t, result)
 }
 
+func TestGetDepGraph_includeComponentMetadata(t *testing.T) {
+	tests := []struct {
+		name                           string
+		enableFeatureFlag              bool
+		expectIncludeComponentMetadata bool
+	}{
+		{name: "feature flag enabled sets include-component-metadata", enableFeatureFlag: true, expectIncludeComponentMetadata: true},
+		{name: "feature flag disabled leaves include-component-metadata unset", enableFeatureFlag: false, expectIncludeComponentMetadata: false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			mockEngine := mocks.NewMockEngine(ctrl)
+			mockEngine.EXPECT().
+				InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
+				DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
+					assert.Equal(t, tt.expectIncludeComponentMetadata, cfg.GetBool("include-component-metadata"), "include-component-metadata flag mismatch")
+					return []workflow.Data{newDepGraphData(t, depGraphData)}, nil
+				}).
+				Times(1)
+
+			mockLogger := zerolog.New(io.Discard)
+			mockConfig := configuration.New()
+			mockConfig.Set(constants.FeatureFlagSbomIncludeComponentMetadata, tt.enableFeatureFlag)
+
+			mockICTX := mocks.NewMockInvocationContext(ctrl)
+			mockICTX.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
+			mockICTX.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
+			mockICTX.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
+
+			result, err := sbomcreate.GetDepGraph(mockICTX)
+			require.NoError(t, err)
+			assert.NotNil(t, result)
+		})
+	}
+}
+
 func TestGetDepGraph_uvSupport(t *testing.T) {
 	tests := []struct {
 		name                string

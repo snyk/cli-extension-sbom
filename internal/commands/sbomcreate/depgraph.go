@@ -34,27 +34,8 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 	version := config.GetString(flags.FlagVersion)
 
 	depGraphConfig := config.Clone()
-	if config.GetBool(flags.FlagAllProjects) {
-		depGraphConfig.Set("fail-fast", true)
-	}
-
-	allowIncomplete := config.GetBool(flags.FlagAllowIncompleteSBOM)
-	if allowIncomplete {
-		depGraphConfig.Set("fail-fast", false)
-		depGraphConfig.Set("print-output-jsonl-with-errors", true)
-	}
-
-	// Currently, we don't support dotnet runtime resolution for SBOMs.
-	// This will come in a future release.
-	depGraphConfig.Set("dotnet-runtime-resolution", false)
-
-	useSCAPlugins, err := shouldUseSCAPlugins(config, logger)
-	if err != nil {
+	if err := applyDepGraphConfig(depGraphConfig, logger); err != nil {
 		return nil, err
-	}
-	if useSCAPlugins {
-		depGraphConfig.Set("use-sbom-resolution", true)
-		depGraphConfig.Set("force-single-graph", true)
 	}
 
 	depGraphs, err := engine.InvokeWithConfig(DepGraphWorkflowID, depGraphConfig)
@@ -103,6 +84,38 @@ func GetDepGraph(ictx workflow.InvocationContext) (*DepGraphResult, error) {
 		DepGraphBytes: depGraphsBytes,
 		ScanErrors:    scanErrors,
 	}, nil
+}
+
+// applyDepGraphConfig applies the SBOM-specific overrides to the (already cloned)
+// config used when invoking the depgraph workflow.
+func applyDepGraphConfig(depGraphConfig configuration.Configuration, logger *zerolog.Logger) error {
+	if depGraphConfig.GetBool(flags.FlagAllProjects) {
+		depGraphConfig.Set("fail-fast", true)
+	}
+
+	if depGraphConfig.GetBool(flags.FlagAllowIncompleteSBOM) {
+		depGraphConfig.Set("fail-fast", false)
+		depGraphConfig.Set("print-output-jsonl-with-errors", true)
+	}
+
+	// Currently, we don't support dotnet runtime resolution for SBOMs.
+	// This will come in a future release.
+	depGraphConfig.Set("dotnet-runtime-resolution", false)
+
+	if depGraphConfig.GetBool(constants.FeatureFlagSbomIncludeComponentMetadata) {
+		depGraphConfig.Set("include-component-metadata", true)
+	}
+
+	useSCAPlugins, err := shouldUseSCAPlugins(depGraphConfig, logger)
+	if err != nil {
+		return err
+	}
+	if useSCAPlugins {
+		depGraphConfig.Set("use-sbom-resolution", true)
+		depGraphConfig.Set("force-single-graph", true)
+	}
+
+	return nil
 }
 
 func getInputDirectories(config configuration.Configuration) ([]string, error) {

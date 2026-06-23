@@ -20,3 +20,9 @@ const ShowNpmScope = "show-npm-scope"
 
 // AllowIncompleteSBOM is the analytics key for the allow-incomplete-sbom CLI flag.
 const AllowIncompleteSBOM = "allow-incomplete-sbom"
+
+// FeatureFlagSbomIncludeComponentMetadata gates including component metadata (e.g. package hashes, distribution URLs) in SBOMs.
+const FeatureFlagSbomIncludeComponentMetadata = "internal_snyk_sbom_include_component_metadata_enabled"
+
+// SbomIncludeComponentMetadata is the feature-flag-service name for the include-component-metadata feature.
+const SbomIncludeComponentMetadata = "sbom-include-component-metadata"
