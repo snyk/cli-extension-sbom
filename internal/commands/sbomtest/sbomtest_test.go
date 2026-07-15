@@ -131,7 +131,7 @@ func TestSBOMTestWorkflow_ReportFlag_FFEnabled_NoAssetName_ReturnsError(t *testi
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
 	require.Error(t, err)
-	assert.ErrorContains(t, err, "Flag `--asset-name` is required when using `--report`.")
+	assert.ErrorContains(t, err, "Flag `--asset-name` is required when using `--report` or `--monitor`.")
 }
 
 func TestSBOMTestWorkflow_ReportFlag_FFEnabled_EmptyAssetName_ReturnsError(t *testing.T) {
@@ -150,7 +150,7 @@ func TestSBOMTestWorkflow_ReportFlag_FFEnabled_EmptyAssetName_ReturnsError(t *te
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
 	require.Error(t, err)
-	assert.ErrorContains(t, err, "Flag `--asset-name` is required when using `--report`.")
+	assert.ErrorContains(t, err, "Flag `--asset-name` is required when using `--report` or `--monitor`.")
 }
 
 func TestSBOMTestWorkflow_NoReportFlag_NoAssetName_DelegatesToOSF(t *testing.T) {

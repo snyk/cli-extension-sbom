@@ -152,7 +152,7 @@ func (ef *ErrorFactory) NewMissingFilenameFlagError() *SBOMExtensionError {
 func (ef *ErrorFactory) NewMissingAssetNameFlagError() *SBOMExtensionError {
 	return ef.newErr(
 		fmt.Errorf("asset-name flag not set"),
-		"Flag `--asset-name` is required when using `--report`. "+
+		"Flag `--asset-name` is required when using `--report` or `--monitor`. "+
 			"Value should be a name that identifies the asset being monitored.",
 	)
 }

@@ -126,7 +126,7 @@ func GetSBOMTestFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagPolicyPath, "", "Manually pass a path to a .snyk policy file.")
 	flagSet.String(FlagRemoteRepoURL, "", "Set or override the remote URL for the repository that you would like to monitor.")
 	flagSet.String(FlagTargetReference, "", "Specify a reference that differentiates this project, for example, a branch name or version.")
-	flagSet.String(FlagAssetName, "", "Set or override the asset (target) name when persisting results via --report.")
+	flagSet.String(FlagAssetName, "", "Set or override the asset (target) name when persisting results via --report or --monitor.")
 	flagSet.String(FlagProjectName, "", "Specify a name for the project.")
 	flagSet.String(FlagProjectEnvironment, "", "Set the project environment project attribute to one or more values (comma-separated).")
 	flagSet.String(FlagProjectLifecycle, "", "Set the project lifecycle project attribute to one or more values (comma-separated).")
