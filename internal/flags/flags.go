@@ -57,6 +57,10 @@ const (
 
 	// FlagReport persists the test result as a monitored project (replaces `sbom monitor`).
 	FlagReport = "report"
+
+	// FlagMonitor persists the test result as a monitored project with recurring
+	// (daily) retests. Forwarded to the os-flows test workflow.
+	FlagMonitor = "monitor"
 )
 
 func GetSBOMCreateFlagSet() *pflag.FlagSet {
@@ -118,6 +122,7 @@ func GetSBOMTestFlagSet() *pflag.FlagSet {
 	// `--report` and the project-attribute flags that accompany it. When `--report` is set,
 	// the test result is persisted as a monitored project (this replaces `snyk sbom monitor`).
 	flagSet.Bool(FlagReport, false, "Share results with the Snyk Web UI, persisting them as a monitored project.")
+	flagSet.Bool(FlagMonitor, false, "Monitor this project with recurring tests (daily retest frequency).")
 	flagSet.String(FlagPolicyPath, "", "Manually pass a path to a .snyk policy file.")
 	flagSet.String(FlagRemoteRepoURL, "", "Set or override the remote URL for the repository that you would like to monitor.")
 	flagSet.String(FlagTargetReference, "", "Specify a reference that differentiates this project, for example, a branch name or version.")

@@ -4,9 +4,17 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	. "github.com/snyk/cli-extension-sbom/internal/flags"
 )
+
+func TestGetSBOMTestFlagSet_HasMonitorFlag(t *testing.T) {
+	fs := GetSBOMTestFlagSet()
+	f := fs.Lookup(FlagMonitor)
+	require.NotNil(t, f, "expected --monitor on the sbom test flag set")
+	assert.Equal(t, "false", f.DefValue)
+}
 
 func TestGetSBOMExportFlagSet(t *testing.T) {
 	flagSet := GetSBOMCreateFlagSet()
