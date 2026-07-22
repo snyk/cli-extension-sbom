@@ -88,8 +88,6 @@ func TestSBOMTestWorkflow_PassesConfigToOSF(t *testing.T) {
 	require.NotNil(t, result)
 }
 
-// Both --report and --monitor are gated by the same rollout FF + --asset-name (DD2)
-// and, once satisfied, delegate to the os-flows test workflow.
 func TestSBOMTestWorkflow_MonitoredFlags_FFEnabled_DelegatesToOSF(t *testing.T) {
 	for _, flag := range []string{flags.FlagReport, flags.FlagMonitor} {
 		t.Run(flag, func(t *testing.T) {
@@ -264,7 +262,6 @@ func TestSBOMTestWorkflow_MonitorFlag_FFEnabled_NoAssetName_ReturnsError(t *test
 	require.Error(t, err)
 }
 
-// The flag value is forwarded to the os-flows test workflow (DD1: independent of --report).
 func TestSBOMTestWorkflow_MonitorFlag_CarriedThroughToOSF(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
