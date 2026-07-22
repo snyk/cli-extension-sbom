@@ -64,10 +64,11 @@ func TestWorkflow(
 		return nil, err
 	}
 
-	// `--report` is the successor to the (removed) `sbom monitor` command;
-	// keep it behind the same rollout FF so that we don't widen access
-	// during the migration.
-	if config.GetBool(flags.FlagReport) {
+	// Both `--report` and `--monitor` persist a named, monitored asset. `--report`
+	// is the successor to the (removed) `sbom monitor` command; `--monitor` adds a
+	// recurring (daily) retest frequency. Keep them behind the same rollout FF and
+	// require an asset name so that we don't widen access during the migration.
+	if config.GetBool(flags.FlagReport) || config.GetBool(flags.FlagMonitor) {
 		if !config.GetBool(FeatureFlagDflySbomMonitor) {
 			return nil, errFactory.NewFeatureNotPermittedError(FeatureFlagDflySbomMonitor)
 		}

@@ -88,26 +88,30 @@ func TestSBOMTestWorkflow_PassesConfigToOSF(t *testing.T) {
 	require.NotNil(t, result)
 }
 
-func TestSBOMTestWorkflow_ReportFlag_FFEnabled_DelegatesToOSF(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	mockEngine := mocks.NewMockEngine(ctrl)
+func TestSBOMTestWorkflow_MonitoredFlags_FFEnabled_DelegatesToOSF(t *testing.T) {
+	for _, flag := range []string{flags.FlagReport, flags.FlagMonitor} {
+		t.Run(flag, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			mockEngine := mocks.NewMockEngine(ctrl)
 
-	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
-	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
-	mockICTX.GetConfiguration().Set(flags.FlagReport, true)
-	mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagDflySbomMonitor, true)
-	mockICTX.GetConfiguration().Set(flags.FlagAssetName, "my-asset")
+			mockICTX := mockInvocationContext(t, ctrl, mockEngine)
+			mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+			mockICTX.GetConfiguration().Set(flag, true)
+			mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagDflySbomMonitor, true)
+			mockICTX.GetConfiguration().Set(flags.FlagAssetName, "my-asset")
 
-	osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
-	osFlowsTestConfig.Set(flags.FlagSBOM, "testdata/bom.json")
+			osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
+			osFlowsTestConfig.Set(flags.FlagSBOM, "testdata/bom.json")
 
-	mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
+			mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
 
-	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+			result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
-	require.NoError(t, err)
-	require.NotNil(t, result)
+			require.NoError(t, err)
+			require.NotNil(t, result)
+		})
+	}
 }
 
 func TestSBOMTestWorkflow_ReportFlag_FFEnabled_NoAssetName_ReturnsError(t *testing.T) {
@@ -125,7 +129,7 @@ func TestSBOMTestWorkflow_ReportFlag_FFEnabled_NoAssetName_ReturnsError(t *testi
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
 	require.Error(t, err)
-	assert.ErrorContains(t, err, "Flag `--asset-name` is required when using `--report`.")
+	assert.ErrorContains(t, err, "Flag `--asset-name` is required when using `--report` or `--monitor`.")
 }
 
 func TestSBOMTestWorkflow_ReportFlag_FFEnabled_EmptyAssetName_ReturnsError(t *testing.T) {
@@ -144,7 +148,7 @@ func TestSBOMTestWorkflow_ReportFlag_FFEnabled_EmptyAssetName_ReturnsError(t *te
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
 	require.Error(t, err)
-	assert.ErrorContains(t, err, "Flag `--asset-name` is required when using `--report`.")
+	assert.ErrorContains(t, err, "Flag `--asset-name` is required when using `--report` or `--monitor`.")
 }
 
 func TestSBOMTestWorkflow_NoReportFlag_NoAssetName_DelegatesToOSF(t *testing.T) {
@@ -225,6 +229,65 @@ func TestSBOMTestWorkflow_AssetName_CarriedThroughToOSF(t *testing.T) {
 	require.NotNil(t, forwardedConfig, "expected the workflow to forward a config to the os-flows test workflow")
 	assert.Equal(t, "my-asset", forwardedConfig.GetString(flags.FlagAssetName), "--asset-name should be forwarded to the os-flows test workflow")
 	assert.Equal(t, "testdata/bom.json", forwardedConfig.GetString(flags.FlagSBOM), "--sbom should be derived from --file when forwarding")
+}
+
+func TestSBOMTestWorkflow_MonitorFlag_FFDisabled_ReturnsError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	mockICTX.GetConfiguration().Set(flags.FlagMonitor, true)
+
+	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+
+	assert.ErrorContains(t, err, "not available for your organization")
+}
+
+func TestSBOMTestWorkflow_MonitorFlag_FFEnabled_NoAssetName_ReturnsError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	mockICTX.GetConfiguration().Set(flags.FlagMonitor, true)
+	mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagDflySbomMonitor, true)
+
+	mockEngine.EXPECT().InvokeWithConfig(gomock.Any(), gomock.Any()).Times(0)
+
+	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+
+	require.Error(t, err)
+}
+
+func TestSBOMTestWorkflow_MonitorFlag_CarriedThroughToOSF(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	mockICTX.GetConfiguration().Set(flags.FlagMonitor, true)
+	mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagDflySbomMonitor, true)
+	mockICTX.GetConfiguration().Set(flags.FlagAssetName, "my-asset")
+
+	var forwardedConfig configuration.Configuration
+	mockEngine.EXPECT().
+		InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, gomock.Any()).
+		DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
+			forwardedConfig = cfg
+			return []workflow.Data{}, nil
+		}).
+		Times(1)
+
+	result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+
+	require.NoError(t, err)
+	require.NotNil(t, result)
+	require.NotNil(t, forwardedConfig)
+	assert.True(t, forwardedConfig.GetBool(flags.FlagMonitor), "--monitor must be forwarded to os-flows")
 }
 
 func TestSBOMTestWorkflow_ExperimentalFlagIgnored(t *testing.T) {
