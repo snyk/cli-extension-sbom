@@ -22,6 +22,7 @@ const (
 	FlagSubProject                   = "sub-project"
 	FlagGradleSubProject             = "gradle-sub-project"
 	FlagGradleNormalizeDeps          = "gradle-normalize-deps"
+	FlagGradleRefreshDependencies    = "gradle-refresh-dependencies"
 	FlagAllSubProjects               = "all-sub-projects"
 	FlagConfigurationMatching        = "configuration-matching"
 	FlagConfigurationAttributes      = "configuration-attributes"
@@ -87,6 +88,13 @@ func GetSBOMCreateFlagSet() *pflag.FlagSet {
 	flagSet.String(FlagSubProject, "", "Name of Gradle sub-project to test.")
 	flagSet.String(FlagGradleSubProject, "", "Name of Gradle sub-project to test.")
 	flagSet.Bool(FlagGradleNormalizeDeps, false, "Normalize Gradle dependencies.")
+	flagSet.Bool(FlagGradleRefreshDependencies, false,
+		"Force Gradle to refresh dependencies so distribution URLs can be captured on a warm cache "+
+			"(used with component metadata; forces network access).")
+	// Undocumented: opt-in companion to component metadata, forwarded verbatim to
+	// the depgraph workflow. Not part of the public SBOM flag surface.
+	//nolint:errcheck // Can only fail if the flag above is unregistered; asserted in flags_test.go.
+	_ = flagSet.MarkHidden(FlagGradleRefreshDependencies)
 	flagSet.Bool(FlagAllSubProjects, false, "Test all sub-projects in a multi-project build.")
 	flagSet.String(FlagNPMStrictOutOfSync, "true", "Prevent testing out-of-sync lockfiles.")
 	flagSet.Bool(FlagNugetAssetsProjectName, false,

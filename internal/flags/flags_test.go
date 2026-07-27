@@ -16,6 +16,17 @@ func TestGetSBOMTestFlagSet_HasMonitorFlag(t *testing.T) {
 	assert.Equal(t, "false", f.DefValue)
 }
 
+// The refresh flag is deliberately undocumented, and MarkHidden's error is discarded at
+// the registration site. If the constant and the registration ever drift apart, the flag
+// would silently show up in `snyk sbom` help, so assert both presence and hiddenness.
+func TestGetSBOMCreateFlagSet_GradleRefreshDependenciesIsHidden(t *testing.T) {
+	fs := GetSBOMCreateFlagSet()
+	f := fs.Lookup(FlagGradleRefreshDependencies)
+	require.NotNil(t, f, "expected --gradle-refresh-dependencies on the sbom create flag set")
+	assert.Equal(t, "false", f.DefValue)
+	assert.True(t, f.Hidden, "--gradle-refresh-dependencies must stay undocumented")
+}
+
 func TestGetSBOMExportFlagSet(t *testing.T) {
 	flagSet := GetSBOMCreateFlagSet()
 
