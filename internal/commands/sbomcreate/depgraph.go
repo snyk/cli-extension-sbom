@@ -98,6 +98,19 @@ func applyDepGraphConfig(depGraphConfig configuration.Configuration, logger *zer
 		depGraphConfig.Set("print-output-jsonl-with-errors", true)
 	}
 
+	// When the user requests pruning (-p) and the prune-effective-graph feature flag is enabled,
+	// ask the depgraph workflow for the effective (pruned) graph so pruning is applied before the
+	// graph is emitted. Otherwise the SBOM path receives the raw (unpruned) graph and -p is a no-op.
+	if depGraphConfig.GetBool(constants.FeatureFlagSbomPruneEffectiveGraph) &&
+		depGraphConfig.GetBool(flags.FlagPruneRepeatedSubDependencies) {
+		if depGraphConfig.GetBool(flags.FlagAllowIncompleteSBOM) {
+			// Request the effective graph while preserving the allow-incomplete (partial-failure) behavior.
+			depGraphConfig.Set("effective-graph-with-errors", true)
+		} else {
+			depGraphConfig.Set("effective-graph", true)
+		}
+	}
+
 	// Currently, we don't support dotnet runtime resolution for SBOMs.
 	// This will come in a future release.
 	depGraphConfig.Set("dotnet-runtime-resolution", false)

@@ -29,6 +29,7 @@ func RegisterWorkflows(e workflow.Engine) error {
 		constants.FeatureFlagShowMavenBuildScope:          constants.ShowMavenBuildScope,
 		constants.FeatureFlagShowNpmScope:                 constants.ShowNpmScope,
 		constants.FeatureFlagSbomIncludeComponentMetadata: constants.SbomIncludeComponentMetadata,
+		constants.FeatureFlagSbomPruneEffectiveGraph:      constants.SbomPruneEffectiveGraph,
 	})
 
 	return nil
@@ -61,6 +62,7 @@ func SBOMWorkflow(
 	ai.AddExtensionBoolValue(constants.ShowMavenBuildScope, config.GetBool(constants.FeatureFlagShowMavenBuildScope))
 	ai.AddExtensionBoolValue(constants.ShowNpmScope, config.GetBool(constants.FeatureFlagShowNpmScope))
 	ai.AddExtensionBoolValue(constants.SbomIncludeComponentMetadata, config.GetBool(constants.FeatureFlagSbomIncludeComponentMetadata))
+	ai.AddExtensionBoolValue(constants.SbomPruneEffectiveGraph, config.GetBool(constants.FeatureFlagSbomPruneEffectiveGraph))
 	ai.AddExtensionBoolValue(constants.AllowIncompleteSBOM, config.GetBool(flags.FlagAllowIncompleteSBOM))
 
 	depGraphResult, err := GetDepGraph(ictx)

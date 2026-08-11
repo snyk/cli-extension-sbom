@@ -521,6 +521,73 @@ func TestGetDepGraph_includeComponentMetadata(t *testing.T) {
 	}
 }
 
+func TestGetDepGraph_pruneEffectiveGraph(t *testing.T) {
+	tests := []struct {
+		name                         string
+		enableFeatureFlag            bool
+		prune                        bool
+		allowIncomplete              bool
+		expectEffectiveGraph         bool
+		expectEffectiveGraphWithErrs bool
+	}{
+		{
+			name:                 "FF on with -p requests the effective graph",
+			enableFeatureFlag:    true,
+			prune:                true,
+			expectEffectiveGraph: true,
+		},
+		{
+			name:                         "FF on with -p and --allow-incomplete-sbom requests the effective graph with errors",
+			enableFeatureFlag:            true,
+			prune:                        true,
+			allowIncomplete:              true,
+			expectEffectiveGraphWithErrs: true,
+		},
+		{
+			name:              "FF off with -p leaves the raw graph (current behavior)",
+			enableFeatureFlag: false,
+			prune:             true,
+		},
+		{
+			name:              "FF on without -p leaves the raw graph",
+			enableFeatureFlag: true,
+			prune:             false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			mockEngine := mocks.NewMockEngine(ctrl)
+			mockEngine.EXPECT().
+				InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
+				DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
+					assert.Equal(t, tt.expectEffectiveGraph, cfg.GetBool("effective-graph"), "effective-graph flag mismatch")
+					assert.Equal(t, tt.expectEffectiveGraphWithErrs, cfg.GetBool("effective-graph-with-errors"), "effective-graph-with-errors flag mismatch")
+					return []workflow.Data{newDepGraphData(t, depGraphData)}, nil
+				}).
+				Times(1)
+
+			mockLogger := zerolog.New(io.Discard)
+			mockConfig := configuration.New()
+			mockConfig.Set(constants.FeatureFlagSbomPruneEffectiveGraph, tt.enableFeatureFlag)
+			mockConfig.Set(flags.FlagPruneRepeatedSubDependencies, tt.prune)
+			mockConfig.Set(flags.FlagAllowIncompleteSBOM, tt.allowIncomplete)
+
+			mockICTX := mocks.NewMockInvocationContext(ctrl)
+			mockICTX.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
+			mockICTX.EXPECT().GetConfiguration().Return(mockConfig).AnyTimes()
+			mockICTX.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
+
+			result, err := sbomcreate.GetDepGraph(mockICTX)
+			require.NoError(t, err)
+			assert.NotNil(t, result)
+		})
+	}
+}
+
 func TestGetDepGraph_uvSupport(t *testing.T) {
 	tests := []struct {
 		name                string
