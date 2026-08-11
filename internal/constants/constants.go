@@ -26,3 +26,10 @@ const FeatureFlagSbomIncludeComponentMetadata = "internal_snyk_sbom_include_comp
 
 // SbomIncludeComponentMetadata is the feature-flag-service name for the include-component-metadata feature.
 const SbomIncludeComponentMetadata = "sbom-include-component-metadata"
+
+// FeatureFlagSbomPruneEffectiveGraph gates requesting the effective (pruned) dependency graph on the SBOM path
+// when --prune-repeated-subdependencies is set. Without it, the SBOM receives the raw (unpruned) graph and -p is a no-op.
+const FeatureFlagSbomPruneEffectiveGraph = "internal_snyk_sbom_prune_effective_graph_enabled"
+
+// SbomPruneEffectiveGraph is the feature-flag-service name for the prune-effective-graph feature.
+const SbomPruneEffectiveGraph = "sbom-prune-effective-graph"
