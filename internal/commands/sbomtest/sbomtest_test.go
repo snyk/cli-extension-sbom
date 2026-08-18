@@ -89,28 +89,30 @@ func TestSBOMTestWorkflow_PassesConfigToOSF(t *testing.T) {
 }
 
 func TestSBOMTestWorkflow_MonitoredFlags_FFEnabled_DelegatesToOSF(t *testing.T) {
-	for _, flag := range []string{flags.FlagReport, flags.FlagMonitor} {
-		t.Run(flag, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-			mockEngine := mocks.NewMockEngine(ctrl)
+	for _, featureFlag := range []string{sbomtest.FeatureFlagDflySbomMonitor, sbomtest.FeatureFlagEnableSbomMonitor} {
+		for _, flag := range []string{flags.FlagReport, flags.FlagMonitor} {
+			t.Run(featureFlag+"/"+flag, func(t *testing.T) {
+				ctrl := gomock.NewController(t)
+				defer ctrl.Finish()
+				mockEngine := mocks.NewMockEngine(ctrl)
 
-			mockICTX := mockInvocationContext(t, ctrl, mockEngine)
-			mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
-			mockICTX.GetConfiguration().Set(flag, true)
-			mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagDflySbomMonitor, true)
-			mockICTX.GetConfiguration().Set(flags.FlagAssetName, "my-asset")
+				mockICTX := mockInvocationContext(t, ctrl, mockEngine)
+				mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+				mockICTX.GetConfiguration().Set(flag, true)
+				mockICTX.GetConfiguration().Set(featureFlag, true)
+				mockICTX.GetConfiguration().Set(flags.FlagAssetName, "my-asset")
 
-			osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
-			osFlowsTestConfig.Set(flags.FlagSBOM, "testdata/bom.json")
+				osFlowsTestConfig := mockICTX.GetConfiguration().Clone()
+				osFlowsTestConfig.Set(flags.FlagSBOM, "testdata/bom.json")
 
-			mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
+				mockEngine.EXPECT().InvokeWithConfig(sbomtest.OsFlowsTestWorkflowID, osFlowsTestConfig).Return([]workflow.Data{}, nil).Times(1)
 
-			result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+				result, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 
-			require.NoError(t, err)
-			require.NotNil(t, result)
-		})
+				require.NoError(t, err)
+				require.NotNil(t, result)
+			})
+		}
 	}
 }
 
@@ -179,6 +181,22 @@ func TestSBOMTestWorkflow_ReportFlag_FFDisabled_ReturnsError(t *testing.T) {
 	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
 	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
 	mockICTX.GetConfiguration().Set(flags.FlagReport, true)
+
+	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
+
+	assert.ErrorContains(t, err, "not available for your organization")
+}
+
+func TestSBOMTestWorkflow_ReportFlag_BothFFsDisabled_ReturnsError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockEngine := mocks.NewMockEngine(ctrl)
+
+	mockICTX := mockInvocationContext(t, ctrl, mockEngine)
+	mockICTX.GetConfiguration().Set("file", "testdata/bom.json")
+	mockICTX.GetConfiguration().Set(flags.FlagReport, true)
+	mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagDflySbomMonitor, false)
+	mockICTX.GetConfiguration().Set(sbomtest.FeatureFlagEnableSbomMonitor, false)
 
 	_, err := sbomtest.TestWorkflow(mockICTX, []workflow.Data{})
 

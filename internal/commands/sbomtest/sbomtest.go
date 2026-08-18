@@ -22,6 +22,8 @@ var (
 // gated `sbom monitor`.
 const FeatureFlagDflySbomMonitor = "internal_snyk_cli_rollout_dfly_sbom_monitor"
 
+const FeatureFlagEnableSbomMonitor = "internal_snyk_cli_enable_sbom_monitor"
+
 func RegisterWorkflows(e workflow.Engine) error {
 	sbomFlagset := flags.GetSBOMTestFlagSet()
 
@@ -34,6 +36,7 @@ func RegisterWorkflows(e workflow.Engine) error {
 	config_utils.AddFeatureFlagsToConfig(e, map[string]string{
 		FeatureFlagDflySbomMonitor: "rollout-dfly-sbom-monitor",
 	})
+	config_utils.AddFeatureFlagToConfig(e, FeatureFlagEnableSbomMonitor, "enableSbomMonitor")
 
 	return nil
 }
@@ -69,7 +72,7 @@ func TestWorkflow(
 	// recurring (daily) retest frequency. Keep them behind the same rollout FF and
 	// require an asset name so that we don't widen access during the migration.
 	if config.GetBool(flags.FlagReport) || config.GetBool(flags.FlagMonitor) {
-		if !config.GetBool(FeatureFlagDflySbomMonitor) {
+		if !config.GetBool(FeatureFlagDflySbomMonitor) && !config.GetBool(FeatureFlagEnableSbomMonitor) {
 			return nil, errFactory.NewFeatureNotPermittedError(FeatureFlagDflySbomMonitor)
 		}
 
