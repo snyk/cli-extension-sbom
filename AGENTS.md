@@ -4,7 +4,7 @@ Single source of truth for AI coding agents working on this project. Read this b
 
 `CLAUDE.md` intentionally delegates here — update this file, not the pointer.
 
-The Snyk SBOM CLI Extension: a Go module (built on the Snyk go-application-framework) that generates an SBOM (Software Bill of Materials) for a local software project. It registers a CLI-extension workflow that takes the project's dependency graphs, calls the Snyk API to convert them, and returns an SBOM document in a user-specified format.
+The Snyk SBOM CLI Extension: a Go module (built on the Snyk go-application-framework) that adds the `sbom` command group to the Snyk CLI. It generates an SBOM (Software Bill of Materials) for a local project (`sbom`), and tests and monitors SBOMs (`sbom test`, the experimental `sbom monitor`). It gathers the project's dependency graphs, calls the Snyk API to convert them, and renders the result.
 
 **Scope:** These rules cover the Go source under `pkg/` and `internal/`.
 
@@ -12,45 +12,52 @@ The Snyk SBOM CLI Extension: a Go module (built on the Snyk go-application-frame
 
 ## Architecture
 
-The extension is a single go-application-framework (GAF) workflow. `pkg/sbom` registers it via `Init(e workflow.Engine)` and defines its flags; the workflow (`SBOMWorkflow`) reads all inputs — config, logger, network client, dep-graphs — from the `workflow.InvocationContext` rather than constructing dependencies itself. `internal/service` calls the Snyk API to convert dep-graphs into an SBOM document, and `internal/errors` centralises customer-facing errors through an `ErrorFactory`.
+The extension registers the `sbom` command group on the GAF engine. `pkg/sbom.Init(engine)` calls each command package's `RegisterWorkflows(engine)`. Each `internal/commands/<cmd>/` package — `sbomcreate`, `sbomtest`, `sbommonitor` — exposes a `WorkflowID`, a `RegisterWorkflows(e workflow.Engine) error` that builds its flag set (`internal/flags`) and registers the workflow, and a `<Cmd>Workflow(ictx workflow.InvocationContext, input []workflow.Data)` handler that reads all inputs from the InvocationContext. `internal/service` converts dep-graphs into SBOM documents and maps HTTP status to errors; `internal/snykclient` is the Snyk API client; `internal/view` renders human-readable test/monitor output; `internal/errors` centralises customer-facing errors.
 
 ### Hard rules
 
 Every item is a blocking gate — a PR that violates any of these must not merge.
 
-- **Require the user to explicitly set the SBOM output format** — never fall back to a default format such as CycloneDX JSON (see #17).
-- **Build SBOMs only from the full (non-pruned) dependency graph** — never feed a pruned/"effective" graph (or the effective-graph flags) into SBOM generation; pruned graphs produce incorrect SBOMs (see #177).
-- **Set the correct content type on SBOM results** (see #15).
-- **Propagate the underlying GAF error** (e.g. from `GetStringWithError`) so the framework renders the correct error-catalog code (e.g. `SNYK-0005`) instead of a generic `SNYK-CLI-0000` (see #174, #114).
-- **Keep accepting — and ignoring — the `--experimental` flag; do not remove it before GA.** Removing it broke usage and had to be reverted (see #27, #28).
-- **Do not Snyk-monitor the code test in CI** — dependencies are already monitored, so monitoring the project twice is wrong (see #30).
+- **Gate new or behaviour-changing SBOM functionality behind a feature flag**, checked via `config.GetBool(constants.FeatureFlag…)`, so it can be rolled out per org/group (e.g. prune-effective-graph, include-component-metadata, the `sbom monitor` rollout, the `--asset-name` requirement) (see #200, #202, #185). Reference: [`internal/constants/constants.go`](internal/constants/constants.go)
+- **The SBOM path uses the raw (unpruned) dependency graph by default.** Request the effective (pruned) graph only when the user passes `--prune-repeated-subdependencies` *and* the `internal_snyk_sbom_prune_effective_graph_enabled` feature flag is on (then set `effective-graph` / `effective-graph-with-errors`); without the flag, `-p` is a no-op. Never feed a pruned graph into an SBOM outside that gate — pruned graphs produce incorrect SBOMs (see #200, #177). Reference: [`internal/commands/sbomcreate/depgraph.go`](internal/commands/sbomcreate/depgraph.go)
+- **`sbom create` sets `force-single-graph` on the dep-graph request** to prevent duplicate components in the output (see #181), and **sets `dotnet-runtime-resolution=false`** — SBOM generation does not support dotnet runtime resolution (see #178, #179). Reference: [`internal/commands/sbomcreate/depgraph.go`](internal/commands/sbomcreate/depgraph.go)
+- **Require the user to set the SBOM output format explicitly** — `--format` has no default; validate it with `service.ValidateSBOMFormat` (supported: `cyclonedx1.4/1.5/1.6+json|xml`, `spdx2.3+json`) (see #17).
+- **Render user-facing errors through the Snyk error-catalog** (`error-catalog-golang-public`) so the correct `SNYK-…` code shows, and propagate the underlying GAF error (e.g. from `GetStringWithError`) instead of substituting one that renders a generic `SNYK-CLI-0000`. The local `ErrorFactory` / `SBOMExtensionError` is an interim layer being migrated to the catalog — new error paths use the catalog (see #114, #157, #174). Reference: [`internal/errors/errors.go`](internal/errors/errors.go)
+- **Preserve backwards compatibility for existing CLI customers.** Keep `--experimental` as a deprecated, ignored no-op on `sbom` create/test (it is still required to enable the experimental `sbom monitor` command), and do not add validation that breaks current usage (see #158, #157).
 
 ### Conventions
 
-- Dependencies are passed explicitly (read from `workflow.InvocationContext`); no DI container and no globals. Reference: [`pkg/sbom/sbom.go`](pkg/sbom/sbom.go)
-- Construct customer-facing errors through the `ErrorFactory` (`internal/errors`, built with `errors.NewErrorFactory(logger)`), which logs the internal cause and produces an `SBOMExtensionError`; wrap the internal cause with `%w` and pass it into a factory method (see #26). Reference: [`internal/errors/errors.go`](internal/errors/errors.go)
-- Read configuration through the GAF config (`config.GetBool`, `SNYK_`-prefixed env vars), not `os.Getenv` directly (see #155, #138).
-- Build API URLs with `net/url` (`url.JoinPath`), not string concatenation or `Sprintf` — manual joining produces backslashes on Windows (see #110).
+- Command workflows read their dependencies (config, logger, network client, analytics) from `workflow.InvocationContext`; lower-level types take plain constructor params (`NewSnykClient(client, apiBaseURL, orgID)`). No DI container, no globals.
+- Read configuration through the GAF config (`config.GetBool` / `GetString`, `SNYK_`-prefixed env vars), not `os.Getenv` directly (see #155, #138).
+- Build API URLs with `net/url` (`url.JoinPath`, returning `*url.URL`), not string concatenation or `Sprintf` — manual joining produces backslashes on Windows (see #110).
 - Decode HTTP response bodies with `json.NewDecoder(resp.Body).Decode`, not by reading the whole body into memory (see #110, #92).
-- Name functions and variables for their specific purpose (not package-wide-sounding names); name interfaces by the action they perform (e.g. `RemoteRepoURLGetter`) (see #123, #129, #161).
-- Use `snake_case` for API query-parameter names per the Snyk API design rules (e.g. `go_module_level`, not `goModuleLevel`) (see #163).
-- Gate logging so irrelevant ecosystems don't log on every SBOM run — keep logs quiet unless the value is relevant/set (see #178).
+- Take result totals and summary values from the server response (e.g. `res.Summary.TotalIssues`); never recompute them locally (see #91).
+- Name interfaces by the action they perform and don't bind them to one implementation (e.g. `RemoteRepoURLGetter`, not a git-specific name) (see #129).
+- Include the Snyk request ID in surfaced error responses so failures are traceable (see #124).
+- Register experimental or network-hitting flags as hidden and decoupled from unrelated feature flags — an explicit per-invocation opt-in (e.g. `--gradle-refresh-dependencies`) (see #198).
 
 ### Directory layout
 
 | Directory | Purpose |
 |-----------|---------|
-| `pkg/sbom` | Workflow definition, flag registration, and the `Init` entrypoint for the CLI extension |
-| `internal/service` | HTTP client logic converting dep-graphs to SBOM documents via the Snyk API |
-| `internal/errors` | `ErrorFactory` producing customer-facing `SBOMExtensionError` values |
-| `internal/mocks` | Hand-written HTTP test server/response mocks (excluded from linting) |
+| `pkg/sbom` | Extension entrypoint: `Init(engine)` registers the three subcommand workflows |
+| `internal/commands/sbomcreate` | `sbom` create command: workflow, dep-graph gathering, SBOM generation |
+| `internal/commands/sbomtest` | `sbom test` command: test workflow, presenter, summary |
+| `internal/commands/sbommonitor` | `sbom monitor` command (experimental): monitor workflow, file parse |
+| `internal/snykclient` | HTTP client to the Snyk API (sbom convert, sbom test, monitor deps, JSON:API types) |
+| `internal/service` | Converts dep-graphs into SBOM documents; HTTP status → error mapping |
+| `internal/view` | Human-readable rendering of test/monitor results |
+| `internal/errors` | Customer-facing errors via `ErrorFactory` / `SBOMExtensionError` |
+| `internal/flags` | CLI flag definitions and per-command flag sets |
+| `internal/constants` | Feature-flag names and shared constants |
 
 ### Danger zone
 
-Treat these areas as high-risk:
+Treat these areas as high-risk — they are the most-fixed in the repo:
 
-- **Error handling and user-facing error messages** (`internal/errors`, `internal/service`): the most-fixed area in the repo — org-ID inference, dep-graph failures, payload and response-body handling, API responses (see #18, #20, #24 and others).
-- **The `--experimental` flag** in `pkg/sbom`: removing it before GA broke usage and had to be reverted — change its handling with care (see #27, #28).
+- **`sbom test` result rendering** (`internal/view`, `internal/commands/sbomtest`): repeated JSON/stdout output fixes (see #96, #90, #89).
+- **`sbom create` dep-graph flags** (`internal/commands/sbomcreate` — `force-single-graph`, `dotnet-runtime-resolution`, `uv.lock`): repeatedly patched (see #181, #178, #162).
+- **SBOM file handling and error/validation** (`internal/sbom`, error-catalog paths): a recurring source of fixes (see #157).
 
 For these, prefer the smallest possible change, add tests before modifying, and ask a human reviewer before landing.
 
@@ -58,12 +65,13 @@ For these, prefer the smallest possible change, add tests before modifying, and 
 
 ### Style and formatting
 
-Formatting and linting are enforced by tooling — run `goimports -local github.com/snyk/cli-extension-sbom` and `golangci-lint run -v ./...` instead of reasoning about style; they are authoritative. There is no Makefile; invoke the Go and golangci-lint commands directly.
+Formatting and linting are enforced by tooling — run `goimports -local github.com/snyk/cli-extension-sbom` and `golangci-lint run -v ./...` (golangci-lint v2; CI pins v2.9.0) instead of reasoning about style; they are authoritative. There is no Makefile; invoke the Go and golangci-lint commands directly.
 
 ### Patterns
 
-- Exported constructors are `New`-prefixed (`NewErrorFactory`, `NewInternalError`); flag names are `flagXxx` constants.
-- Directories and source-file basenames are concatenated-lowercase single words (`errors.go`, `service.go`, `sbom.go`).
+- Exported constructors are `New`-prefixed (`NewErrorFactory`, `NewSnykClient`); flag names are `flagXxx` / `FlagXxx` constants.
+- Package and source-file basenames are concatenated-lowercase single words (`sbomcreate`, `snykclient.go`); `cmd_exec` is the lone snake_case exception.
+- `ireturn` restricts functions to returning concrete types — only `error` and `workflow.Data` may be returned as interfaces.
 
 ### Best practices for new code
 
@@ -77,6 +85,14 @@ When you touch a file that has existing violations:
 - **Single Responsibility Principle (SRP)**
 - **Avoid Hasty Abstractions (AHA)**
 
+## Generated code
+
+Never hand-edit these — they are auto-generated:
+
+| Path | Generator | Regenerate with |
+|------|-----------|-----------------|
+| `internal/mocks/mock_codescanner.go` | GoMock (`mockgen`) for `code-client-go` `CodeScanner` | `mockgen -package=mocks -destination=internal/mocks/mock_codescanner.go github.com/snyk/code-client-go CodeScanner` |
+
 ## Testing
 
 > **Note:** No automated coverage enforcement found in CI or config. The unit-test job runs with `-race` and atomic covermode but does not fail on a coverage threshold — coverage is reported, not gated. Consider adding a threshold.
@@ -84,9 +100,8 @@ When you touch a file that has existing violations:
 | Command | What it runs |
 |---------|--------------|
 | `go test -race ./...` | Unit tests |
-| `go test -tags=integration ./...` | Integration tests |
 
-Integration tests are guarded by the `integration` build tag (`//go:build integration`); the tag is declared in the golangci config so lint sees them too.
+There is no Makefile — run Go commands directly. The golangci config declares an `integration` build tag, but no integration-tagged tests currently exist.
 
 ### AI agent testing protocol
 
@@ -110,19 +125,20 @@ scope and may introduce incorrect assumptions about existing behavior. Do write 
 
 ## Local development
 
-- Requires the Go toolchain pinned in `go.mod` (Go 1.19).
-- Install `golangci-lint` separately — there is no Makefile or bundled install target.
+- Requires the Go toolchain pinned in `go.mod` (Go 1.26.5).
+- Install `golangci-lint` (v2) separately — there is no Makefile or bundled install target.
+- A local dev harness lives at `cmd/develop/main.go` for running the extension outside the CLI.
 
 ## Commits and PRs
 
 **Commit format:** Conventional Commits (`<type>(scope): <description>`) — used throughout git history, though no commitlint config enforces it.
-Types observed: feat, fix, chore, refactor.
-Example: `feat: introduce error factory which logs error details`
-Branch naming: `<type>/<TICKET>-<description>` (e.g. `fix/LINK-213-body-error`).
+Types observed: feat, fix, chore, refactor, docs.
+Example: `feat: allow sbom test --report/--monitor via registry-based group opt-in [OSF-466]`
+Branch naming: `<type>/<TICKET>-<description>` (e.g. `feat/osf-466/registry-based-sbom-monitor-ff`).
 
 ## When in doubt
 
-If you're unsure about a decision that would affect SBOM output correctness, the error contract, or the Snyk API interaction, ask @snyk/link (the CODEOWNERS team) before proceeding.
+If you're unsure about a decision that would affect SBOM output correctness, the error contract, feature-flag gating, or the Snyk API interaction, ask @snyk/engines_sca-scanners (the CODEOWNERS team) before proceeding.
 
 ## Before you finish
 
@@ -131,17 +147,17 @@ Before presenting any change, verify each item below. Do not report work as comp
 - [ ] `go test -race ./...` passes
 - [ ] `golangci-lint run -v ./...` passes
 - [ ] `goimports -local github.com/snyk/cli-extension-sbom` run and output committed
-- [ ] Integration tests (`go test -tags=integration ./...`) pass when touching the service or workflow
+- [ ] Mocks regenerated with `mockgen` if the mocked interface changed
 - [ ] New code has test coverage (or the "unverified" warning is documented)
-- [ ] Snyk scan is clean (CI runs open-source + code tests at the high severity threshold)
+- [ ] New/changed behaviour is feature-flag gated where appropriate
 - [ ] Commit / PR title follows Conventional Commits
 
 ---
 
 ## Human review checklist
 
-This file was generated by `/create-agents-md:create-agents-md` in auto mode as a starting point. Complete these items to finish it:
+This file was generated by `/create-agents-md:create-agents-md` (regenerated against `main` after an initial run scanned a stale branch). Complete these items to finish it:
 
 - [ ] Review test coverage and consider adding a CI coverage threshold (currently reported, not enforced).
-- [ ] Confirm the max subject-line length and whether commit types beyond feat/fix/chore/refactor are allowed.
+- [ ] Confirm the max commit subject-line length and the full allowed type list.
 - [ ] Remove this section once all items above are resolved.
