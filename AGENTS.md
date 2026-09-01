@@ -18,23 +18,23 @@ The extension registers the `sbom` command group on the GAF engine. `pkg/sbom.In
 
 Every item is a blocking gate — a PR that violates any of these must not merge.
 
-- **Gate new or behaviour-changing SBOM functionality behind a feature flag**, checked via `config.GetBool(constants.FeatureFlag…)`, so it can be rolled out per org/group (e.g. prune-effective-graph, include-component-metadata, the `sbom monitor` rollout, the `--asset-name` requirement) (see #200, #202, #185). Reference: [`internal/constants/constants.go`](internal/constants/constants.go)
-- **The SBOM path uses the raw (unpruned) dependency graph by default.** Request the effective (pruned) graph only when the user passes `--prune-repeated-subdependencies` *and* the `internal_snyk_sbom_prune_effective_graph_enabled` feature flag is on (then set `effective-graph` / `effective-graph-with-errors`); without the flag, `-p` is a no-op. Never feed a pruned graph into an SBOM outside that gate — pruned graphs produce incorrect SBOMs (see #200, #177). Reference: [`internal/commands/sbomcreate/depgraph.go`](internal/commands/sbomcreate/depgraph.go)
-- **`sbom create` sets `force-single-graph` on the dep-graph request** to prevent duplicate components in the output (see #181), and **sets `dotnet-runtime-resolution=false`** — SBOM generation does not support dotnet runtime resolution (see #178, #179). Reference: [`internal/commands/sbomcreate/depgraph.go`](internal/commands/sbomcreate/depgraph.go)
-- **Require the user to set the SBOM output format explicitly** — `--format` has no default; validate it with `service.ValidateSBOMFormat` (supported: `cyclonedx1.4/1.5/1.6+json|xml`, `spdx2.3+json`) (see #17).
-- **Render user-facing errors through the Snyk error-catalog** (`error-catalog-golang-public`) so the correct `SNYK-…` code shows, and propagate the underlying GAF error (e.g. from `GetStringWithError`) instead of substituting one that renders a generic `SNYK-CLI-0000`. The local `ErrorFactory` / `SBOMExtensionError` is an interim layer being migrated to the catalog — new error paths use the catalog (see #114, #157, #174). Reference: [`internal/errors/errors.go`](internal/errors/errors.go)
-- **Preserve backwards compatibility for existing CLI customers.** Keep `--experimental` as a deprecated, ignored no-op on `sbom` create/test (it is still required to enable the experimental `sbom monitor` command), and do not add validation that breaks current usage (see #158, #157).
+- **Gate new or behaviour-changing SBOM functionality behind a feature flag**, checked via `config.GetBool(constants.FeatureFlag…)`, so it can be rolled out per org/group (e.g. prune-effective-graph, include-component-metadata, the `sbom monitor` rollout, the `--asset-name` requirement). Reference: [`internal/constants/constants.go`](internal/constants/constants.go)
+- **The SBOM path uses the raw (unpruned) dependency graph by default.** Request the effective (pruned) graph only when the user passes `--prune-repeated-subdependencies` *and* the `internal_snyk_sbom_prune_effective_graph_enabled` feature flag is on (then set `effective-graph` / `effective-graph-with-errors`); without the flag, `-p` is a no-op. Never feed a pruned graph into an SBOM outside that gate — pruned graphs produce incorrect SBOMs. Reference: [`internal/commands/sbomcreate/depgraph.go`](internal/commands/sbomcreate/depgraph.go)
+- **`sbom create` sets `force-single-graph` on the dep-graph request** to prevent duplicate components in the output, and **sets `dotnet-runtime-resolution=false`** — SBOM generation does not support dotnet runtime resolution. Reference: [`internal/commands/sbomcreate/depgraph.go`](internal/commands/sbomcreate/depgraph.go)
+- **Require the user to set the SBOM output format explicitly** — `--format` has no default; validate it with `service.ValidateSBOMFormat` (supported: `cyclonedx1.4/1.5/1.6+json|xml`, `spdx2.3+json`). Reference: [`internal/service/service.go`](internal/service/service.go)
+- **Render user-facing errors through the Snyk error-catalog** (`error-catalog-golang-public`) so the correct `SNYK-…` code shows, and propagate the underlying GAF error (e.g. from `GetStringWithError`) instead of substituting one that renders a generic `SNYK-CLI-0000`. The local `ErrorFactory` / `SBOMExtensionError` is an interim layer being migrated to the catalog — new error paths use the catalog. Reference: [`internal/errors/errors.go`](internal/errors/errors.go)
+- **Preserve backwards compatibility for existing CLI customers.** Keep `--experimental` as a deprecated, ignored no-op on `sbom` create/test (it is still required to enable the experimental `sbom monitor` command), and do not add validation that breaks current usage. Reference: [`internal/flags/flags.go`](internal/flags/flags.go)
 
 ### Conventions
 
 - Command workflows read their dependencies (config, logger, network client, analytics) from `workflow.InvocationContext`; lower-level types take plain constructor params (`NewSnykClient(client, apiBaseURL, orgID)`). No DI container, no globals.
-- Read configuration through the GAF config (`config.GetBool` / `GetString`, `SNYK_`-prefixed env vars), not `os.Getenv` directly (see #155, #138).
-- Build API URLs with `net/url` (`url.JoinPath`, returning `*url.URL`), not string concatenation or `Sprintf` — manual joining produces backslashes on Windows (see #110).
-- Decode HTTP response bodies with `json.NewDecoder(resp.Body).Decode`, not by reading the whole body into memory (see #110, #92).
-- Take result totals and summary values from the server response (e.g. `res.Summary.TotalIssues`); never recompute them locally (see #91).
-- Name interfaces by the action they perform and don't bind them to one implementation (e.g. `RemoteRepoURLGetter`, not a git-specific name) (see #129).
-- Include the Snyk request ID in surfaced error responses so failures are traceable (see #124).
-- Register experimental or network-hitting flags as hidden and decoupled from unrelated feature flags — an explicit per-invocation opt-in (e.g. `--gradle-refresh-dependencies`) (see #198).
+- Read configuration through the GAF config (`config.GetBool` / `GetString`, `SNYK_`-prefixed env vars), not `os.Getenv` directly.
+- Build API URLs with `net/url` (`url.JoinPath`, returning `*url.URL`), not string concatenation or `Sprintf` — manual joining produces backslashes on Windows.
+- Decode HTTP response bodies with `json.NewDecoder(resp.Body).Decode`, not by reading the whole body into memory.
+- Take result totals and summary values from the server response (e.g. `res.Summary.TotalIssues`); never recompute them locally.
+- Name interfaces by the action they perform and don't bind them to one implementation (e.g. `RemoteRepoURLGetter`, not a git-specific name).
+- Include the Snyk request ID in surfaced error responses so failures are traceable.
+- Register experimental or network-hitting flags as hidden and decoupled from unrelated feature flags — an explicit per-invocation opt-in (e.g. `--gradle-refresh-dependencies`).
 
 ### Directory layout
 
@@ -50,16 +50,6 @@ Every item is a blocking gate — a PR that violates any of these must not merge
 | `internal/errors` | Customer-facing errors via `ErrorFactory` / `SBOMExtensionError` |
 | `internal/flags` | CLI flag definitions and per-command flag sets |
 | `internal/constants` | Feature-flag names and shared constants |
-
-### Danger zone
-
-Treat these areas as high-risk — they are the most-fixed in the repo:
-
-- **`sbom test` result rendering** (`internal/view`, `internal/commands/sbomtest`): repeated JSON/stdout output fixes (see #96, #90, #89).
-- **`sbom create` dep-graph flags** (`internal/commands/sbomcreate` — `force-single-graph`, `dotnet-runtime-resolution`, `uv.lock`): repeatedly patched (see #181, #178, #162).
-- **SBOM file handling and error/validation** (`internal/sbom`, error-catalog paths): a recurring source of fixes (see #157).
-
-For these, prefer the smallest possible change, add tests before modifying, and ask a human reviewer before landing.
 
 ## Code conventions
 
@@ -125,8 +115,8 @@ scope and may introduce incorrect assumptions about existing behavior. Do write 
 
 ## Local development
 
-- Requires the Go toolchain pinned in `go.mod` (Go 1.26.5).
-- Install `golangci-lint` (v2) separately — there is no Makefile or bundled install target.
+- Requires the Go toolchain; the version is pinned in `go.mod` — consult it rather than assuming.
+- Install `golangci-lint` separately — there is no Makefile or bundled install target.
 - A local dev harness lives at `cmd/develop/main.go` for running the extension outside the CLI.
 
 ## Commits and PRs
@@ -151,13 +141,3 @@ Before presenting any change, verify each item below. Do not report work as comp
 - [ ] New code has test coverage (or the "unverified" warning is documented)
 - [ ] New/changed behaviour is feature-flag gated where appropriate
 - [ ] Commit / PR title follows Conventional Commits
-
----
-
-## Human review checklist
-
-This file was generated by `/create-agents-md:create-agents-md` (regenerated against `main` after an initial run scanned a stale branch). Complete these items to finish it:
-
-- [ ] Review test coverage and consider adding a CI coverage threshold (currently reported, not enforced).
-- [ ] Confirm the max commit subject-line length and the full allowed type list.
-- [ ] Remove this section once all items above are resolved.
