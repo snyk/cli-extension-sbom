@@ -18,7 +18,6 @@ The extension registers the `sbom` command group on the GAF engine. `pkg/sbom.In
 
 Every item is a blocking gate — a PR that violates any of these must not merge.
 
-- **Gate new or behaviour-changing SBOM functionality behind a feature flag**, checked via `config.GetBool(constants.FeatureFlag…)`, so it can be rolled out per org/group (e.g. prune-effective-graph, include-component-metadata, the `sbom monitor` rollout, the `--asset-name` requirement). Reference: [`internal/constants/constants.go`](internal/constants/constants.go)
 - **The SBOM path uses the raw (unpruned) dependency graph by default.** Request the effective (pruned) graph only when the user passes `--prune-repeated-subdependencies` *and* the `internal_snyk_sbom_prune_effective_graph_enabled` feature flag is on (then set `effective-graph` / `effective-graph-with-errors`); without the flag, `-p` is a no-op. Never feed a pruned graph into an SBOM outside that gate — pruned graphs produce incorrect SBOMs. Reference: [`internal/commands/sbomcreate/depgraph.go`](internal/commands/sbomcreate/depgraph.go)
 - **Require the user to set the SBOM output format explicitly** — `--format` has no default; validate it with `service.ValidateSBOMFormat` (supported: `cyclonedx1.4/1.5/1.6+json|xml`, `spdx2.3+json`). Reference: [`internal/service/service.go`](internal/service/service.go)
 - **Render user-facing errors through the Snyk error-catalog** (`error-catalog-golang-public`) so the correct `SNYK-…` code shows, and propagate the underlying GAF error (e.g. from `GetStringWithError`) instead of substituting one that renders a generic `SNYK-CLI-0000`. The local `ErrorFactory` / `SBOMExtensionError` is an interim layer being migrated to the catalog — new error paths use the catalog. Reference: [`internal/errors/errors.go`](internal/errors/errors.go)
@@ -34,6 +33,7 @@ Every item is a blocking gate — a PR that violates any of these must not merge
 - Name interfaces by the action they perform and don't bind them to one implementation (e.g. `RemoteRepoURLGetter`, not a git-specific name).
 - Include the Snyk request ID in surfaced error responses so failures are traceable.
 - Register experimental or network-hitting flags as hidden and decoupled from unrelated feature flags — an explicit per-invocation opt-in (e.g. `--gradle-refresh-dependencies`).
+- New or higher-risk behaviour is typically rolled out behind a feature flag (decided per change, not required for every change) for staged per-org/group rollout; flags are checked via `config.GetBool(constants.FeatureFlag…)` and named in `internal/constants`. Reference: [`internal/constants/constants.go`](internal/constants/constants.go)
 
 ### Directory layout
 
