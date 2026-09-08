@@ -117,6 +117,7 @@ scope and may introduce incorrect assumptions about existing behavior. Do write 
 - Requires the Go toolchain; the version is pinned in `go.mod` — consult it rather than assuming.
 - Install `golangci-lint` separately — there is no Makefile or bundled install target.
 - A local dev harness lives at `cmd/develop/main.go` for running the extension outside the CLI.
+- The repo also has a Nix flake (`flake.nix`) for a reproducible dev environment — use `nix develop` if you use Nix.
 
 ## Commits and PRs
 
@@ -124,6 +125,7 @@ scope and may introduce incorrect assumptions about existing behavior. Do write 
 Types observed: feat, fix, chore, refactor, docs.
 Example: `feat: allow sbom test --report/--monitor via registry-based group opt-in [OSF-466]`
 Branch naming: `<type>/<TICKET>-<description>` (e.g. `feat/osf-466/registry-based-sbom-monitor-ff`).
+**PR title/description:** Include the ticket number in the PR title (or, at minimum, link the ticket in the description), matching the commit convention above.
 
 ## When in doubt
 
