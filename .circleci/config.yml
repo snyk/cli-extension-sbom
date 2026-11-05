@@ -1,8 +1,10 @@
 version: 2.1
 
 orbs:
-  go: circleci/go@4
+  # Snyk-owned orbs: track the latest release of the major version
   prodsec: snyk/prodsec-orb@1
+  # Third-party orbs: always pin an exact version
+  go: circleci/go@4.0.3
 
 jobs:
   unit-test:
