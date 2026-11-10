@@ -1,8 +1,10 @@
 version: 2.1
 
 orbs:
-  go: circleci/go@1.7.1
+  # Snyk-owned orbs: track the latest release of the major version
   prodsec: snyk/prodsec-orb@1
+  # Third-party orbs: always pin an exact version
+  go: circleci/go@4.0.4
 
 jobs:
   unit-test:
@@ -11,9 +13,9 @@ jobs:
       tag: '1.26.5'
     steps:
       - checkout
-      - go/load-cache
+      - go/load-mod-cache
       - go/mod-download
-      - go/save-cache
+      - go/save-mod-cache
       - go/test:
           covermode: atomic
           failfast: true
@@ -32,9 +34,9 @@ jobs:
     resource_class: small
     steps:
       - checkout
-      - go/load-cache
+      - go/load-mod-cache
       - go/mod-download
-      - go/save-cache
+      - go/save-mod-cache
       - prodsec/security_scans:
           mode: auto
           iac-scan: disabled
