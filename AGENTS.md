@@ -54,7 +54,7 @@ Every item is a blocking gate — a PR that violates any of these must not merge
 
 ### Style and formatting
 
-Formatting and linting are enforced by tooling — run `goimports -local github.com/snyk/cli-extension-sbom` and `golangci-lint run -v ./...` (golangci-lint v2; CI pins v2.9.0) instead of reasoning about style; they are authoritative. There is no Makefile; invoke the Go and golangci-lint commands directly.
+Formatting and linting are enforced by tooling — run `goimports -local github.com/snyk/cli-extension-sbom` and `golangci-lint run -v ./...` (golangci-lint v2; CI pins v2.15.0) instead of reasoning about style; they are authoritative. There is no Makefile; invoke the Go and golangci-lint commands directly.
 
 ### Patterns
 

@@ -2,8 +2,7 @@ package view
 
 import (
 	"io"
-
-	"golang.org/x/exp/slices"
+	"slices"
 )
 
 type Presentation struct {
