@@ -10,7 +10,7 @@ jobs:
   unit-test:
     executor:
       name: go/default
-      tag: '1.26.5'
+      tag: '1.26.11'
     steps:
       - checkout
       - go/load-mod-cache
@@ -30,7 +30,7 @@ jobs:
   security-scans:
     executor:
       name: go/default
-      tag: '1.26.5'
+      tag: '1.26.11'
     resource_class: small
     steps:
       - checkout
