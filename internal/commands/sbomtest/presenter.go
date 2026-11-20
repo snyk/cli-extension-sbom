@@ -5,9 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"slices"
 	"time"
-
-	"golang.org/x/exp/slices"
 
 	"github.com/snyk/cli-extension-sbom/internal/severities"
 	"github.com/snyk/cli-extension-sbom/internal/snykclient"
