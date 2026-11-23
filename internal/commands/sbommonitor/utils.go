@@ -14,7 +14,7 @@ func concatConversionWarnings(warnings []*snykclient.ConversionWarning) string {
 		if warn.BOMRef != "" {
 			suffix = fmt.Sprintf(" (%s)", warn.BOMRef)
 		}
-		sb.WriteString(fmt.Sprintf("WARNING: [%s] %s%s\n", warn.Type, warn.Msg, suffix))
+		fmt.Fprintf(&sb, "WARNING: [%s] %s%s\n", warn.Type, warn.Msg, suffix)
 	}
 	return sb.String()
 }
