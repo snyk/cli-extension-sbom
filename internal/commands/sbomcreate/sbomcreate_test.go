@@ -666,3 +666,29 @@ func TestGetDepGraph_uvSupport(t *testing.T) {
 		})
 	}
 }
+
+// snyk sbom always asks the depgraph workflow to keep its graph flags for
+// legacy projects in SBOM resolution, so they get the same graph as on the
+// standard path (cli-extension-dep-graph SCAS-1054).
+func TestGetDepGraph_keepsCallerGraphMode(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockEngine := mocks.NewMockEngine(ctrl)
+	mockEngine.EXPECT().
+		InvokeWithConfig(gomock.Eq(sbomcreate.DepGraphWorkflowID), gomock.Any()).
+		DoAndReturn(func(_ workflow.Identifier, cfg configuration.Configuration) ([]workflow.Data, error) {
+			assert.True(t, cfg.GetBool("internal-keep-caller-graph-mode"))
+			return []workflow.Data{newDepGraphData(t, depGraphData)}, nil
+		}).
+		Times(1)
+
+	mockLogger := zerolog.New(io.Discard)
+	mockICTX := mocks.NewMockInvocationContext(ctrl)
+	mockICTX.EXPECT().GetEngine().Return(mockEngine).AnyTimes()
+	mockICTX.EXPECT().GetConfiguration().Return(configuration.New()).AnyTimes()
+	mockICTX.EXPECT().GetEnhancedLogger().Return(&mockLogger).AnyTimes()
+
+	_, err := sbomcreate.GetDepGraph(mockICTX)
+	require.NoError(t, err)
+}

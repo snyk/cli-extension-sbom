@@ -111,6 +111,12 @@ func applyDepGraphConfig(depGraphConfig configuration.Configuration, logger *zer
 		}
 	}
 
+	// Legacy projects in the depgraph workflow's SBOM resolution otherwise get
+	// the pruned effective graph that `snyk test` needs. This keeps the graph
+	// flags set above, so they match the standard path. The standard path
+	// ignores the key.
+	depGraphConfig.Set("internal-keep-caller-graph-mode", true)
+
 	// Currently, we don't support dotnet runtime resolution for SBOMs.
 	// This will come in a future release.
 	depGraphConfig.Set("dotnet-runtime-resolution", false)
